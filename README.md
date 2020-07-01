@@ -40,6 +40,9 @@ npm i
 cd backend
 npm i
 ```
+If found severity vulnerabilities, run:
+$ npm audit fix
+
 
 ##### 2. Create `.env` file for database connection info.
 
