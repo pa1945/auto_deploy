@@ -36,7 +36,6 @@ That way you can access the private packages.
 https://www.npmjs.com/
 login: pedroalvesfi
 pass: Koafcechbajyo85
-Email: (this IS public) palves1945@gmail.com
 
 
 2nd...
@@ -97,10 +96,7 @@ This API comes with a simple endpoint that provides it's status. If the API is n
 
 ## Logging with Loggly
 
-We are using Loggly with Winston to track log messages remotely. 
-If you want to send your logs to Loggly, you should configure the 
-following variables in your environment (either with `.env` 
-or in your operating system):
+We are using Loggly with Winston to track log messages remotely. If you want to send your logs to Loggly, you should configure the following variables in your environment (either with `.env` or in your operating system):
 
 ```
 LOGGLY_SUBDOMAIN=yoursubdomain
@@ -112,9 +108,7 @@ You can obtain a free account from Loggly to test.
 
 ## Logging with Slack
 
-You can also log things like errors to Slack to get faster notifications. 
-If you want to send your logs to Slack, you should configure the following 
-variables in your environment (either with `.env` or in your operating system):
+You can also log things like errors to Slack to get faster notifications. If you want to send your logs to Slack, you should configure the following variables in your environment (either with `.env` or in your operating system):
 
 ```
 SLACK_LOGGER_WEBHOOK=some webhook from slack
@@ -131,8 +125,7 @@ SLACK_LOGGER_LOG_LEVEL=error
 
 ## Migrations
 
-NOTE: Be sure you have your environment variables set up. 
-See `DB Setup` section.
+NOTE: Be sure you have your environment variables set up. See `DB Setup` section.
 
 NestJS uses TypeORM to create, generate, run migrations.
 To apply pending migrations you just need to run:
@@ -155,9 +148,7 @@ npm run migrations:revert
 
 ## DB Setup
 
-You need to add some environment variables to your system in order to 
-run migrations or the backend. For convenience, you can also create a 
-`.env` file to represent your environment. Here's the format:
+You need to add some environment variables to your system in order to run migrations or the backend. For convenience, you can also create a `.env` file to represent your environment. Here's the format:
 
 ```
 TYPEORM_CONNECTION=postgres
@@ -176,9 +167,7 @@ It would be best to spin up a database in RDS while we are spinning up a new env
 
 ## Authentication with Auth0
 
-Authentication has been applied to all endpoints, so it's not necessary 
-to specify which endpoints require auth. For authentication to work, 
-you will need some env vars, for example:
+Authentication has been applied to all endpoints, so it's not necessary to specify which endpoints require auth. For authentication to work, you will need some env vars, for example:
 
 ```
 AUTH0_CLIENT_SECRET= <id placeholder, check trello card on OIW board in resources lane>

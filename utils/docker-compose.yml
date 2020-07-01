@@ -1,0 +1,13 @@
+# docker-compose.yml
+# https://www.techrepublic.com/article/how-to-build-a-docker-compose-file/
+#
+version: "3"
+services:
+  database:
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=glee
+    ports:
+      - "5532:5432"
