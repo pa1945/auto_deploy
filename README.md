@@ -155,6 +155,10 @@ $ git remote add <to-my-remote-git> <https://pa1945@....git>
 $ git add .
 $ git commit -m "My first commit jul 1 - 09:30"
 $ git push <to-my-remote-git> <master>
+My repo:
+https://github.com/pa1945/auto_deploy.git
+
+
 
 ##### Circle CI
 
