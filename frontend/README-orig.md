@@ -4,16 +4,12 @@ A bare minimum react-redux-webpack-typescript boilerplate with TodoMVC example.
 
 [Live demo](https://rokoroku.github.io/react-redux-typescript-boilerplate)
 
-Note that this project does not include **Server-Side Rendering**, 
- **Static code analysis**, **Testing Frameworks** and other stuffs that 
-  makes the package unnecessarily complicated. (e.g. yarn, tslint, jest, ...)
-If needed, please fork this repository and add your own that meets your 
-  requirements.
+Note that this project does not include **Server-Side Rendering**, **Static code analysis**, **Testing Frameworks** and other stuffs that makes the package unnecessarily complicated. (e.g. yarn, tslint, jest, ...)  
+If needed, please fork this repository and add your own that meets your requirements.
 
 Ideal for creating React apps from the scratch.
 
-See also: 
-[react-mobx-typescript-boilerplate](https://github.com/rokoroku/react-mobx-typescript-boilerplate)
+See also: [react-mobx-typescript-boilerplate](https://github.com/rokoroku/react-mobx-typescript-boilerplate)
 
 ## Contains
 
@@ -71,22 +67,13 @@ MIT
 
 ## Connecting to Backend
 
-During build, CRA will import the backend API url from `API_URL` 
-which you can use via `process.env.API_URL`. 
-To change the value of this locally, add that as an environment 
-variable and set it to whatever you need. You can also create a 
-`.env` file, of course.
+During build, CRA will import the backend API url from `API_URL` which you can use via `process.env.API_URL`. To change the value of this locally, add that as an environment variable and set it to whatever you need. You can also create a `.env` file, of course.
 
 Example:
 
 ```
 API_URL=http://localhost:3030
 ```
-PA: Run
-frontend $ export API_URL=http://localhost:3030
-And, Run the backend
-utils $ docker-compose up -d	# docker-compose Database
-
 
 ## Relative Paths in HTML
 
@@ -94,10 +81,7 @@ When deploying to a folder instead of the root on a web server, you need paths t
 
 ## Logging
 
-We are using Loggly to track log messages remotely. 
-If you want to send your logs to Loggly for some reason, 
-you should configure the following variables in your environment 
-(either with `.env` or in your operating system):
+We are using Loggly to track log messages remotely. If you want to send your logs to Loggly for some reason, you should configure the following variables in your environment (either with `.env` or in your operating system):
 
 ```
 LOGGLY_SUBDOMAIN=yoursubdomain
