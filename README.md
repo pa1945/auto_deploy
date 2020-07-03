@@ -305,7 +305,7 @@ Since CircleCI cannot decrypt SSH keys, every new key must have an empty passphr
 CircleCI also will not accept OpenSSH’s default file format.
 Use `ssh-keygen -m pem` if you are using OpenSSH to generate your key.
 
-Name                   Fingerprint                                            ID
+Name                   Fingerprint                                              ID
 uda deploy	6a:06:d0:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:69:07:e5:48:4f	key-00f18a32a8ff4a983
 
 2. Create IAM user for programmatic access only and copy the id and access keys.
@@ -315,7 +315,6 @@ https://serverless-stack.com/chapters/create-an-iam-user.html
 
 User           'Access key ID'              'Secret access key'
 uda-deploy XXIA5JIMLSYYTSDZOGXX          xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBXX
-
 
 3. Add a PostgreSQL database in RDS and take note of the connection details 
    (hostname, username, password).
@@ -372,16 +371,16 @@ Settings > pa1945 > auto_deploy > Environment Variables
   - `TYPEORM_DATABASE`={your postgres database name in RDS}
 
 
-AWS_ACCESS_KEY_ID=AKIA5JIMLSYYTSDZOG5B
-AWS_SECRET_ACCESS_KEY=sZvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBca
+AWS_ACCESS_KEY_ID=AKIA5JIMLSYYTSDZOGXX
+AWS_SECRET_ACCESS_KEY=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
 TYPEORM_CONNECTION=postgres
 TYPEORM_MIGRATIONS_DIR=./src/migrations
 TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
 TYPEORM_MIGRATIONS=./src/migrations/*.ts
-TYPEORM_HOST=db-deploy1.cd65hkgojqit.us-east-1.rds.amazonaws.com
+TYPEORM_HOST=db-deploy7.cd65hkgojqit.us-east-7.rds.amazonaws.com
 TYPEORM_PORT=5432
 TYPEORM_USERNAME=admin_deploy
-TYPEORM_PASSWORD=Mas1er-pass2020
+TYPEORM_PASSWORD=Mas1er-pass2026
 TYPEORM_DATABASE=deploy
 
 
