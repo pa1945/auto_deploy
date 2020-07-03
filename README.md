@@ -306,7 +306,7 @@ CircleCI also will not accept OpenSSH’s default file format.
 Use `ssh-keygen -m pem` if you are using OpenSSH to generate your key.
 
 Name                   Fingerprint                                          ID
-uda deploy	ff:zz:d0:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:6...   key-!!f18a32a....
+uda deploy	ff:zz:..:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:6...   key-..f18a32a....
 
 2. Create IAM user for programmatic access only and copy the id and access keys.
 Tutorial: 
@@ -314,7 +314,7 @@ Create an IAM User
 https://serverless-stack.com/chapters/create-an-iam-user.html
 
 User           'Access key ID'              'Secret access key'
-uda-deploy XXIA5JIMLSYYTSDZOGXX          xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBXX
+uda-deploy XXIA5JIMLSYYTSDZOG..        xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tof...
 
 3. Add a PostgreSQL database in RDS and take note of the connection details 
    (hostname, username, password).
@@ -323,17 +323,17 @@ uda-deploy XXIA5JIMLSYYTSDZOGXX          xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBX
 
 DB instance identifier: db-deploy
 Master username: admin-deploy
-Master password: Mas1er-pass2020
+Master password: Mas1er-pass2026
 DB instance size: 1 vCPU, 1 GiB
 Enable storage autoscaling - UNCHECKED <<== To keep Free plan.
 Database port: 5432
 Database authentication options: Password authentication
 
-hostname=db-deploy1.cd65hkgojqit.us-east-1.rds.amazonaws.com
+hostname=db-deploy1.cd65hkgojqit....
 username=admin_deploy
 password=Mas1er-pass2020
 
-$ psql --host=db-deploy1.cd65hkgojqit.us-east-1.rds.amazonaws.com \
+$ psql --host=db-deploy1.cd65hkg... \
  --port=5432  --username=admin_deploy \
  --password   --dbname=deploy
 Password: 
@@ -346,9 +346,7 @@ Password:
 [here](https://circleci.com/docs/2.0/add-ssh-key/).
 https://circleci.com/gh/pa1945/auto_deploy/edit#ssh
 Settings > pa1945 > auto_deploy > Add SSH key
-Fingerprint: a3:85:0f:c2:2e:46:d9:5a:4d:74:e8:b1:77:a8:52:70	
-
-
+Fingerprint: a3:85:0f:c2:2e:46:d9:5....
 
 2. Add the following environment variables to your project by navigating 
    to {project name} > Settings > Environment Variables as shown 
@@ -372,12 +370,12 @@ Settings > pa1945 > auto_deploy > Environment Variables
 
 
 AWS_ACCESS_KEY_ID=AKIA5JIMLSYYTSDZOGXX
-AWS_SECRET_ACCESS_KEY=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
+AWS_SECRET_ACCESS_KEY=sZvlzrvFelOv+WPHOTv7...
 TYPEORM_CONNECTION=postgres
 TYPEORM_MIGRATIONS_DIR=./src/migrations
 TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts
 TYPEORM_MIGRATIONS=./src/migrations/*.ts
-TYPEORM_HOST=db-deploy7.cd65hkgojqit.us-east-7.rds.amazonaws.com
+TYPEORM_HOST=db-deploy7.cd65hkgo....
 TYPEORM_PORT=5432
 TYPEORM_USERNAME=admin_deploy
 TYPEORM_PASSWORD=Mas1er-pass2026
