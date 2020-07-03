@@ -36,5 +36,5 @@ jobs:
 workflows:
   default:
     jobs:
-      - hello-world
+      - executor
   
