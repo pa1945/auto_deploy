@@ -305,8 +305,8 @@ Since CircleCI cannot decrypt SSH keys, every new key must have an empty passphr
 CircleCI also will not accept OpenSSH’s default file format.
 Use `ssh-keygen -m pem` if you are using OpenSSH to generate your key.
 
-Name                   Fingerprint                                              ID
-uda deploy	6a:06:d0:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:69:07:e5:48:4f	key-00f18a32a8ff4a983
+Name                   Fingerprint                                          ID
+uda deploy	ff:zz:d0:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:6...   key-!!f18a32a....
 
 2. Create IAM user for programmatic access only and copy the id and access keys.
 Tutorial: 
