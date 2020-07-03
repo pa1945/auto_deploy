@@ -314,7 +314,7 @@ Create an IAM User
 https://serverless-stack.com/chapters/create-an-iam-user.html
 
 User           'Access key ID'              'Secret access key'
-uda-deploy AKIA5JIMLSYYTSDZOG5B        sZvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBca
+uda-deploy XXIA5JIMLSYYTSDZOGXX          xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tofItBXX
 
 
 3. Add a PostgreSQL database in RDS and take note of the connection details 
