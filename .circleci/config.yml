@@ -72,6 +72,11 @@ jobs:
           command: |
             echo "Udacity deploy: Hello World"
 #
+workflows:
+  default:
+    jobs:
+      - hello-world
+#
 #---------------------------------------------------
 #https://circleci.com/docs/2.0/language-javascript/
 #
