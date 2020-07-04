@@ -401,6 +401,9 @@ checklist item.
    CloudFormation templates. Again, provide a screenshot demonstrating 
    an appropriate job failure (failing for the right reasons). **[SCREENSHOT05]**
   - New EC2 Instance for back-end.
+    Public DNS: ec2-34-204-95-58.compute-1.amazonaws.com
+    IPv4 Public IP: 34.204.95.58
+
   - Save the new back-end url for later use (the front-end needs it).
   - New S3 Bucket for front-end.
   - Save the old bucket arn in case you need it later (for rollback).
@@ -436,7 +439,8 @@ $ pm2 start binary-file -- --port 1520
 $ pm2 [list|ls|status]
 $ pm2 stop all|0
 
------------------------
+---
+
 Run Your First Command and Playbook
 https://docs.ansible.com/ansible/latest/network/getting_started/first_playbook.html
 
@@ -449,7 +453,9 @@ $ sudo apt update
 $ sudo apt install software-properties-common
 $ sudo apt-add-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
-------------------------
+
+---
+
 ADVANCED, PRODUCTION PROCESS MANAGER FOR NODE.JS
 https://pm2.keymetrics.io/
 npm install pm2 -g
@@ -483,11 +489,15 @@ to catch up on his Netflix playlist.
   table (removing a column should cause the smoke test to fail).
   - Take note of whether or not any new migrations were run. 
     This is useful information if you need to rollback.
+
 - Add a job to build and copy the compiled back-end files to your new 
    EC2 instance. Use Ansible to copy the files. 
+
 - Add a job to prepare the front-end code for distribution and deploy it. 
   - Add the back-end url that you saved earlier to the job's `API_URL` 
     environment variables. 
+    API_URL=ec2-34-204-95-58.compute-1.amazonaws.com
+
   - Run another `npm run build` so that the back-end url gets baked into 
     the front-end. 
   - Copy the files to your new S3 Bucket using AWS CLI.
@@ -496,6 +506,18 @@ to catch up on his Netflix playlist.
 - Provide the public URL for your CloudFront distribution (aka, your front-end).
    **[URL03]**
 - Provide the public URL for your back-end server. **[URL04]**
+API_URL=ec2-34-204-95-58.compute-1.amazonaws.com
+
+### Running the frontend: frontend $ npm start
+WARNING in EnvironmentPlugin - API_URL environment variable is undefined.
+You can pass an object with default values to suppress this warning.
+See https://webpack.js.org/plugins/environment-plugin for example.
+
+frontend $ cat .env 
+API_URL=https://ec2-34-204-95-58.compute-1.amazonaws.com
+frontend $ 
+
+
 
 ###### 3. Smoke Test Phase
 

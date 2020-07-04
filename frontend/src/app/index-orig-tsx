@@ -20,8 +20,7 @@ export class Root extends React.Component<Props, State> {
     }
     setTimeout(() => this.setState({ showLoader: false }), 1000);
   };
-  // console.log('Welcome to production API_URL: ');
-  // console.log(process.env.API_URL);
+  // console.log('Welcome to production API_URL: ', process.env.API_URL);
   render() {
     return (
       <div>
