@@ -10,6 +10,7 @@ orbs:
 
 # 3.Use node elements in your existing workflows and jobs.
 
+# OK!
 #jobs:
 #  hello-world:
 #    docker:
@@ -19,13 +20,13 @@ orbs:
 #      - run:
 #          name: Say Hello
 #          command: |
-#            echo "Hello World"
+#            echo "Udacity deploy: Hello World"
 #
 #workflows:
 #  default:
 #    jobs:
 #      - hello-world
-#
+#----------------------------------------
 # https://circleci.com/docs/2.0/getting-started/#section=getting-started
 #version: 2.1
 # https://circleci.com/docs/2.0/circleci-images/
@@ -50,9 +51,9 @@ orbs:
 #  default:
 #    jobs:
 #      - build
-#
+#-------------------------------------------------------
 # https://circleci.com/docs/2.0/hello-world/
-#
+# OK!
 jobs:
   build:
     docker: 
@@ -60,14 +61,25 @@ jobs:
     steps:
       - checkout # check out the code in the project directory
       - run: echo "hello world" # run the `echo` command
+#----
+  hello-world:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Say Hello
+          command: |
+            echo "Udacity deploy: Hello World"
 #
+#---------------------------------------------------
 #https://circleci.com/docs/2.0/language-javascript/
 #
 #orbs: # declare what orbs we are going to use
 #  node: circleci/node@2.0.2 # the node orb provides common node-related configuration 
 #
 #version: 2.1 # using 2.1 provides access to orbs and other features
-#
+# NOT OK!
 #workflows:
 #  matrix-tests:
 #    jobs:
@@ -77,5 +89,5 @@ jobs:
 #          version: 12.16.0
 #      - node/test:
 #          version: 10.19.0
-##
+#------------------------------------------------------
 #
