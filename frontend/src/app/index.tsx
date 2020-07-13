@@ -17,11 +17,10 @@ export class Root extends React.Component<Props, State> {
   componentDidMount() {
     if (!window.localStorage.getItem('backendUrl')) {
       window.localStorage.setItem('backendUrl', process.env.API_URL || '');
+      console.log("1. API_URL: ", process.env.API_URL);
     }
     setTimeout(() => this.setState({ showLoader: false }), 1000);
-  };
-  // console.log('Welcome to production API_URL: ');
-  // console.log(process.env.API_URL);
+  }
   render() {
     return (
       <div>

@@ -19,8 +19,7 @@ export class Root extends React.Component<Props, State> {
       window.localStorage.setItem('backendUrl', process.env.API_URL || '');
     }
     setTimeout(() => this.setState({ showLoader: false }), 1000);
-  };
-  // console.log('Welcome to production API_URL: ', process.env.API_URL);
+  }
   render() {
     return (
       <div>

@@ -1,0 +1,9 @@
+---
+# Ansible copy multiple files
+# https://www.decodingdevops.com/ansible-copy-multiple-files/
+- name: ansible copy multiple files
+  copy: src={{ item.src }} dest={{ item.dest }}
+  with_items:
+    - { src: '/project/jboss.conf', dest: '/etc/jboss' }
+    - { src: '/project/rundeck.conf', dest: '/etc/rundeck' }
+    - { src: '/project/httpd.conf', dest: '/etc/httpd' }

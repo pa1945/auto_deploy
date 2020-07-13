@@ -1,0 +1,44 @@
+# --- https://cursos.alura.com.br/forum/topico-ansible-com-erro-the-read-operation-timed-out-103768
+---
+- hosts: all
+  tasks:
+    - name: 'Instala pacotes de dependencia do sistema operacional'
+      apt:
+        name:
+          - php7.2
+          - apache2
+          - libapache2-mod-php7.2
+          - php7.2-gd
+          - php-ssh2 
+          - mysql-server-5.7
+          - php7.2-mysql
+          - python-mysqldb
+        state: latest
+      become: yes
+
+    - name: 'Cria o banco do MySQL'
+      mysql_db: 
+        name: wordpress_db
+        state: present
+      become: yes
+
+    - name: 'Cria usuario no MySQL'
+      mysql_user:
+        name: wordpress_user
+        password: 12345
+        priv: 'wordpress_db.*:ALL'
+        state: present
+      become: yes
+
+    - name: 'Baixa o arquivo de instalacao do Wordpress'
+      get_url:
+        url: 'https://wordpress.org/latest.tar.gz'
+        dest: '/tmp/wordpress.tar.gz'
+        mode: '1777'
+
+    - name: 'Descompacta o wordpress'
+      unarchive:
+        src: '/tmp/wordpress.tar.gz'
+        dest: /var/www/
+        remote_src: yes
+      become: yes

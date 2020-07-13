@@ -67,6 +67,8 @@ Access using:
 backend $ psql --host=localhost --port=5532 --username=postgres \
  --password --dbname=glee
 
+Installing postgreSQL in Amazon RedHat
+$ sudo yum install -y postgresql
 
 You can use your own Postgres server if you wish or you can use the 
 Docker-Compose template we provided in the `./utils` (`./util`) folder.
@@ -221,10 +223,15 @@ defense against bugs as you attempt to integrate the pieces of your project
 together. This is especially important to UdaPeople because we don’t want 
 to waste credits or time running other steps if the code can’t even compile.
 
-- Add jobs to the `.circleci/config.yml` file to build/compile both front-end and back-end code (one job for each). 
-- You should have separate jobs for front-end and back-end so that failure alerts are more descriptive.
-- Job should fail if code cannot be compiled (fail for the right reasons). We have provided an easy-to-fix compile error in the code to prove the jobs fail. Provide a screenshot of jobs that failed because of compile errors. **[SCREENSHOT01]**
-- Fix the compile error so that the pipeline can continue (see code-comment that guides you to the fix).
+- Add jobs to the `.circleci/config.yml` file to build/compile both front-end and 
+  back-end code (one job for each). 
+- You should have separate jobs for front-end and back-end so that failure alerts are 
+   more descriptive.
+- Job should fail if code cannot be compiled (fail for the right reasons). 
+  We have provided an easy-to-fix compile error in the code to prove the jobs fail. 
+  Provide a screenshot of jobs that failed because of compile errors. **[SCREENSHOT01]**
+- Fix the compile error so that the pipeline can continue (see code-comment that guides 
+   you to the fix).
 - A failed build should stop all future jobs.
 
 ##### 2. Test Phase
@@ -406,6 +413,7 @@ checklist item.
 
   - Save the new back-end url for later use (the front-end needs it).
   - New S3 Bucket for front-end.
+    Bucket name: `s3-uda-deploy`
   - Save the old bucket arn in case you need it later (for rollback).
 
 - Create an Ansible playbook to set up the back-end server.
@@ -422,6 +430,7 @@ checklist item.
 
 ### PM2
 $ pm2 start "npm start"
+frontend $ pm2 start "npm start" --name frontend
 
 backend $ pm2 start "npm start"
 [PM2] Starting /bin/bash in fork_mode (1 instance)
@@ -496,7 +505,7 @@ to catch up on his Netflix playlist.
 - Add a job to prepare the front-end code for distribution and deploy it. 
   - Add the back-end url that you saved earlier to the job's `API_URL` 
     environment variables. 
-    API_URL=ec2-34-204-95-58.compute-1.amazonaws.com
+    API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3030   # Or any port
 
   - Run another `npm run build` so that the back-end url gets baked into 
     the front-end. 
@@ -506,7 +515,7 @@ to catch up on his Netflix playlist.
 - Provide the public URL for your CloudFront distribution (aka, your front-end).
    **[URL03]**
 - Provide the public URL for your back-end server. **[URL04]**
-API_URL=ec2-34-204-95-58.compute-1.amazonaws.com
+API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3030
 
 ### Running the frontend: frontend $ npm start
 WARNING in EnvironmentPlugin - API_URL environment variable is undefined.
@@ -514,17 +523,30 @@ You can pass an object with default values to suppress this warning.
 See https://webpack.js.org/plugins/environment-plugin for example.
 
 frontend $ cat .env 
-API_URL=https://ec2-34-204-95-58.compute-1.amazonaws.com
+API_URL=https://ec2-34-204-95-58.compute-1.amazonaws.com:3030
 frontend $ 
 
 
 
 ###### 3. Smoke Test Phase
 
-All this automated deployment stuff is great, but what if there’s something we didn’t plan for that made it through to production? What if the UdaPeople website is now down due to a runtime bug that our unit tests didn’t catch? Users won’t be able to access their data! This same situation can happen with manual deployments, too. In a manual deployment situation, what’s the first thing you do after you finish deploying? You do a “smoke test” by going to the site and making sure you can still log in or navigate around. You might do a quick `curl` on the back-end to make sure it is responding. In an automated scenario, you can do the same thing through code. Let’s add a job to provide the UdaPeople team with a little sanity check.
+All this automated deployment stuff is great, but what if there’s something we didn’t plan 
+for that made it through to production? What if the UdaPeople website is now down due to a 
+runtime bug that our unit tests didn’t catch? Users won’t be able to access their data! 
+This same situation can happen with manual deployments, too. In a manual deployment situation, 
+what’s the first thing you do after you finish deploying? You do a “smoke test” by going to 
+the site and making sure you can still log in or navigate around. You might do a quick `curl` 
+on the back-end to make sure it is responding. In an automated scenario, you can do the same 
+thing through code. Let’s add a job to provide the UdaPeople team with a little sanity check.
 
-- Add a job to make a simple test on both front-end and back-end. Use the suggested tests below or come up with your own. 
+- Add a job to make a simple test on both front-end and back-end. 
+  Use the suggested tests below or come up with your own. 
   - Check `$API_URL/api/status` to make sure it returns a healthy response.
+
+On localhost:
+http://localhost:3030/api/status
+{"status":"ok","version":"1.0.0","environment":"local"}
+
 ```bash
 BACKEND_IP=$(aws ec2 describe-instances \
   --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
@@ -546,18 +568,28 @@ fi
 
 ###### 4. Rollback Phase
 
-Of course, we all hope every pipeline follows the “happy path.” But any experienced UdaPeople developer knows that it’s not always the case. If the smoke test fails, what should we do? The smart thing would be to hit CTRL-Z and undo all our changes. But is it really that easy? It will be once you build the next job!
+Of course, we all hope every pipeline follows the “happy path.” 
+But any experienced UdaPeople developer knows that it’s not always the case. 
+If the smoke test fails, what should we do? The smart thing would be to hit 
+CTRL-Z and undo all our changes. But is it really that easy? 
+It will be once you build the next job!
 
 - Only trigger rollback jobs if the smoke tests or any following jobs fail. 
-- Add a “[command](https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands)” that rolls back the last change:
+- Add a “[command](https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands)”
+  that rolls back the last change:
   - Destroy the current CloudFormation stack.
-  - Revert the last migration (IF a new migration was applied) on the database to that it goes back to the way it was before.
+  - Revert the last migration (IF a new migration was applied) on the database to that it goes
+    back to the way it was before.
 - No more jobs should run after this.
 - Provide a screenshot for a successful rollback after a failed smoke test. **[SCREENSHOT07]**
 
 ###### 5. Promotion Phase
 
-Assuming the smoke test came back clean, we should have a relatively high level of confidence that our deployment was a 99% success. Now’s time for the last 1%. UdaPeople uses the “Blue-Green Deployment Strategy” which means we deployed a second environment or stack next to our existing production stack. Now that we’re sure everything is a-okay, we can switch from blue to green. 
+Assuming the smoke test came back clean, we should have a relatively high level of confidence 
+that our deployment was a 99% success. Now’s time for the last 1%. UdaPeople uses the 
+“Blue-Green Deployment Strategy” which means we deployed a second environment or stack 
+next to our existing production stack. Now that we’re sure everything is a-okay, we can 
+switch from blue to green. 
 
 - Add a build that promotes our new front-end to production
   - Use a CloudFormation template to change the origin bucket to the new S3 bucket arn.
@@ -565,7 +597,11 @@ Assuming the smoke test came back clean, we should have a relatively high level 
 
 ###### 6. Cleanup Phase
 
-The UdaPeople finance department likes it when your AWS bills are more or less the same as last month OR trending downward. But, what if all this “Blue-Green” is leaving behind a trail of dead-end production environments? That upward trend probably means no Christmas bonus for the dev team. Let’s make sure everyone at UdaPeople has a Merry Christmas by adding a job to clean up old stacks.
+The UdaPeople finance department likes it when your AWS bills are more or less the same as 
+last month OR trending downward. But, what if all this “Blue-Green” is leaving behind a 
+trail of dead-end production environments? That upward trend probably means no Christmas 
+bonus for the dev team. Let’s make sure everyone at UdaPeople has a Merry Christmas by 
+adding a job to clean up old stacks.
 
 - Add a job that deletes the previous S3 bucket and EC2 instance. 
 - Provide a screenshot of the successful job. **[SCREENSHOT09]**

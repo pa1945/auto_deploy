@@ -103,7 +103,7 @@ export namespace EmployeeActions {
         showSuccessNotification(text.CHANGES_SAVED);
       } catch (error) {
         console.error(error);
-        showErrorNotification(text.GENERIC_ERROR_ADD);
+        showErrorNotification(text.GENERIC_ERROR);
         dispatch(addEmployeeFailure(error));
       }
     };

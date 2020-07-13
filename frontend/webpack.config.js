@@ -36,6 +36,7 @@ module.exports = {
       assets: path.resolve(__dirname, 'src/assets/'),
     },
   },
+  cache: false,  // PA 20-07-12
   module: {
     rules: [
       // .ts, .tsx
@@ -153,9 +154,9 @@ module.exports = {
     new Dotenv(),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development', // use 'development' unless process.env.NODE_ENV is defined
-      DEBUG: false,
+      DEBUG: true,		// false,
       API_URL: process.env.API_URL,
-      WP_HELP_EMAIL: 'info@acklenavenue.com',
+      WP_HELP_EMAIL: 'palves1945@gmail.com',	//  'info@acklenavenue.com',
     }),
     new WebpackCleanupPlugin(),
     new MiniCssExtractPlugin({
@@ -176,9 +177,17 @@ module.exports = {
     contentBase: sourcePath,
     hot: true,
     inline: true,
+    // host: '192.168.199.152', // Only works for this IP -- don't show DB entries-employees?
+                             //  Or try to fetch from the Redhat instance
+    host: '0.0.0.0',            // PA <<== to work with public IP and all IPs. Show employess when set http://localhost:3060/
+    // host: 'localhost',       // PA <<== to work with 'localhost' and show employees.
+    disableHostCheck: true,     // PA <<== to work with public IP
+    headers: { 'Access-Control-Allow-Origin': '*' },
     historyApiFallback: {
       disableDotRule: true,
     },
+    port: 3000,
+    // 3000: OK, 3060: OK-sometimes, 3050: NOT, 3040: NOT, 3020: NOT
     stats: 'minimal',
     clientLogLevel: 'warning',
   },

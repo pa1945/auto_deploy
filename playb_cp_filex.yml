@@ -1,0 +1,28 @@
+---
+#
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html#examples
+# https://www.decodingdevops.com/ansible-copy-module/
+#
+# Ansible Copy
+# https://www.javatpoint.com/ansible-copy
+#
+# Run:
+# cdond-c3-projectstarter $ ansible-playbook playb_cp_file_env.yml
+#
+- hosts: "*"
+  tasks:  
+  - name: Ansible copy backend .env file to a remote server  
+    copy:
+      src: backend/.env
+      dest: ~/uda-deploy/backend/.env
+      #force: yes
+  - name: Ansible copy frontend .env file to a remote server  
+    copy:
+      src: frontend/.env
+      dest: ~/uda-deploy/frontend/.env
+      #force: yes
+  - name: Ansible copy 'ecosystem.config.js' file to a remote server  
+    copy:
+      src: ecosystem.config.js
+      dest: ~/uda-deploy/
+      #force: yes

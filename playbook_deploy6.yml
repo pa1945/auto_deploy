@@ -1,0 +1,4 @@
+- name: misc task on ubuntu 18.04 instance
+  hosts: "*"
+  tasks:
+    - debug: var=ansible_host

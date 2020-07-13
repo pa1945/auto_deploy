@@ -30,14 +30,7 @@
 
 ## Installation
 
-1st, login with NPM using `npm login`. 
-That way you can access the private packages.
-
-https://www.npmjs.com/
-login: pedroalvesfi
-pass: Koafcechbajyo91
-Email: (this IS public) palves1945@gmail.com
-
+1st, login with NPM using `npm login`. That way you can access the private packages.
 
 2nd...
 
@@ -50,10 +43,6 @@ $ npm install
 ```bash
 # development
 $ npm run start
-
-PA:
-Error to edit in file:
-joe  src/modules/domain/employees/entities/employee.entity.ts 
 
 # watch mode
 $ npm run start:dev
@@ -79,27 +68,9 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-### Using pm2 # PA
-
-backend $ pm2 start "npm start"
-[PM2] Starting /bin/bash in fork_mode (1 instance)
-[PM2] Done.
-┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
-│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
-├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
-│ 1  │ node               │ fork     │ 0    │ online    │ 0%       │ 32.5mb   │
-│ 0  │ npm                │ fork     │ 299  │ online    │ 0%       │ 50.4mb   │
-│ 2  │ npm start          │ fork     │ 0    │ online    │ 0%       │ 8.4mb    │
-└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
-backend $ 
-
-
 ## Support
 
-Nest is an MIT-licensed open source project. 
-It can grow thanks to the sponsors and support by the amazing backers. 
-If you'd like to join them, please 
-[read more here](https://docs.nestjs.com/support).
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 ## Stay in touch
 
@@ -113,19 +84,13 @@ Nest is [MIT licensed](LICENSE).
 
 ## Status/Healthcheck Endpoint
 
-This API comes with a simple endpoint that provides it's status. 
-If the API is not working, neither will the endpoint. 
-This can be useful for load balancers and other applications that 
-periodically check on the availability of a service.
+This API comes with a simple endpoint that provides it's status. If the API is not working, neither will the endpoint. This can be useful for load balancers and other applications that periodically check on the availability of a service.
 
 `GET /status` => `{ status: "ok" }`
 
 ## Logging with Loggly
 
-We are using Loggly with Winston to track log messages remotely. 
-If you want to send your logs to Loggly, you should configure the 
-following variables in your environment (either with `.env` 
-or in your operating system):
+We are using Loggly with Winston to track log messages remotely. If you want to send your logs to Loggly, you should configure the following variables in your environment (either with `.env` or in your operating system):
 
 ```
 LOGGLY_SUBDOMAIN=yoursubdomain
@@ -137,17 +102,14 @@ You can obtain a free account from Loggly to test.
 
 ## Logging with Slack
 
-You can also log things like errors to Slack to get faster notifications. 
-If you want to send your logs to Slack, you should configure the following 
-variables in your environment (either with `.env` or in your operating system):
+You can also log things like errors to Slack to get faster notifications. If you want to send your logs to Slack, you should configure the following variables in your environment (either with `.env` or in your operating system):
 
 ```
 SLACK_LOGGER_WEBHOOK=some webhook from slack
 SLACK_LOGGER_CHANNEL=channelName
 ```
 
-To further customize the log messages, you can also include these optional 
-env vars:
+To further customize the log messages, you can also include these optional env vars:
 
 ```
 SLACK_LOGGER_USERNAME=Sync Errors
@@ -157,8 +119,7 @@ SLACK_LOGGER_LOG_LEVEL=error
 
 ## Migrations
 
-NOTE: Be sure you have your environment variables set up. 
-See `DB Setup` section.
+NOTE: Be sure you have your environment variables set up. See `DB Setup` section.
 
 NestJS uses TypeORM to create, generate, run migrations.
 To apply pending migrations you just need to run:
@@ -172,7 +133,6 @@ If you have modified/created any entity you can generate a migration from it:
 ```bash
 npm run migrations:generate -- --n <MigrationName>
 ```
-backend $ npm run migrations	# <== Worked
 
 To revert the last applied migration:
 
@@ -182,9 +142,7 @@ npm run migrations:revert
 
 ## DB Setup
 
-You need to add some environment variables to your system in order to 
-run migrations or the backend. For convenience, you can also create a 
-`.env` file to represent your environment. Here's the format:
+You need to add some environment variables to your system in order to run migrations or the backend. For convenience, you can also create a `.env` file to represent your environment. Here's the format:
 
 ```
 TYPEORM_CONNECTION=postgres
@@ -196,49 +154,14 @@ TYPEORM_DATABASE=glee2
 TYPEORM_MIGRATIONS=./src/migrations/*.ts
 TYPEORM_ENTITIES=./src/modules/**/*.entity.ts
 ```
-**Note:** These configurations are handled by:
-backend $ less  src/modules/config/config.service.ts 
-
-After running:
-backend $ npm run migrations
-
-
-backend $ psql --host=localhost --port=5532 --username=postgres \
- --password --dbname=glee
-
-
-glee=# \dt
-Did not find any relations.
-glee=# \dt
-                 List of relations
- Schema |          Name          | Type  |  Owner   
---------+------------------------+-------+----------
- public | employee               | table | postgres
- public | migrations             | table | postgres
- public | order                  | table | postgres
- public | order_products_product | table | postgres
- public | product                | table | postgres
-(5 rows)
-
-glee=# 
 
 ## Migrations for CI/CD Review Apps
 
-It would be best to spin up a database in RDS while we are spinning up a 
-new environment in EB. 
-BUT, it takes around 10 minutes to spin up a new DB in RDS. 
-It's also more work to script the new db that we don't have time for. 
-So, as a stop-gap, you can manually migrate a shared database ("dev") 
-from the CI/CD screen in Gitlab. This will trigger a build step that 
-runs "revert" and "run" to down and up the migrations. 
-You must make sure that you have all the necessary db-related env vars in 
-Gitlab so that this will work (see "DB Setup" section).
+It would be best to spin up a database in RDS while we are spinning up a new environment in EB. BUT, it takes around 10 minutes to spin up a new DB in RDS. It's also more work to script the new db that we don't have time for. So, as a stop-gap, you can manually migrate a shared database ("dev") from the CI/CD screen in Gitlab. This will trigger a build step that runs "revert" and "run" to down and up the migrations. You must make sure that you have all the necessary db-related env vars in Gitlab so that this will work (see "DB Setup" section).
 
 ## Authentication with Auth0
 
-Authentication has been applied to all endpoints, so it's not necessary 
-to specify which endpoints require auth. For authentication to work, 
-you will need some env vars, for example:
+Authentication has been applied to all endpoints, so it's not necessary to specify which endpoints require auth. For authentication to work, you will need some env vars, for example:
 
 ```
 AUTH0_CLIENT_SECRET= <id placeholder, check trello card on OIW board in resources lane>
@@ -258,9 +181,6 @@ curl --request POST \
   --data '{"client_id":"qrzt4jjhdmJHSdg5Ca6gVsdtY6x1xc2G","client_secret":"Xm6vhFnMv2BonJ8lhxsbCAZtIe5KjqqyXKNut5I5Spt4AQ3ms7mYTmwQ7JzIIwdt","audience":"http://localhost:3030","grant_type":"client_credentials"}'
 ```
 
-(This only works with an "API" in Auth0. It will not work with an 
-"Application" in Auth0 because they disable `client_credentials` 
-grants by default and we have not found a way to enable that.)
+(This only works with an "API" in Auth0. It will not work with an "Application" in Auth0 because they disable `client_credentials` grants by default and we have not found a way to enable that.)
 
-To switch your backend to use the "Application" in Auth0, you should simply 
-change the clientId, clientSecret, and audience in your environment variables.
+To switch your backend to use the "Application" in Auth0, you should simply change the clientId, clientSecret, and audience in your environment variables.

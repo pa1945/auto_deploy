@@ -1,0 +1,13 @@
+---
+#
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html#examples
+# https://www.decodingdevops.com/ansible-copy-module/
+# Run:
+# cdond-c3-projectstarter $ ansible-playbook playb_cp_dir.yml
+#
+- hosts: "*"
+  tasks:  
+  - name: Ansible copy file to a remote server  
+    copy:
+      src: backend
+      dest: backend

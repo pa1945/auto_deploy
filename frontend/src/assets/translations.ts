@@ -11,8 +11,7 @@ export enum Translation {
   CHANGES_SAVED = 'All changes have been saved successfully!',
   EDIT_EMPLOYEE_FIELD_SUCCESS = 'Employee field has been saved.',
   EDIT_EMPLOYEE_FIELD_ERROR = 'There was an error updating the field.',
-  GENERIC_ERROR = 'Oops!, something went wrong.<<==',
-  GENERIC_ERROR_ADD = 'Error Adding employee.<<==',
+  GENERIC_ERROR = 'Oops!, something went wrong.',
   BAD_REQUEST_ERROR = 'Oops!, something went wrong, please check your data.',
   SERVER_ERROR = 'Oops!, something went wrong, we could not establish a connection to the server.'
 };
