@@ -536,6 +536,7 @@ http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees
   - Save the old bucket arn in case you need it later (for rollback).
 
 ### Sync
+```
 $ aws s3 sync . s3://s3-uda-deploy --acl public-read
 
 H:frontend $ aws s3 sync . s3://s3-uda-deploy --acl public-read
@@ -560,8 +561,7 @@ H:frontend $ aws s3 ls s3-uda-deploy
 2020-07-13 18:36:27       5183 webpack.config-orig-js
 2020-07-13 18:36:27       5839 webpack.config.js
 H:frontend $ 
-
-
+```
 
 - Create an Ansible playbook to set up the back-end server.
   - Install Python, if needed.
