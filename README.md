@@ -899,5 +899,17 @@ Prometheus Udacity server:
 Public DNS (IPv4): ec2-54-226-141-209.compute-1.amazonaws.com
 IPv4 Public IP: 54.226.141.209
 
-https://prometheus.server.com/service-discovery
-
+Ubuntu1:prometheus $ netstat -tunlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::3030                 :::*                    LISTEN      1143/node           
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 :::9090                 :::*                    LISTEN      -                   
+tcp6       0      0 :::9100                 :::*                    LISTEN      -                   
+udp        0      0 127.0.0.53:53           0.0.0.0:*                           -                   
+udp        0      0 172.31.62.95:68         0.0.0.0:*                           -                   
+Ubuntu1:prometheus $ 
