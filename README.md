@@ -89,8 +89,9 @@ docker-compose up
 
 ### To stop
 $ docker ps --all|grep django
-bc8c666ca548        pedroalvesfi/django   "init.sh"   
+bc8c666ca548        p.../django   "init.sh"   
 $ docker container stop bc8c666ca548             
+
 ---
 
 
@@ -450,7 +451,8 @@ https://s3-uda-deploy.s3.us-east-1.amazonaws.com/README.md
 
 Making Everything in the S3 Bucket Publicly Accessible:
 Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
------------------ Used in Udacity deploy super powers
+
+### Used in Udacity deploy super powers
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -467,7 +469,9 @@ Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
         }
     ]
 }
-----------
+
+---
+
 {
     "Version": "2008-10-17",
     "Statement": [
@@ -482,7 +486,9 @@ Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
         }
     ]
 }
---------
+
+---
+
 {
     "Version": "2012-10-17",
     "Id": "someID",
@@ -497,7 +503,9 @@ Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
         }
     ]
 }
---------
+
+---
+
 {"Version": "2008-10-17",
 "Statement": [{"Sid": "AllowPublicRead",
 "Effect": "Allow",
@@ -507,7 +515,9 @@ Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
 "Action": "s3:GetObject",
 "Resource": "arn:aws:s3:::s3-uda-deploy/*"
 }]}
-------------
+
+---
+
 How to Allow Public Access to an Amazon S3 Bucket & Find S3 URLs
 https://havecamerawilltravel.com/photographer/how-allow-public-access-amazon-bucket/
 
@@ -601,7 +611,7 @@ $ sudo apt-add-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 
 ### Ansible hosts
--------------------------------
+
 ```
 $ cat  /etc/ansible/hosts
 
@@ -628,8 +638,6 @@ ec2-54-226-141-209.compute-1.amazonaws.com
 ansible_connection=ssh 
 ansible_user=ubuntu
 ```
------------------------------------
-
 
 ---
 
@@ -647,9 +655,7 @@ with a built-in Load Balancer.
 QUICK START
 https://pm2.keymetrics.io/docs/usage/quick-start/
 
-
---------------
-
+---
 
 ###### 2. Deploy Phase
 

@@ -1,0 +1,38 @@
+20-07-14
+========
+
+A text file named urls.txt including:
+
+Public Url to GitHub repository (not private) [URL01]
+https://github.com/pa1945/auto_deploy
+
+
+Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
+http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees
+
+
+Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
+http://dlikkhw73vt34.cloudfront.net/#/employees
+
+
+Extra:
+Public URLs to deployed application front-end in EC2 (RedHat)
+http://ec2-34-204-95-58.compute-1.amazonaws.com:3000/#/employees
+Use Firefox, Opera, Safari, IE.
+Some issues using Google Chrome.
+SSH:
+ssh -i "uda-deploy-ec2.pem" ec2-user@ec2-34-204-95-58.compute-1.amazonaws.com
+
+
+Public URLs to deployed application back-end in EC2 [URL04]
+http://ec2-100-25-117-115.compute-1.amazonaws.com:3030/api/status
+Ubuntu 20.
+SSH:
+ssh -i "uda-deploy-ec2.pem" ubuntu@ec2-100-25-117-115.compute-1.amazonaws.com
+
+
+Public URL to your Prometheus Server [URL05]
+http://ec2-54-226-141-209.compute-1.amazonaws.com:9090/graph
+Ubuntu 20.
+SSH:
+ssh -i "uda-deploy-ec2.pem" ubuntu@ec2-54-226-141-209.compute-1.amazonaws.com
