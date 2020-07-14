@@ -31,7 +31,6 @@ logfile
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-node_modules
 venv/
 .venv/
 .env
@@ -56,7 +55,6 @@ npm-debug.log*
 .versions/
 coverage/
 www/
-node_modules/
 tmp/
 temp/
 platforms/
@@ -68,7 +66,6 @@ $RECYCLE.BIN/
 .DS_Store
 Thumbs.db
 UserInterfaceState.xcuserstate
-node_modules
 #.env*
 dist
 package-lock.json

@@ -7,7 +7,8 @@ https://github.com/udacity/cdond-c3-projectstarter
 
 In this project, you will prove your mastery of the following learning objectives:
 
-- Explain the fundamentals and benefits of CI/CD to achieve, build, and deploy automation for cloud-based software products.
+- Explain the fundamentals and benefits of CI/CD to achieve, build, 
+   and deploy automation for cloud-based software products.
 - Utilize Deployment Strategies to design and build CI/CD pipelines that support Continuous Delivery processes.
 - Utilize a configuration management tool to accomplish deployment to cloud-based servers.
 - Surface critical server errors for diagnosis using centralized structured logging.
@@ -186,6 +187,7 @@ $ git add .
 $ git commit -m "My first commit jul 1 - 09:30"
 $ git push <to-my-remote-git> <master>
 My repo:
+
 https://github.com/pa1945/auto_deploy.git
 
 
@@ -283,7 +285,8 @@ npm audit fix --audit-level=critical --force
 ##### 4. Alerts
 
 When a build fails for any reason, the UdaPeople dev team needs to know about it.
-That way they can jump in and save the day (the day that they almost ruined by checking in bad code… but we digress). We’re going to add an alert so that botched builds raise a nice wavy red flag.
+That way they can jump in and save the day (the day that they almost ruined by checking in bad code… but we digress).
+We’re going to add an alert so that botched builds raise a nice wavy red flag.
 
 - Integrate Slack, email or another communication tool to receive alerts 
   when jobs fail. 
@@ -305,6 +308,9 @@ That way they can jump in and save the day (the day that they almost ruined by c
      https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#having-ec2-create-your-key-pair 
      (Option 1: Create a key pair using Amazon EC2)
 
+Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/
+NETWORK & SECURITY > Key Pairs > Choose Create key pair.
+
 Adding an SSH Key to CircleCI
 https://circleci.com/docs/2.0/add-ssh-key/#overview
 **Note:** Use PEM format
@@ -313,24 +319,30 @@ CircleCI also will not accept OpenSSH’s default file format.
 Use `ssh-keygen -m pem` if you are using OpenSSH to generate your key.
 
 Name                   Fingerprint                                          ID
-uda deploy	ff:zz:..:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:6...   key-..f18a32a....
+'uda deploy'	ff:zz:..:16:e8:9e:b9:68:01:90:a5:e6:a7:f8:0f:6...   key-..f18a32a....
 
 2. Create IAM user for programmatic access only and copy the id and access keys.
 Tutorial: 
+
 Create an IAM User
 https://serverless-stack.com/chapters/create-an-iam-user.html
+Identity and Access Management (IAM) > Users > Add user > Access type: 'Programmatic access'  <<<===
+> 'Attach existing policies directly' > 'AdministratorAccess'
 
 User           'Access key ID'              'Secret access key'
-uda-deploy XXIA5JIMLSYYTSDZOG..        xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tof...
+uda-deploy2 XXIA5JIMLSYYTSDZOG..        xxvlzrvFelOv+WPHOTv7cZ/B+Eijp/j4tof...
 
 3. Add a PostgreSQL database in RDS and take note of the connection details 
    (hostname, username, password).
  - Tutorial: 
    https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/
 
+RDS > Create database > PostgreSQL > Free tier
+
+
 DB instance identifier: db-deploy
 Master username: admin-deploy
-Master password: Mas1er-pass2026
+Master password: Master-xxx  # <<== See file with correct pass.
 DB instance size: 1 vCPU, 1 GiB
 Enable storage autoscaling - UNCHECKED <<== To keep Free plan.
 Database port: 5432
@@ -338,7 +350,7 @@ Database authentication options: Password authentication
 
 hostname=db-deploy1.cd65hkgojqit....
 username=admin_deploy
-password=Mas1er-pass2020
+password=Master-pasxxx
 
 $ psql --host=db-deploy1.cd65hkg... \
  --port=5432  --username=admin_deploy \
@@ -408,13 +420,138 @@ checklist item.
    CloudFormation templates. Again, provide a screenshot demonstrating 
    an appropriate job failure (failing for the right reasons). **[SCREENSHOT05]**
   - New EC2 Instance for back-end.
-    Public DNS: ec2-34-204-95-58.compute-1.amazonaws.com
+    Public DNS: ec2-34-204-95-58.compute-1.amazonaws.com         # RedHat
     IPv4 Public IP: 34.204.95.58
 
   - Save the new back-end url for later use (the front-end needs it).
   - New S3 Bucket for front-end.
     Bucket name: `s3-uda-deploy`
+
+Working with Amazon S3 Buckets
+https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html
+
+An S3 bucket can be accessed through its URL. The URL format of a bucket is either of two options: 
+http://s3.amazonaws.com/[bucket_name]/  or, http://[bucket_name].s3.amazonaws.com/
+
+Amazon S3 virtual hosted style URLs follow the format shown below.
+https://bucket-name.s3.Region.amazonaws.com/key name
+
+In Amazon S3, path-style URLs follow the format shown below.
+https://s3.Region.amazonaws.com/bucket-name/key name
+
+In Amazon S3, path-style URLs follow the format shown below.
+https://s3.Region.amazonaws.com/bucket-name/key name
+
+Using:
+http://s3.amazonaws.com/s3-uda-deploy/  or, 
+http://s3-uda-deploy.s3.amazonaws.com/
+
+https://s3-uda-deploy.s3.us-east-1.amazonaws.com/README.md
+
+Making Everything in the S3 Bucket Publicly Accessible:
+Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
+----------------- Used in Udacity deploy super powers
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::s3-uda-deploy/*"
+            ]
+        }
+    ]
+}
+----------
+{
+    "Version": "2008-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowPublicRead",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::s3-uda-deploy/*"
+        }
+    ]
+}
+--------
+{
+    "Version": "2012-10-17",
+    "Id": "someID",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::123456789:user/iam_user"  // <<== allow this iam_user to make changes to the bucket.
+            },
+            "Action": "s3:*",
+            "Resource": "arn:aws:s3:::bucket-name"
+        }
+    ]
+}
+--------
+{"Version": "2008-10-17",
+"Statement": [{"Sid": "AllowPublicRead",
+"Effect": "Allow",
+"Principal": {
+"AWS": "*"
+},
+"Action": "s3:GetObject",
+"Resource": "arn:aws:s3:::s3-uda-deploy/*"
+}]}
+------------
+How to Allow Public Access to an Amazon S3 Bucket & Find S3 URLs
+https://havecamerawilltravel.com/photographer/how-allow-public-access-amazon-bucket/
+
+Amazon S3 > s3-uda-deploy > Properties > 'Static website hosting' > 'Use this bucket to host a website'
+> Index document : index.html / main.tsx
+
+S3 Endpoint:
+http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com
+https://s3-uda-deploy.s3.us-east-1.amazonaws.com/
+https://s3-uda-deploy.s3.us-east-1.amazonaws.com/index.html
+
+### udapeople site
+http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees
+
+
   - Save the old bucket arn in case you need it later (for rollback).
+
+### Sync
+$ aws s3 sync . s3://s3-uda-deploy --acl public-read
+
+H:frontend $ aws s3 sync . s3://s3-uda-deploy --acl public-read
+H:frontend $ aws s3 ls s3-uda-deploy
+                           PRE .vercel/
+                           PRE node_modules/
+                           PRE src/
+                           PRE types/
+2020-07-13 18:05:05        993 .env
+2020-07-13 18:04:45          7 .gitignore
+2020-07-13 18:05:10         55 .prettierrc
+2020-07-13 18:04:52       3296 README.md
+2020-07-13 18:36:23       5239 package-200711-json
+2020-07-13 18:36:23     623776 package-lock.json
+2020-07-13 18:36:23       4788 package-orig-json
+2020-07-13 18:36:23       5217 package.json
+2020-07-13 18:36:27        603 stryker.conf.js
+2020-07-13 18:36:27        595 tsconfig.json
+2020-07-13 18:36:27        862 tslint.json
+2020-07-13 18:36:27        620 wallaby.config.js
+2020-07-13 18:36:27       5632 webpack.config-200711-js
+2020-07-13 18:36:27       5183 webpack.config-orig-js
+2020-07-13 18:36:27       5839 webpack.config.js
+H:frontend $ 
+
+
 
 - Create an Ansible playbook to set up the back-end server.
   - Install Python, if needed.
@@ -463,6 +600,37 @@ $ sudo apt install software-properties-common
 $ sudo apt-add-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 
+### Ansible hosts
+-------------------------------
+```
+$ cat  /etc/ansible/hosts
+
+[aws_rh]
+ec2-34-204-95-58.compute-1.amazonaws.com ansible_user=ec2-user
+
+[aws_rh:vars]
+ansible_connection=ssh 
+ansible_user=ec2-user 
+
+[aws_ubuntu]
+ec2-54-226-141-209.compute-1.amazonaws.com
+
+[aws_ubuntu:vars]
+ansible_connection=ssh 
+ansible_user=ubuntu
+
+
+[aws_promet]
+ec2-100-25-117-115.compute-1.amazonaws.com
+ec2-54-226-141-209.compute-1.amazonaws.com
+
+[aws_promet:vars]
+ansible_connection=ssh 
+ansible_user=ubuntu
+```
+-----------------------------------
+
+
 ---
 
 ADVANCED, PRODUCTION PROCESS MANAGER FOR NODE.JS
@@ -505,7 +673,17 @@ to catch up on his Netflix playlist.
 - Add a job to prepare the front-end code for distribution and deploy it. 
   - Add the back-end url that you saved earlier to the job's `API_URL` 
     environment variables. 
-    API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3030   # Or any port
+    API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3000   # This is front end
+
+#Frontend -  RedHat
+34.204.95.58   uda-deploy1   ec2-34-204-95-58.compute-1.amazonaws.com
+
+#Backend Ubuntu 20.
+100.25.117.115 uda-deploy3   ec2-100-25-117-115.compute-1.amazonaws.com
+
+# Prometheus
+54.226.141.209 uda-prometheus ec2-54-226-141-209.compute-1.amazonaws.com
+
 
   - Run another `npm run build` so that the back-end url gets baked into 
     the front-end. 
@@ -514,18 +692,40 @@ to catch up on his Netflix playlist.
     distribution to your new bucket.
 - Provide the public URL for your CloudFront distribution (aka, your front-end).
    **[URL03]**
+
+### CloudFront Distributions
+Web - ELP62178K8WGU - dlikkhw73vt34.cloudfront.net - s3-uda-deploy.s3-website-us-east-1.amazonaws.com
+Domain Name: dlikkhw73vt34.cloudfront.net
+Price Class: Use Only U.S., Canada and Europe  #  <<==
+
+http://dlikkhw73vt34.cloudfront.net/#/employees
+
+
 - Provide the public URL for your back-end server. **[URL04]**
-API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3030
+API_URL=http://ec2-100-25-117-115.compute-1.amazonaws.com:3030
+
+### ATTENTION: NOT trailing slash '/'
+Why is Google Chrome appending a forward slash to my flask url when there is none?
+https://stackoverflow.com/questions/57013906/why-is-google-chrome-appending-a-forward-slash-to-my-flask-url-when-there-is-non
+Please notice that this strange behavior is only noticed on Chrome browser. 
+It works fine on Opera, Firefox, and EI.
+
+I got this issue and spent a couple of day to find out.
+So, the frontend (RedHat) and the backend (Ubuntu) are working fine.
+You may create employees, edit, deactivate.
+Any issue, switch the browser to Firefox or Safari.
+I tested with Firefox and Opera, not Safari.
+
 
 ### Running the frontend: frontend $ npm start
 WARNING in EnvironmentPlugin - API_URL environment variable is undefined.
 You can pass an object with default values to suppress this warning.
 See https://webpack.js.org/plugins/environment-plugin for example.
 
+API_URL to the backend:
 frontend $ cat .env 
-API_URL=https://ec2-34-204-95-58.compute-1.amazonaws.com:3030
+API_URL=http://ec2-100-25-117-115.compute-1.amazonaws.com:3030
 frontend $ 
-
 
 
 ###### 3. Smoke Test Phase
@@ -552,11 +752,15 @@ BACKEND_IP=$(aws ec2 describe-instances \
   --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
   --query 'Reservations[*].Instances[*].PublicIpAddress' \
   --output text)
+
 curl "http://${BACKEND_IP}:3030/api/status"
+
 ```
   - Check the front-end to make sure it includes a word or two that proves it is working properly.
 ```bash
-URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
+URL="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
+
 if curl -s ${URL} | grep "Welcome"
 then
   return 1
@@ -564,7 +768,10 @@ else
   return 0
 fi
 ```
+
 - Provide a screenshot for appropriate failure for the smoke test job. **[SCREENSHOT06]**
+
+### The backend and the frontend are working using free tier. <<<==============
 
 ###### 4. Rollback Phase
 
@@ -608,38 +815,51 @@ adding a job to clean up old stacks.
 
 ###### Other Considerations
 
-- Make sure you only run deployment-related jobs on commits to the `master` branch. Provide screenshot of a build triggered by a non-master commit. It should only run the job prior to deployment. [SCREENSHOT10]
+- Make sure you only run deployment-related jobs on commits to the `master` branch. 
+  Provide screenshot of a build triggered by a non-master commit. 
+  It should only run the job prior to deployment. [SCREENSHOT10]
 - Provide public URLs to deployed application front-end [URL04] and back-end [URL05]
 
 ### Turn Errors into Sirens
 
 #### Section 4 - Surface Critical Server Errors for Diagnosis Using Centralized Logging
 
-Errors and unhealthy states are important to know about, wouldn’t you say? But, too often, server errors are silenced by hasty reboots or simply never having an outlet in the first place. If a server has an error in a forest, but no one is there to hear it, did it actually happen? Why is the server in the forest in the first place? 
-UdaPeople chose Prometheus as a monitoring solution since it is open-source and versatile. Once configured properly, Prometheus will turn our server’s errors into sirens that no one can ignore.  
+Errors and unhealthy states are important to know about, wouldn’t you say? 
+But, too often, server errors are silenced by hasty reboots or simply never having an outlet in 
+the first place. If a server has an error in a forest, but no one is there to hear it, 
+did it actually happen? Why is the server in the forest in the first place? 
+UdaPeople chose Prometheus as a monitoring solution since it is open-source and versatile. 
+Once configured properly, Prometheus will turn our server’s errors into sirens that no one can ignore.  
 
 ##### Setup
 - Create an EC2 instance and SSH into it.
-- Set up Prometheus Server on EC2 following [these instructions](https://devopscube.com/install-configure-prometheus-linux/).
-- Configure Prometheus for AWS Service Discovery following [these instructions](https://kbild.ch/blog/2019-02-18-awsprometheus/#_prometheus_aws_service_discovery).
+- Set up Prometheus Server on EC2 following 
+  [these instructions](https://devopscube.com/install-configure-prometheus-linux/).
+- Configure Prometheus for AWS Service Discovery following 
+  [these instructions](https://kbild.ch/blog/2019-02-18-awsprometheus/#_prometheus_aws_service_discovery).
 
 ##### To Do
 
 ###### 1. Setup Back-End Monitoring
 
-In order for server instances to speak to Prometheus, we need to install an “exporter” in each one.  Create a job that uses Ansible to go into the EC2 instance and install the exporter.
+In order for server instances to speak to Prometheus, we need to install an “exporter” in each one.  
+Create a job that uses Ansible to go into the EC2 instance and install the exporter.
 
 - Add a section to your back-end configuration job to install the `node_exporter` for Prometheus monitoring.
 - After deploy, ensure your back-end is being discovered by the Prometheus Server.
-- Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, and CPU usage. **[SCREENSHOT11]**
+- Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, 
+   and CPU usage. **[SCREENSHOT11]**
 - Provide a public URL to your Prometheus Server. **[URL06]**
 
 ##### 2. Setup Alerts
 
-Now that Prometheus and our EC2 instance have an open line of communication, we need to set up some alerts. The UdaPeople dev team loves their chat tool and wants to receive an alert in chat when the server starts running out of memory or disk space. Set up a job to make that dream a reality.
+Now that Prometheus and our EC2 instance have an open line of communication, we need to set up some alerts. 
+The UdaPeople dev team loves their chat tool and wants to receive an alert in chat when the server starts 
+running out of memory or disk space. Set up a job to make that dream a reality.
 
 - SSH into your Prometheus Server
-- Install and configure AlertManager by following [these instructions](https://medium.com/@abhishekbhardwaj510/alertmanager-integration-in-prometheus-197e03bfabdf).
+- Install and configure AlertManager by following 
+  [these instructions](https://medium.com/@abhishekbhardwaj510/alertmanager-integration-in-prometheus-197e03bfabdf).
 - You can decide if you will use Slack, email, or another messaging service.
 - Set up an alert for low memory or some condition you can control to intentionally cause an alert.
 - Provide a screenshot of an alert that was sent by Prometheus. **[SCREENSHOT12]**
@@ -652,7 +872,9 @@ For your submission, please zip up all of the 12 screenshots, and the text or pr
 - Public URLs to deployed application front-end [URL04] and back-end [URL05]
 - Public URL to your Prometheus Server. [URL06]
 
-Before you submit your project, please check your work against the project rubric. If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all the requirements. 
+Before you submit your project, please check your work against the project rubric. 
+If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all 
+the requirements. 
 
 ## Built With
 
@@ -666,3 +888,10 @@ Before you submit your project, please check your work against the project rubri
 ## License
 
 [License](LICENSE.md)
+
+Prometheus Udacity server:
+Public DNS (IPv4): ec2-54-226-141-209.compute-1.amazonaws.com
+IPv4 Public IP: 54.226.141.209
+
+https://prometheus.server.com/service-discovery
+
