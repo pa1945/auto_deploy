@@ -17,14 +17,11 @@ jobs:
 workflows:
   matrix-tests:
     jobs:
-      - node/test:
+      - node/test frontend:
           app-dir: frontend
-          version: 13.11.0
-      - node/test:
-          app-dir: frontend
-          version: 12.16.0
-      - node/test:
-          app-dir: frontend
+          version: 10.15.2
+      - node/test backend:
+          app-dir: backend
           version: 10.15.2
       - hello-world
 
