@@ -3,6 +3,17 @@ orbs:
 
 version: 2.1
 
+jobs:
+  hello-world:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Say Hello
+          command: |
+            echo "uda-deploy: Hello World"
+
 workflows:
   matrix-tests:
     jobs:
@@ -12,3 +23,5 @@ workflows:
           version: 12.16.0
       - node/test:
           version: 10.15.2
+      - hello-world
+
