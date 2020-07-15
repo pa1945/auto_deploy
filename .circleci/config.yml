@@ -20,7 +20,7 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
-          app-dir: backend
+          # app-dir: backend
           steps:
             - run: npm install
       - run: npm run test
