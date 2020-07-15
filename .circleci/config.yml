@@ -20,6 +20,7 @@ jobs:
     steps:
       - checkout
       - node/with-cache:
+          app-dir: backend
           steps:
             - run: npm install
       - run: npm run test
@@ -30,4 +31,3 @@ workflows:
     jobs:
       - hello-world
       - build
-          app-dir: backend
