@@ -1,7 +1,7 @@
-orbs:
-  node: circleci/node@2.0.2
-
 version: 2.1
+
+orbs:
+  node: circleci/node@1.1
 
 jobs:
   hello-world:
@@ -13,15 +13,21 @@ jobs:
           name: Say Hello
           command: |
             echo "uda-deploy: Hello World"
+  build:
+    executor:
+      name: node/default
+      tag: '10.4'
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: npm install
+      - run: npm run test
+
 
 workflows:
-  matrix-tests:
+  default:
     jobs:
-      - node/test:
-          app-dir: frontend
-          version: 10.15.2
-      - node/test:
-          app-dir: backend
-          version: 10.15.2
       - hello-world
-
+      - build
+          app-dir: backend
