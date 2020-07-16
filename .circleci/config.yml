@@ -7,17 +7,21 @@ jobs:
     steps:
       - checkout
       - run:
-          name: cd folder/dir
+          name: cd folder/dir frontend, ls -las
           command: |
-            cd frontend
+            cd frontend && ls -als
       - run:
-          name: List folder/dir
+          name: List folder/dir where we are
           command: |
             ls -las
       - run:
-          name: Say Hello
+          name: cd frontend and run lint
           command: |
-            echo "Hello World"
+            cd frontend; npm run lint
+      - run:
+          name: Say Hello to Udapeople
+          command: |
+            echo "Udapeople: Hello World"
 
 workflows:
   default:
