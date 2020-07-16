@@ -86,6 +86,8 @@ jobs:
           name: cd folder/dir backend, ls -las
           command: |
             cd backend && ls -als
+            npm -v && sudo npm install npm -g && npm -v
+
       - run:
           name: List folder/dir where we are
           command: |
