@@ -61,13 +61,17 @@ jobs:
           command: |
             ls -las
       - run:
-          name: cd frontend, install 'npm i' and run 'npm audit'
+          name: cd frontend, install 'npm i'
           command: |
-            cd frontend; npm install ; npm audit --audit-level=critical
+            cd frontend; npm install 
       - run:
-          name: cd frontend, install 'npm i' and run 'npm start'
+          name: cd frontend,  and run 'npm audit'
           command: |
-            cd frontend; npm install ; npm run start
+            cd frontend; npm audit --audit-level=critical
+      - run:
+          name: cd frontend, and run 'npm start'
+          command: |
+            cd frontend; npm run start
 
   run-backend:
     docker:
@@ -83,13 +87,17 @@ jobs:
           command: |
             ls -las
       - run:
-          name: cd backend, install 'npm i' and run 'npm audit'
+          name: cd backend, install 'npm i'
           command: |
-            cd backend; npm install ; npm audit --audit-level=critical
+            cd backend; npm install
       - run:
-          name: cd backend, install 'npm i' and run 'npm start'
+          name: cd backend,  run 'npm audit'
           command: |
-            cd backend; npm install ; npm run start
+            cd backend; npm audit --audit-level=critical
+      - run:
+          name: cd backend, run 'npm start'
+          command: |
+            cd backend;  npm run start
 
 
 workflows:
