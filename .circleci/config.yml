@@ -1,19 +1,22 @@
 ---
+#https://github.com/harentius/attraction-wars-server/blob/master/.circleci/config.yml
 
 version: 2
 jobs:
   lint:
-    working_directory: ~/frontend
+    # working_directory: ~/frontend
     docker:
       - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
+          from: frontend
           name: install-npm
           command: 'sudo npm install -g npm@latest'
       - restore_cache:    # special step to restore the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
+          # from: frontend
           name: install-dependencies
           command: npm install
       - save_cache:        #  special step to save the dependency cache
