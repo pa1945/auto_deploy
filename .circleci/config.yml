@@ -69,7 +69,9 @@ jobs:
       - run:
           name: cd frontend,  and run 'npm audit'
           command: |
-            cd frontend; npm audit --audit-level=critical
+            cd frontend; npm audit
+
+      #Or, cd frontend; npm audit --audit-level=critical
       - run:
           name: cd frontend, and run 'npm start'
           command: |
@@ -108,5 +110,5 @@ workflows:
       #- lint-frontend
       #- lint-backend
       - run-frontend
-      - run-backend
+      #- run-backend
       - hello-world-udapeople
