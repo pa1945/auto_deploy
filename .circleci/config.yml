@@ -47,11 +47,49 @@ jobs:
           command: |
             cd backend; npm install ; npm run lint
 
+  run-fronted:
+    docker:
+      - image: circleci/node:10.0.0
+    steps:
+      - checkout
+      - run:
+          name: cd folder/dir fronted, ls -las
+          command: |
+            cd fronted && ls -als
+      - run:
+          name: List folder/dir where we are
+          command: |
+            ls -las
+      - run:
+          name: cd fronted, install 'npm i' and run 'npm start'
+          command: |
+            cd fronted; npm install ; npm run start
+
+  run-backend:
+    docker:
+      - image: circleci/node:10.0.0
+    steps:
+      - checkout
+      - run:
+          name: cd folder/dir backend, ls -las
+          command: |
+            cd backend && ls -als
+      - run:
+          name: List folder/dir where we are
+          command: |
+            ls -las
+      - run:
+          name: cd backend, install 'npm i' and run 'npm start'
+          command: |
+            cd backend; npm install ; npm run start
+
 
 workflows:
   default:
     jobs:
-      - lint-frontend
-      - lint-backend
+      #- lint-frontend
+      #- lint-backend
+      - run-frontend
+      - run-backend
       - hello-world-udapeople
 
