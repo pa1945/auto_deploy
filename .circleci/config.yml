@@ -1,53 +1,25 @@
----
-#https://github.com/harentius/attraction-wars-server/blob/master/.circleci/config.yml
+version: 2.1
 
-version: 2
 jobs:
-  lint:
-    # working_directory: ~/frontend
+  hello-world:
     docker:
-      - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
-          from: frontend
-          name: install-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:    # special step to restore the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          # from: frontend
-          name: install-dependencies
-          command: npm install
-      - save_cache:        #  special step to save the dependency cache
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: lint
-          command: npm run lint
-
-  build-and-publish-image:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: Build Docker image
+          name: cd folder/dir
           command: |
-            docker build -t "$IMAGE_NAME":latest .
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push "$IMAGE_NAME":latest
-    filters:
-      branches:
-        only: master
-    requires:
-      - lint
+            cd frontend
+      - run:
+          name: List folder/dir
+          command: |
+            ls -las
+      - run:
+          name: Say Hello
+          command: |
+            echo "Hello World"
 
 workflows:
-  version: 2
-  lint_and_publish:
+  default:
     jobs:
-      - lint
-      # - build-and-publish-image
+      - hello-world
