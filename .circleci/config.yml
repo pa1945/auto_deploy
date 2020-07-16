@@ -61,6 +61,10 @@ jobs:
           command: |
             ls -las
       - run:
+          name: cd frontend, install 'npm i' and run 'npm audit'
+          command: |
+            cd frontend; npm install ; npm audit --audit-level=critical
+      - run:
           name: cd frontend, install 'npm i' and run 'npm start'
           command: |
             cd frontend; npm install ; npm run start
@@ -78,6 +82,10 @@ jobs:
           name: List folder/dir where we are
           command: |
             ls -las
+      - run:
+          name: cd backend, install 'npm i' and run 'npm audit'
+          command: |
+            cd backend; npm install ; npm audit --audit-level=critical
       - run:
           name: cd backend, install 'npm i' and run 'npm start'
           command: |
