@@ -1,37 +1,48 @@
-#https://circleci.com/docs/2.0/deployment-examples/#aws
-version: 2.1 
-
-orbs:
-  aws-s3: circleci/aws-s3@x.y.z # use the AWS S3 orb in your config
-
-workflows: # Define a Workflow running the build job, then the deploy job
-  version: 2
-  build-deploy: # Make a workflow to build and deploy your project
-    jobs:
-      - build
-      - deploy:
-          requires:
-            - build # Only run deploy job once the build job has completed
-          filters:
-            branches:
-              only: master # Only deploy when the commit is on the Master branch
-
-jobs: # Define the build and deploy jobs
-  build:
-    docker: # Use the Docker executor for the build job
-      - image: ami-068663a3c619dd892
-      # <image-name-and-tag> # Specify the Docker image to use for the build job
-      #  ... # build job steps omitted for brevity
-  deploy:
-    docker: # Use the Docker executor for the deploy job
-      - image: ami-068663a3c619dd892
-      # <image-name-and-tag>  # Specify the Docker image to use for the deploy job
-  steps:
+version: 2
+jobs:
+  lint:
+    working_directory: frontend
+    docker:
+      - image: circleci/node:10.0.0
+    steps:
       - checkout
-      - aws-s3/sync:
-          from: bucket
-          to: 's3://s3-uda-deploy/prefix'
-          arguments: |              # Optional arguments
-            --acl public-read \
-            --cache-control "max-age=86400"
-          overwrite: true # default is false
+      - run:
+          name: install-npm
+          command: 'npm install -g npm@latest'
+      - restore_cache: # special step to restore the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-dependencies
+          command: npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: lint
+          command: npm run lint
+
+  build-and-publish-image:
+    docker:
+      - image: circleci/buildpack-deps:stretch
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t "$IMAGE_NAME":latest .
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push "$IMAGE_NAME":latest
+    filters:
+      branches:
+        only: master
+    requires:
+      - lint
+
+workflows:
+  version: 2
+  lint_and_publish:
+    jobs:
+      - lint
+      # - build-and-publish-image
