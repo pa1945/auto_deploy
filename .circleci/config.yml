@@ -7,6 +7,16 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Say Hello to Udapeople
+          command: |
+            echo "Udapeople: Hello World"
+
+  lint:
+    docker:
+      - image: circleci/node:10.0.0
+    steps:
+      - checkout
+      - run:
           name: cd folder/dir frontend, ls -las
           command: |
             cd frontend && ls -als
@@ -18,12 +28,11 @@ jobs:
           name: cd frontend and run lint
           command: |
             cd frontend; npm run lint
-      - run:
-          name: Say Hello to Udapeople
-          command: |
-            echo "Udapeople: Hello World"
+
 
 workflows:
   default:
     jobs:
+      - lint
       - hello-world
+
