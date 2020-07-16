@@ -56,7 +56,7 @@ jobs:
           name: cd folder/dir frontend, ls -las
           command: |
             cd frontend && ls -als
-            npm -v && npm install npm -g && npm -v
+            npm -v && sudo npm install npm -g && npm -v
 
       - run:
           name: List folder/dir where we are
