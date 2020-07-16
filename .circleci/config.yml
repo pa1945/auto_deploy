@@ -25,9 +25,9 @@ jobs:
           command: |
             ls -las
       - run:
-          name: cd frontend and run lint
+          name: cd frontend, install 'npm i' and and run lint
           command: |
-            cd frontend; npm run lint
+            cd frontend; npm install ; npm run lint
 
 
 workflows:
