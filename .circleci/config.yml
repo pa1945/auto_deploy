@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  hello-world:
+  hello-world-udapeople:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -11,7 +11,7 @@ jobs:
           command: |
             echo "Udapeople: Hello World"
 
-  lint:
+  lint-frontend:
     docker:
       - image: circleci/node:10.0.0
     steps:
@@ -25,14 +25,33 @@ jobs:
           command: |
             ls -las
       - run:
-          name: cd frontend, install 'npm i' and and run lint
+          name: cd frontend, install 'npm i' and run lint
           command: |
             cd frontend; npm install ; npm run lint
+
+  lint-backend:
+    docker:
+      - image: circleci/node:10.0.0
+    steps:
+      - checkout
+      - run:
+          name: cd folder/dir backend, ls -las
+          command: |
+            cd backend && ls -als
+      - run:
+          name: List folder/dir where we are
+          command: |
+            ls -las
+      - run:
+          name: cd backend, install 'npm i' and run lint
+          command: |
+            cd backend; npm install ; npm run lint
 
 
 workflows:
   default:
     jobs:
-      - lint
-      - hello-world
+      - lint-frontend
+      - lint-backend
+      - hello-world-udapeople
 
