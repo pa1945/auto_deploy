@@ -9,7 +9,8 @@ version: 2.1
 orbs:
   orb-tools: circleci/orb-tools@8.20.0
   #cloudformation: orbss/aws-cloudformation@0.1.4
-  aws-cloudformation: orbss/aws-cloudformation@0.1.6
+  # aws-cloudformation: orbss/aws-cloudformation@0.1.6
+  cloudformation: orbss/aws-cloudformation@0.1.6
 
 
 workflows:
