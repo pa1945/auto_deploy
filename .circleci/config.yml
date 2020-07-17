@@ -1,95 +1,16 @@
 ---
 
-# https://github.com/circleci-orbs-tm/cloudformation/blob/master/.circleci/config.yml
-# https://circleci.com/orbs/registry/orb/orbss/aws-cloudformation
+# https://circleci.com/orbs/registry/orb/frameio/cloudformation
+# Commands: deploy, lint
 #
 
+orbs:
+  cloudformation: frameio/cloudformation@0.15.0
 version: 2.1
 
-orbs:
-  orb-tools: circleci/orb-tools@8.20.0
-  #cloudformation: orbss/aws-cloudformation@0.1.4
-  # aws-cloudformation: orbss/aws-cloudformation@0.1.6
-  cloudformation: orbss/aws-cloudformation@0.1.6
-
-
 workflows:
-  version: 2
-  test-checkout:
+  deploy:
     jobs:
-      - cloudformation/create-stack:
-          stack-name: Xcircleci-test-checkout
-          # template-file-path: tests/checkout-test-cfn-template.yaml
-          template-file-path: .circleci/files/frontend.yml
-          aws-access-key-id: AWS_ACCESS_KEY_ID2
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-          aws-region: AWS_DEFAULT_REGION
-          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
-
-      - cloudformation/describe-stacks:
-          requires:
-            - cloudformation/create-stack
-          stack-name: Xcircleci-test-checkout
-
-      - cloudformation/delete-stack:
-          requires:
-            - cloudformation/describe-stacks
-          stack-name: Xcircleci-test-checkout
-          aws-access-key-id: AWS_ACCESS_KEY_ID2
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-          aws-region: AWS_DEFAULT_REGION
-
-  test-checkout-2:
-    jobs:
-      - cloudformation/create-stack:
-          stack-name: Xcircleci-test-checkout-2
-          template-file-path: .circleci/files/frontend.yml
-          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
-
-      - cloudformation/describe-stacks:
-          requires:
-            - cloudformation/create-stack
-          stack-name: Xcircleci-test-checkout-2
-
-      - cloudformation/delete-stack:
-          requires:
-            - cloudformation/describe-stacks
-          stack-name: Xcircleci-test-checkout-2
-
-  test-git-url:
-    jobs:
-      - cloudformation/create-stack:
-          stack-name: Xcircleci-test-git-url
-          template-file-path: .circleci/files/frontend.yml
-          aws-access-key-id: AWS_ACCESS_KEY_ID2
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-          aws-region: AWS_DEFAULT_REGION
-          git-url: https://github.com/aws-cloudformation-tm/ec2.git
-          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
-      - cloudformation/describe-stacks:
-          requires:
-            - cloudformation/create-stack
-          stack-name: Xcircleci-test-git-url
-      - cloudformation/delete-stack:
-          requires:
-            - cloudformation/describe-stacks
-          stack-name: Xcircleci-test-git-url
-          aws-access-key-id: AWS_ACCESS_KEY_ID2
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-          aws-region: AWS_DEFAULT_REGION
-
-  test-git-url-2:
-    jobs:
-      - cloudformation/create-stack:
-          stack-name: Xcircleci-test-git-url-2
-          template-file-path: .circleci/files/frontend.yml
-          git-url: https://github.com/aws-cloudformation-tm/ec2.git
-          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
-      - cloudformation/describe-stacks:
-          requires:
-            - cloudformation/create-stack
-          stack-name: Xcircleci-test-git-url-2
-      - cloudformation/delete-stack:
-          requires:
-            - cloudformation/describe-stacks
-          stack-name: Xcircleci-test-git-url-2
+      - cloudformation/deploy:
+          template: .circleci/files/frontend.yml
+          stack_name: mystack
