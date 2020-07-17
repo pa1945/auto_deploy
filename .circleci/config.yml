@@ -13,7 +13,7 @@ workflows:
   test-checkout:
     jobs:
       - cloudformation/create-stack:
-          stack-name: circleci-test-checkout
+          stack-name: Xcircleci-test-checkout
           # template-file-path: tests/checkout-test-cfn-template.yaml
           template-file-path: .circleci/files/frontend.yml
           aws-access-key-id: AWS_ACCESS_KEY_ID2
@@ -24,12 +24,12 @@ workflows:
       - cloudformation/describe-stacks:
           requires:
             - cloudformation/create-stack
-          stack-name: circleci-test-checkout
+          stack-name: Xcircleci-test-checkout
 
       - cloudformation/delete-stack:
           requires:
             - cloudformation/describe-stacks
-          stack-name: circleci-test-checkout
+          stack-name: Xcircleci-test-checkout
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
           aws-region: AWS_DEFAULT_REGION
@@ -37,24 +37,24 @@ workflows:
   test-checkout-2:
     jobs:
       - cloudformation/create-stack:
-          stack-name: circleci-test-checkout-2
+          stack-name: Xcircleci-test-checkout-2
           template-file-path: tests/checkout-test-cfn-template.yaml
           extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
 
       - cloudformation/describe-stacks:
           requires:
             - cloudformation/create-stack
-          stack-name: circleci-test-checkout-2
+          stack-name: Xcircleci-test-checkout-2
 
       - cloudformation/delete-stack:
           requires:
             - cloudformation/describe-stacks
-          stack-name: circleci-test-checkout-2
+          stack-name: Xcircleci-test-checkout-2
 
   test-git-url:
     jobs:
       - cloudformation/create-stack:
-          stack-name: circleci-test-git-url
+          stack-name: Xcircleci-test-git-url
           template-file-path: centos7-ubuntu18.yaml
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
@@ -64,11 +64,11 @@ workflows:
       - cloudformation/describe-stacks:
           requires:
             - cloudformation/create-stack
-          stack-name: circleci-test-git-url
+          stack-name: Xcircleci-test-git-url
       - cloudformation/delete-stack:
           requires:
             - cloudformation/describe-stacks
-          stack-name: circleci-test-git-url
+          stack-name: Xcircleci-test-git-url
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
           aws-region: AWS_DEFAULT_REGION
@@ -76,15 +76,15 @@ workflows:
   test-git-url-2:
     jobs:
       - cloudformation/create-stack:
-          stack-name: circleci-test-git-url-2
+          stack-name: Xcircleci-test-git-url-2
           template-file-path: centos7-ubuntu18.yaml
           git-url: https://github.com/aws-cloudformation-tm/ec2.git
           extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
       - cloudformation/describe-stacks:
           requires:
             - cloudformation/create-stack
-          stack-name: circleci-test-git-url-2
+          stack-name: Xcircleci-test-git-url-2
       - cloudformation/delete-stack:
           requires:
             - cloudformation/describe-stacks
-          stack-name: circleci-test-git-url-2
+          stack-name: Xcircleci-test-git-url-2
