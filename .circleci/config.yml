@@ -1,120 +1,89 @@
 ---
 
+# https://github.com/circleci-orbs-tm/cloudformation/blob/master/.circleci/config.yml
+
 version: 2.1
 
-jobs:
-  hello-world-udapeople:
-    docker:
-      - image: amazon/aws-cli
-    steps:
-      - checkout
-      - run:
-          name: Say Hello to Udapeople
-          command: |
-            echo "Udapeople: Hello World"
-
-  lint-frontend:
-    docker:
-      - image: circleci/node:10.0.0
-    steps:
-      - checkout
-      - run:
-          name: cd folder/dir frontend, ls -las
-          command: |
-            cd frontend && ls -als
-      - run:
-          name: List folder/dir where we are
-          command: |
-            ls -las
-      - run:
-          name: cd frontend, install 'npm i' and run lint
-          command: |
-            cd frontend; npm install ; npm run lint
-
-  lint-backend:
-    docker:
-      - image: circleci/node:10.0.0
-    steps:
-      - checkout
-      - run:
-          name: cd folder/dir backend, ls -las
-          command: |
-            cd backend && ls -als
-      - run:
-          name: List folder/dir where we are
-          command: |
-            ls -las
-      - run:
-          name: cd backend, install 'npm i' and run lint
-          command: |
-            cd backend; npm install ; npm run lint
-
-  run-frontend:
-    docker:
-      - image: circleci/node:10.0.0
-    steps:
-      - checkout
-      - run:
-          name: cd folder/dir frontend, ls -las
-          command: |
-            cd frontend && ls -als
-            npm -v && sudo npm install npm -g && npm -v
-
-      - run:
-          name: List folder/dir where we are
-          command: |
-            ls -las
-      - run:
-          name: cd frontend, install 'npm i'
-          command: |
-            cd frontend; npm install 
-      - run:
-          name: cd frontend,  and run 'npm audit'
-          command: |
-            cd frontend; npm audit
-
-      #Or, cd frontend; npm audit --audit-level=critical
-      - run:
-          name: cd frontend, and run 'npm start'
-          command: |
-            cd frontend; npm run start
-
-  run-backend:
-    docker:
-      - image: circleci/node:10.0.0
-    steps:
-      - checkout
-      - run:
-          name: cd folder/dir backend, ls -las
-          command: |
-            cd backend && ls -als
-            npm -v && sudo npm install npm -g && npm -v
-
-      - run:
-          name: List folder/dir where we are
-          command: |
-            ls -las
-      - run:
-          name: cd backend, install 'npm i'
-          command: |
-            cd backend; npm install
-      - run:
-          name: cd backend,  run 'npm audit'
-          command: |
-            cd backend; npm audit
-
-      # cd backend; npm audit --audit-level=critical
-      - run:
-          name: cd backend, run 'npm start'
-          command: |
-            cd backend;  npm run start
-
+orbs:
+  orb-tools: circleci/orb-tools@8.20.0
+  cloudformation: orbss/aws-cloudformation@0.1.4
 
 workflows:
-  default:
+  version: 2
+  test-checkout:
     jobs:
-      #- lint-frontend
-      #- lint-backend
-      - run-frontend
-      - run-backend
-      - hello-world-udapeople
+      - cloudformation/create-stack:
+          stack-name: circleci-test-checkout
+          template-file-path: tests/checkout-test-cfn-template.yaml
+          aws-access-key-id: AWS_ACCESS_KEY_ID2
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+          aws-region: AWS_DEFAULT_REGION
+          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
+
+      - cloudformation/describe-stacks:
+          requires:
+            - cloudformation/create-stack
+          stack-name: circleci-test-checkout
+
+      - cloudformation/delete-stack:
+          requires:
+            - cloudformation/describe-stacks
+          stack-name: circleci-test-checkout
+          aws-access-key-id: AWS_ACCESS_KEY_ID2
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+          aws-region: AWS_DEFAULT_REGION
+
+  test-checkout-2:
+    jobs:
+      - cloudformation/create-stack:
+          stack-name: circleci-test-checkout-2
+          template-file-path: tests/checkout-test-cfn-template.yaml
+          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
+
+      - cloudformation/describe-stacks:
+          requires:
+            - cloudformation/create-stack
+          stack-name: circleci-test-checkout-2
+
+      - cloudformation/delete-stack:
+          requires:
+            - cloudformation/describe-stacks
+          stack-name: circleci-test-checkout-2
+
+  test-git-url:
+    jobs:
+      - cloudformation/create-stack:
+          stack-name: circleci-test-git-url
+          template-file-path: centos7-ubuntu18.yaml
+          aws-access-key-id: AWS_ACCESS_KEY_ID2
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+          aws-region: AWS_DEFAULT_REGION
+          git-url: https://github.com/aws-cloudformation-tm/ec2.git
+          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
+      - cloudformation/describe-stacks:
+          requires:
+            - cloudformation/create-stack
+          stack-name: circleci-test-git-url
+      - cloudformation/delete-stack:
+          requires:
+            - cloudformation/describe-stacks
+          stack-name: circleci-test-git-url
+          aws-access-key-id: AWS_ACCESS_KEY_ID2
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+          aws-region: AWS_DEFAULT_REGION
+
+  test-git-url-2:
+    jobs:
+      - cloudformation/create-stack:
+          stack-name: circleci-test-git-url-2
+          template-file-path: centos7-ubuntu18.yaml
+          git-url: https://github.com/aws-cloudformation-tm/ec2.git
+          extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
+      - cloudformation/describe-stacks:
+          requires:
+            - cloudformation/create-stack
+          stack-name: circleci-test-git-url-2
+      - cloudformation/delete-stack:
+          requires:
+            - cloudformation/describe-stacks
+          stack-name: circleci-test-git-url-2
