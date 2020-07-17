@@ -2,6 +2,22 @@
 
 version: 2.1
 
+orbs:
+  aws-code-deploy: circleci/aws-code-deploy@dev:alpha
+  aws-cli: circleci/aws-cli@0.1
+  orb-tools: circleci/orb-tools@9.0
+
+# Pipeline parameters
+parameters:
+  # These pipeline parameters are required by the "trigger-integration-tests-workflow"
+  # job, by default.
+  run-integration-tests:
+    type: boolean
+    default: false
+  dev-orb-version:
+    type: string
+    default: "dev:alpha"
+
 jobs:
   hello-world-udapeople:
     docker:
@@ -116,7 +132,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: cd backend, install 'npm i'
+          name: Run aws cloudformation
           command: |
             aws cloudformation deploy --template-file .circleci/files/frontend.yml --stack-name project-udapeople --parameter-overrides ID=s3-udapeople
 
