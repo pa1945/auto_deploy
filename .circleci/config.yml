@@ -1,12 +1,16 @@
 ---
 
 # https://github.com/circleci-orbs-tm/cloudformation/blob/master/.circleci/config.yml
+# https://circleci.com/orbs/registry/orb/orbss/aws-cloudformation
+#
 
 version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@8.20.0
-  cloudformation: orbss/aws-cloudformation@0.1.4
+  #cloudformation: orbss/aws-cloudformation@0.1.4
+  aws-cloudformation: orbss/aws-cloudformation@0.1.6
+
 
 workflows:
   version: 2
@@ -38,7 +42,7 @@ workflows:
     jobs:
       - cloudformation/create-stack:
           stack-name: Xcircleci-test-checkout-2
-          template-file-path: tests/checkout-test-cfn-template.yaml
+          template-file-path: .circleci/files/frontend.yml
           extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
 
       - cloudformation/describe-stacks:
@@ -55,7 +59,7 @@ workflows:
     jobs:
       - cloudformation/create-stack:
           stack-name: Xcircleci-test-git-url
-          template-file-path: centos7-ubuntu18.yaml
+          template-file-path: .circleci/files/frontend.yml
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
           aws-region: AWS_DEFAULT_REGION
@@ -77,7 +81,7 @@ workflows:
     jobs:
       - cloudformation/create-stack:
           stack-name: Xcircleci-test-git-url-2
-          template-file-path: centos7-ubuntu18.yaml
+          template-file-path: .circleci/files/frontend.yml
           git-url: https://github.com/aws-cloudformation-tm/ec2.git
           extra-arguments: --parameters ParameterKey=InstanceType,ParameterValue=t2.micro ParameterKey=KeyName,ParameterValue=centos7
       - cloudformation/describe-stacks:
