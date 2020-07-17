@@ -121,6 +121,7 @@ jobs:
       - run:
           name: Run aws cloudformation
           command: |
+            sudo apt install awscli
             aws cloudformation deploy --template-file .circleci/files/frontend.yml --stack-name project-udapeople --parameter-overrides ID=s3-udapeople
 
 
