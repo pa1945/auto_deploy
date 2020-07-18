@@ -141,8 +141,12 @@ jobs:
       - run:
           name: Run aws cloudformation
           command: |
-            aws cloudformation deploy --region us-east-1 --template-file .circleci/files/frontend.yml --stack-name project-udapeople --parameter-overrides ID=s3-udapeople
-
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name project-udapeople --parameter-overrides \
+            ID=s3-udapeople
 
 
 
