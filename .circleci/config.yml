@@ -1,5 +1,11 @@
 ---
 
+#
+# https://circleci.com/docs/2.0/contexts/
+# https://circleci.com/orbs/registry/orb/circleci/aws-cli
+# https://circleci.com/orbs/registry/orb/orbss/aws-cloudformation
+#
+
 version: 2.1
 
 orbs:
@@ -10,9 +16,6 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
-      # - aws-cli/setup:
-      #    profile-name: example
-      # - aws-cli/configure:
       - aws-cli/setup:
           profile-name: circle-ci-uda
           # aws-access-key-id: AWS_ACCESS_KEY_ID2
@@ -60,8 +63,6 @@ jobs:
   lint-frontend:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.0.0
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -80,7 +81,6 @@ jobs:
   lint-backend:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -99,7 +99,6 @@ jobs:
   run-frontend:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -121,7 +120,6 @@ jobs:
           command: |
             cd frontend; npm audit
 
-      # Or, cd frontend; npm audit --audit-level=critical
       - run:
           name: cd frontend, and run 'npm start'
           command: |
@@ -130,7 +128,6 @@ jobs:
   run-backend:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -152,7 +149,6 @@ jobs:
           command: |
             cd backend; npm audit
 
-      # cd backend; npm audit --audit-level=critical
       - run:
           name: cd backend, run 'npm start'
           command: |
@@ -161,7 +157,6 @@ jobs:
   run-s3:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -195,7 +190,6 @@ jobs:
   run-ec2:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -210,12 +204,13 @@ jobs:
       - run:
           name: Run aws cloudformation and create ec2 instance
           command: |
-            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
-            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            # export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            # export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
             aws cloudformation deploy \
-            --template-file .circleci/files/frontend.yml \
-            --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeople
+            --template-file .circleci/files/backend.yml \
+            --stack-name project-udapeople \
+            --parameter-overrides ID=ec2-udapeople
+
 
 
 workflows:
@@ -226,19 +221,17 @@ workflows:
       # - lint-backend
       # - run-frontend
       # - run-backend
-      - run-s3
+      - run-s3:
+          context: ci-uda-context
       #    aws-access-key-id: AWS_ACCESS_KEY_ID2
       #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
       #    aws-region: AWS_DEFAULT_REGION
-      # - run-ec2
+      - run-ec2:
+          context: ci-uda-context
       - hello-world-udapeople
 
   aws-cli:
     jobs:
-      # - aws-cli-example
-      #    aws-access-key-id: AWS_ACCESS_KEY_ID2
-      #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-      #    aws-region: AWS_DEFAULT_REGION
       - aws-cli-example:
           context: ci-uda-context
   
