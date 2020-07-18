@@ -2,10 +2,23 @@
 
 version: 2.1
 
-#orbs:
-#  aws-cli: circleci/aws-cli@1.2.1
+orbs:
+  aws-cli: circleci/aws-cli@1.2.1
 
 jobs:
+  aws-cli-example:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - aws-cli/setup:
+          profile-name: example
+      - run: echo "*** Run your code here  ***"
+
+      - run:
+          name: Check aws cli version
+          command: |
+            aws --version
+
   hello-world-udapeople:
     docker:
       - image: amazon/aws-cli
@@ -18,8 +31,9 @@ jobs:
 
   lint-frontend:
     docker:
-      #- image: amazon/aws-cli
-      - image: circleci/node:10.0.0
+      # - image: amazon/aws-cli
+      # - image: circleci/node:10.0.0
+      - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -37,8 +51,9 @@ jobs:
 
   lint-backend:
     docker:
-      - image: circleci/node:10.0.0
-      #- image: amazon/aws-cli
+      # - image: circleci/node:10.0.0
+      # - image: amazon/aws-cli
+      - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -56,8 +71,9 @@ jobs:
 
   run-frontend:
     docker:
-      #- image: amazon/aws-cli
-      - image: circleci/node:10.0.0
+      # - image: amazon/aws-cli
+      # - image: circleci/node:10.0.0
+      - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -73,13 +89,13 @@ jobs:
       - run:
           name: cd frontend, install 'npm i'
           command: |
-            cd frontend; npm install 
+            cd frontend; npm install
       - run:
           name: cd frontend,  and run 'npm audit'
           command: |
             cd frontend; npm audit
 
-      #Or, cd frontend; npm audit --audit-level=critical
+      # Or, cd frontend; npm audit --audit-level=critical
       - run:
           name: cd frontend, and run 'npm start'
           command: |
@@ -87,8 +103,9 @@ jobs:
 
   run-backend:
     docker:
-      #- image: amazon/aws-cli
-      - image: circleci/node:10.0.0
+      # - image: amazon/aws-cli
+      # - image: circleci/node:10.0.0
+      - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -118,28 +135,44 @@ jobs:
 
   run-s3:
     docker:
-      #- image: amazon/aws-cli
-      #- image: cimg/base:2020.01
-      #- image: circleci/node:10.16.3
       - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
           name: Install awscli
           command: |
-            # aws --version # Fail if not exist
-            # which aws
             sudo apt update
             sudo apt upgrade
             sudo apt install python3-pip
-            #sudo apt install awscli
-            #aws --version
-            #pip install awscli --upgrade --user
             pip3 install awscli --upgrade --user
             aws --version
 
       - run:
-          name: Run aws cloudformation
+          name: Run aws cloudformation and create stack/s3-bucket
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws cloudformation deploy \
+            --template-file .circleci/files/frontend.yml \
+            --stack-name project-udapeople --parameter-overrides \
+            ID=s3-udapeople
+
+  run-ec2:
+    docker:
+      - image: circleci/node:10.21.0
+    steps:
+      - checkout
+      - run:
+          name: Install awscli
+          command: |
+            sudo apt update
+            sudo apt upgrade
+            sudo apt install python3-pip
+            pip3 install awscli --upgrade --user
+            aws --version
+
+      - run:
+          name: Run aws cloudformation and create ec2 instance
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
@@ -149,13 +182,18 @@ jobs:
             ID=s3-udapeople
 
 
-
 workflows:
   default:
     jobs:
-      #- lint-frontend
-      #- lint-backend
-      #- run-frontend
-      #- run-backend
+      # - lint-frontend
+      # - lint-backend
+      # - run-frontend
+      # - run-backend
       - run-s3
+      - run-ec2
       - hello-world-udapeople
+
+  aws-cli:
+    jobs:
+      - aws-cli-example:
+          context: aws
