@@ -128,11 +128,11 @@ jobs:
           name: Install awscli
           command: |
             # aws --version # Fail if not exist
-            pip install awscli --upgrade --user
-            #sudo apt update
-            #sudo apt upgrade
-            #sudo apt install awscli
+            sudo apt update
+            sudo apt upgrade
+            sudo apt install awscli
             aws --version
+            pip install awscli --upgrade --user
 
       - run:
           name: Run aws cloudformation
