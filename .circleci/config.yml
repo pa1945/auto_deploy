@@ -151,10 +151,10 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            sudo apt update
-            sudo apt upgrade
-            sudo apt install python3-pip
-            pip3 install awscli --upgrade --user
+            # sudo apt update
+            # sudo apt upgrade
+            # sudo apt install python3-pip
+            # pip3 install awscli --upgrade --user
             aws --version
 
       - run:
@@ -165,7 +165,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeople
+            ID=s3-udapeopleX
 
   run-ec2:
     docker:
