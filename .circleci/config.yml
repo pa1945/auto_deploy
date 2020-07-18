@@ -206,10 +206,10 @@ workflows:
       # - lint-backend
       # - run-frontend
       # - run-backend
-      - run-s3:
-          aws-access-key-id: AWS_ACCESS_KEY_ID2
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-          aws-region: AWS_DEFAULT_REGION
+      - run-s3
+      #    aws-access-key-id: AWS_ACCESS_KEY_ID2
+      #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+      #    aws-region: AWS_DEFAULT_REGION
       # - run-ec2
       - hello-world-udapeople
 
