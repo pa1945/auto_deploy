@@ -237,9 +237,9 @@ workflows:
 
   aws-cli:
     jobs:
-      - aws-cli-example
+      # - aws-cli-example
       #    aws-access-key-id: AWS_ACCESS_KEY_ID2
       #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
       #    aws-region: AWS_DEFAULT_REGION
-      #- aws-cli-example:
-      #    context: aws
+      - aws-cli-example:
+          context: circle-ci-uda
