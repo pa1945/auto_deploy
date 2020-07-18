@@ -2,8 +2,8 @@
 
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@1.2.1
+#orbs:
+#  aws-cli: circleci/aws-cli@1.2.1
 
 jobs:
   hello-world-udapeople:
@@ -37,7 +37,8 @@ jobs:
 
   lint-backend:
     docker:
-      - image: circleci/node:10.0.0
+      # - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -55,7 +56,8 @@ jobs:
 
   run-frontend:
     docker:
-      - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
+      #- image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -85,7 +87,8 @@ jobs:
 
   run-backend:
     docker:
-      - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
+      #- image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -115,12 +118,14 @@ jobs:
 
   run-s3:
     docker:
-      - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
           name: Install awscli
           command: |
+            aws --version
             sudo apt update
             sudo apt install awscli
             aws --version
