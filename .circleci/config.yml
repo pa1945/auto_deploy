@@ -10,8 +10,14 @@ jobs:
     executor: aws-cli/default
     steps:
       - checkout
-      - aws-cli/setup:
-          profile-name: example
+      #- aws-cli/setup:
+      #    profile-name: example
+      - aws-cli/configure:
+          profile-name: circle-ci-uda
+          aws-access-key-id: AWS_ACCESS_KEY_ID2
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+          aws-region: AWS_REGION
+
       - run: echo "*** Run your code here  ***"
 
       - run:
