@@ -43,7 +43,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeople0
+            ID=s3-udapeople11
 
   hello-world-udapeople:
     docker:
@@ -185,7 +185,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeople0
+            ID=s3-udapeople22
 
   run-ec2:
     docker:
@@ -209,7 +209,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
             --stack-name project-udapeople \
-            --parameter-overrides ID=ec2-udapeople
+            --parameter-overrides ID=ec2-udapeople33
 
 
 
