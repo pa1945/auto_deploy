@@ -12,7 +12,8 @@ jobs:
       - checkout
       #- aws-cli/setup:
       #    profile-name: example
-      - aws-cli/configure:
+      #- aws-cli/configure:
+      - aws-cli/setup:
           profile-name: circle-ci-uda
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
