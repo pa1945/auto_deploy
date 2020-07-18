@@ -120,7 +120,8 @@ jobs:
     docker:
       #- image: amazon/aws-cli
       #- image: cimg/base:2020.01
-      - image: circleci/node:10.16.3
+      #- image: circleci/node:10.16.3
+      - image: circleci/node:10.19.0
     steps:
       - checkout
       - run:
