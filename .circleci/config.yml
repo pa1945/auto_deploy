@@ -128,7 +128,7 @@ jobs:
           name: Install awscli
           command: |
             # aws --version # Fail if not exist
-            which aws
+            # which aws
             sudo apt update
             sudo apt upgrade
             sudo apt install awscli
