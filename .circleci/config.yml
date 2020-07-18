@@ -119,7 +119,8 @@ jobs:
   run-s3:
     docker:
       #- image: amazon/aws-cli
-      - image: circleci/node:10.0.0
+      #- image: cimg/base:2020.01
+      - image: circleci/node:10.16.3
     steps:
       - checkout
       - run:
