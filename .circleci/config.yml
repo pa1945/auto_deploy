@@ -183,6 +183,7 @@ jobs:
 
 
 workflows:
+  version: 2
   default:
     jobs:
       # - lint-frontend
@@ -190,7 +191,7 @@ workflows:
       # - run-frontend
       # - run-backend
       - run-s3
-      - run-ec2
+      # - run-ec2
       - hello-world-udapeople
 
   aws-cli:
