@@ -36,9 +36,9 @@ jobs:
 
   lint-frontend:
     docker:
-      # - image: amazon/aws-cli
+      - image: amazon/aws-cli
       # - image: circleci/node:10.0.0
-      - image: circleci/node:10.21.0
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -56,9 +56,8 @@ jobs:
 
   lint-backend:
     docker:
-      # - image: circleci/node:10.0.0
-      # - image: amazon/aws-cli
-      - image: circleci/node:10.21.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -76,9 +75,8 @@ jobs:
 
   run-frontend:
     docker:
-      # - image: amazon/aws-cli
-      # - image: circleci/node:10.0.0
-      - image: circleci/node:10.21.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -108,9 +106,8 @@ jobs:
 
   run-backend:
     docker:
-      # - image: amazon/aws-cli
-      # - image: circleci/node:10.0.0
-      - image: circleci/node:10.21.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -165,7 +162,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeopleX
+            ID=s3-udapeople0
 
   run-ec2:
     docker:
@@ -176,10 +173,10 @@ jobs:
       - run:
           name: Install awscli
           command: |
-            sudo apt update
-            sudo apt upgrade
-            sudo apt install python3-pip
-            pip3 install awscli --upgrade --user
+            # sudo apt update # Or without 'sudo'
+            # sudo apt upgrade
+            # sudo apt install python3-pip
+            # pip3 install awscli --upgrade --user
             aws --version
 
       - run:
