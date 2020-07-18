@@ -231,9 +231,10 @@ workflows:
       #    aws-region: AWS_DEFAULT_REGION
       - run-ec2:
           context: ci-uda-context
-      - hello-world-udapeople
+      # - hello-world-udapeople
 
   aws-cli:
     jobs:
-      - aws-cli-example:
-          context: ci-uda-context
+      - hello-world-udapeople
+      # - aws-cli-example:
+      #    context: ci-uda-context
