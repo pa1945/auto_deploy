@@ -165,7 +165,7 @@ jobs:
           command: |
             aws --version
       - run:
-          name: Install awscli
+          name: Install/version aws cli
           command: |
             # sudo apt update
             # sudo apt upgrade
@@ -186,8 +186,8 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
-            --stack-name project-udapeople --parameter-overrides \
-            ID=s3-udapeople22
+            --stack-name udapeople1 \
+            --parameter-overrides ID=s3-udapeople22
 
   run-ec2:
     docker:
@@ -195,7 +195,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install awscli
+          name: Install/version aws cli
           command: |
             # sudo apt update # Or without 'sudo'
             # sudo apt upgrade
@@ -211,8 +211,33 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
-            --stack-name project-udapeople \
-            --parameter-overrides ID=ec2-udapeople33
+            --stack-name udapeople2 \
+            --parameter-overrides ID=ec2-udapeoplexx
+
+  run-cloudfront:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install/version aws cli
+          command: |
+            # sudo apt update # Or without 'sudo'
+            # sudo apt upgrade
+            # sudo apt install python3-pip
+            # pip3 install awscli --upgrade --user
+            aws --version
+
+      - run:
+          name: Run aws cloudformation and create ec2 instance
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            # aws cloudformation wait stack-create-complete \
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name udapeople3 \
+            --parameter-overrides WorkflowID=udapeople
 
 
 
@@ -230,6 +255,8 @@ workflows:
       #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
       #    aws-region: AWS_DEFAULT_REGION
       - run-ec2:
+          context: ci-uda-context
+      - run-cloudfront:
           context: ci-uda-context
       # - hello-world-udapeople
 
