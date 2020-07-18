@@ -206,7 +206,7 @@ workflows:
       # - lint-backend
       # - run-frontend
       # - run-backend
-      - run-s3
+      - run-s3:
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
           aws-region: AWS_DEFAULT_REGION
@@ -215,7 +215,7 @@ workflows:
 
   aws-cli:
     jobs:
-      - aws-cli-example
+      - aws-cli-example:
           aws-access-key-id: AWS_ACCESS_KEY_ID2
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
           aws-region: AWS_DEFAULT_REGION
