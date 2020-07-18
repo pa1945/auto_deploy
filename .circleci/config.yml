@@ -119,15 +119,15 @@ jobs:
   run-s3:
     docker:
       - image: amazon/aws-cli
-      # - image: circleci/node:10.0.0
+      #- image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
           name: Install awscli
           command: |
             # aws --version # Fail if not exist
-            sudo apt update
-            sudo apt install awscli
+            apt update
+            apt install awscli
             aws --version
 
       - run:
