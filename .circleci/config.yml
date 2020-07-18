@@ -140,7 +140,8 @@ jobs:
 
   run-s3:
     docker:
-      - image: circleci/node:10.21.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
@@ -168,7 +169,8 @@ jobs:
 
   run-ec2:
     docker:
-      - image: circleci/node:10.21.0
+      - image: amazon/aws-cli
+      # - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
