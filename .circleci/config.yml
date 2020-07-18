@@ -20,14 +20,19 @@ jobs:
             aws --version
 
   hello-world-udapeople:
-    docker:
-      - image: amazon/aws-cli
+    # docker:
+    #  - image: amazon/aws-cli
     steps:
       - checkout
       - run:
           name: Say Hello to Udapeople
           command: |
             echo "Udapeople: Hello World"
+      - run:
+          name: Check aws cli version
+          command: |
+            aws --version
+
 
   lint-frontend:
     docker:
@@ -134,10 +139,14 @@ jobs:
             cd backend;  npm run start
 
   run-s3:
-    docker:
-      - image: circleci/node:10.21.0
+    # docker:
+    #  - image: circleci/node:10.21.0
     steps:
       - checkout
+      - run:
+          name: Check aws cli version
+          command: |
+            aws --version
       - run:
           name: Install awscli
           command: |
