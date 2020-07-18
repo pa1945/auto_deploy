@@ -119,10 +119,21 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Run aws cloudformation
+          name: Install awscli
           command: |
             sudo apt install awscli
-            aws cloudformation deploy --template-file .circleci/files/frontend.yml --stack-name project-udapeople --parameter-overrides ID=s3-udapeople
+
+      - run:
+          name: Run aws --version
+          command: |
+            aws --version
+
+      - run:
+          name: Run aws cloudformation
+          command: |
+            aws cloudformation deploy --region us-east-1 --template-file .circleci/files/frontend.yml --stack-name project-udapeople --parameter-overrides ID=s3-udapeople
+
+
 
 
 workflows:
