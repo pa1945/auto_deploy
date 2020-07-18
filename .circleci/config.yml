@@ -40,7 +40,8 @@ jobs:
             echo $AWS_ACCESS_KEY_ID
             echo $AWS_SECRET_ACCESS_KEY
             echo $AWS_DEFAULT_REGION
-            aws cloudformation deploy \
+            # aws cloudformation deploy \
+            aws cloudformation wait stack-create-complete \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
             ID=s3-udapeople11
@@ -182,7 +183,8 @@ jobs:
             echo $AWS_ACCESS_KEY_ID
             echo $AWS_SECRET_ACCESS_KEY
             echo $AWS_DEFAULT_REGION
-            aws cloudformation deploy \
+            # aws cloudformation deploy \
+            aws cloudformation wait stack-create-complete \
             --template-file .circleci/files/frontend.yml \
             --stack-name project-udapeople --parameter-overrides \
             ID=s3-udapeople22
@@ -206,7 +208,8 @@ jobs:
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
-            aws cloudformation deploy \
+            # aws cloudformation deploy \
+            aws cloudformation wait stack-create-complete \
             --template-file .circleci/files/backend.yml \
             --stack-name project-udapeople \
             --parameter-overrides ID=ec2-udapeople33
