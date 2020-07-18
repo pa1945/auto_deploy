@@ -131,10 +131,12 @@ jobs:
             # which aws
             sudo apt update
             sudo apt upgrade
-            sudo apt install awscli
-            aws --version
+            sudo apt install python3-pip
+            #sudo apt install awscli
+            #aws --version
             #pip install awscli --upgrade --user
             pip3 install awscli --upgrade --user
+            aws --version
 
       - run:
           name: Run aws cloudformation
