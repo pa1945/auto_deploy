@@ -20,8 +20,8 @@ jobs:
             aws --version
 
   hello-world-udapeople:
-    # docker:
-    #  - image: amazon/aws-cli
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -139,8 +139,8 @@ jobs:
             cd backend;  npm run start
 
   run-s3:
-    # docker:
-    #  - image: circleci/node:10.21.0
+    docker:
+      - image: circleci/node:10.21.0
     steps:
       - checkout
       - run:
