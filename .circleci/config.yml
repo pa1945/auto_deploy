@@ -18,8 +18,8 @@ jobs:
 
   lint-frontend:
     docker:
-      - image: amazon/aws-cli
-      #- image: circleci/node:10.0.0
+      #- image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -37,8 +37,8 @@ jobs:
 
   lint-backend:
     docker:
-      # - image: circleci/node:10.0.0
-      - image: amazon/aws-cli
+      - image: circleci/node:10.0.0
+      #- image: amazon/aws-cli
     steps:
       - checkout
       - run:
@@ -56,8 +56,8 @@ jobs:
 
   run-frontend:
     docker:
-      - image: amazon/aws-cli
-      #- image: circleci/node:10.0.0
+      #- image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -87,8 +87,8 @@ jobs:
 
   run-backend:
     docker:
-      - image: amazon/aws-cli
-      #- image: circleci/node:10.0.0
+      #- image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -118,16 +118,17 @@ jobs:
 
   run-s3:
     docker:
-      - image: amazon/aws-cli
-      #- image: circleci/node:10.0.0
+      #- image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
           name: Install awscli
           command: |
             # aws --version # Fail if not exist
-            apt update
-            apt install awscli
+            sudo apt update
+            sudo apt upgrade
+            sudo apt install awscli
             aws --version
 
       - run:
