@@ -230,6 +230,7 @@ jobs:
 
       - run:
           # https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-stack-export-name-error/
+          # WorkflowID=<existing S3 bucket> e.g.:'s3-uda-deploy'
           name: Run aws cloudformation 
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
@@ -238,7 +239,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name cloudf-udapeople \
-            --parameter-overrides WorkflowID=udapeople
+            --parameter-overrides WorkflowID=s3-uda-deploy
 
 
 
