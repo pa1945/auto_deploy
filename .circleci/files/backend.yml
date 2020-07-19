@@ -11,7 +11,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: !Sub UdaPeople-${ID}
-      GroupDescription: Allow port 22 and port 3030. Missing Promethers ports
+      GroupDescription: Allow port 22 and port 3030. Missing Prometheus ports
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22

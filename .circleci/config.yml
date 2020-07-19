@@ -155,7 +155,7 @@ jobs:
           command: |
             cd backend;  npm run start
 
-  run-s3:
+  create-s3:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -189,7 +189,7 @@ jobs:
             --stack-name udapeople-s3 \
             --parameter-overrides ID=s3-udapeople
 
-  run-ec2:
+  create-ec2:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -241,6 +241,7 @@ jobs:
             --stack-name cloudf-udapeople \
             --parameter-overrides WorkflowID=s3-uda-deploy
 
+# 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
 
 workflows:
   version: 2
@@ -250,12 +251,12 @@ workflows:
       # - lint-backend
       # - run-frontend
       # - run-backend
-      - run-s3:
+      - create-s3:
           context: ci-uda-context
       #    aws-access-key-id: AWS_ACCESS_KEY_ID2
       #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
       #    aws-region: AWS_DEFAULT_REGION
-      - run-ec2:
+      - create-ec2:
           context: ci-uda-context
           requires:
             - run-s3
