@@ -22,7 +22,7 @@ Resources:
         Origins:
           #- DomainName: !Sub "udapeople-${WorkflowID}.s3.amazonaws.com"
           #- DomainName: !Sub "s3-uda-deploy-${WorkflowID}.s3-website.us-east-1.amazonaws.com"
-          - DomainName: !Sub "uda-deploy-${WorkflowID}.s3-website.us-east-1.amazonaws.com"
+          - DomainName: !Sub "uda-deploy-${WorkflowID}"
             Id: webpage
             S3OriginConfig:
               OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
