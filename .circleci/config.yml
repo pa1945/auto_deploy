@@ -186,8 +186,8 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
-            --stack-name udapeople1 \
-            --parameter-overrides ID=s3-udapeople22
+            --stack-name udapeople-s3 \
+            --parameter-overrides ID=s3-udapeople2
 
   run-ec2:
     docker:
@@ -211,8 +211,8 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
-            --stack-name udapeople2 \
-            --parameter-overrides ID=ec2-udapeoplexx
+            --stack-name udapeople-ec2 \
+            --parameter-overrides ID=ec2-udapeoplex
 
   run-cloudfront:
     docker:
@@ -237,7 +237,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name udapeople3 \
-            --parameter-overrides WorkflowID=udapeople
+            --parameter-overrides WorkflowID=udapeople3
 
 
 
