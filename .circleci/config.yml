@@ -256,8 +256,14 @@ workflows:
       #    aws-region: AWS_DEFAULT_REGION
       - run-ec2:
           context: ci-uda-context
+          requires:
+            - run-s3
       - run-cloudfront:
           context: ci-uda-context
+          # type: approval  # <<< This key-value pair will set your workflow to a status of "On Hold"
+          requires:
+            - run-s3
+            - run-ec2
       # - hello-world-udapeople
 
   aws-cli:
