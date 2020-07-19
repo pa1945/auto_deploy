@@ -237,7 +237,7 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name udapeople3 \
+            --stack-name cloudf-udapeople \
             --parameter-overrides WorkflowID=udapeople
 
 
