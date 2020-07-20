@@ -236,7 +236,7 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/prometheus.yml \
-            --stack-name udapeople-ec2 \
+            --stack-name prometheus-ec2 \
             --parameter-overrides ID=ec2-promet
 
   run-cloudfront:
@@ -283,7 +283,7 @@ jobs:
 
 workflows:
   version: 2
-  default:
+  create-infra:
     jobs:
       # - lint-frontend
       # - lint-backend
