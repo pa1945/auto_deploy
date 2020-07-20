@@ -155,7 +155,7 @@ jobs:
           command: |
             cd backend;  npm run start
 
-  create-s3:
+  create-frontend-s3:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -189,7 +189,7 @@ jobs:
             --stack-name udapeople-s3 \
             --parameter-overrides ID=s3-udapeople
 
-  create-ec2:
+  create-backend-ec2:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -213,6 +213,31 @@ jobs:
             --template-file .circleci/files/backend.yml \
             --stack-name udapeople-ec2 \
             --parameter-overrides ID=ec2-udapeople
+
+  create-prometheus-ec2:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install/version aws cli
+          command: |
+            # sudo apt update # Or without 'sudo'
+            # sudo apt upgrade
+            # sudo apt install python3-pip
+            # pip3 install awscli --upgrade --user
+            aws --version
+
+      - run:
+          name: Run aws cloudformation and create ec2 instance
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            # aws cloudformation wait stack-create-complete \
+            aws cloudformation deploy \
+            --template-file .circleci/files/prometheus.yml \
+            --stack-name udapeople-ec2 \
+            --parameter-overrides ID=ec2-promet
 
   run-cloudfront:
     docker:
@@ -240,8 +265,21 @@ jobs:
             --template-file .circleci/files/cloudfront.yml \
             --stack-name cloudf-udapeople \
             --parameter-overrides WorkflowID=s3-uda-deploy
+            # 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
 
-# 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
+  run-cp2s3:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Copy fronted/dist to s3 bucket
+          command: |
+            aws --version
+            # $ aws s3 cp ./dist s3://s3-uda-deploy --recursive \
+            # --exclude "*.DS_Store" --acl public-read --cache-control \
+            # public,max-age=604800 --dryrun --profile iam_user
+
 
 workflows:
   version: 2
@@ -251,21 +289,37 @@ workflows:
       # - lint-backend
       # - run-frontend
       # - run-backend
-      - create-s3:
+      - create-frontend-s3:
           context: ci-uda-context
       #    aws-access-key-id: AWS_ACCESS_KEY_ID2
       #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
       #    aws-region: AWS_DEFAULT_REGION
-      - create-ec2:
+      - create-backend-ec2:
           context: ci-uda-context
           requires:
-            - create-s3
+            - create-frontend-s3
+      - create-backend-ec2:
+          context: ci-uda-context
+          requires:
+            - create-frontend-s3
+      - create-prometheus-ec2:
+          context: ci-uda-context
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
+      - run-cp2s3:
+          context: ci-uda-context
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
       - run-cloudfront:
           context: ci-uda-context
-          # type: approval  # <<< This key-value pair will set your workflow to a status of "On Hold"
+          # type: approval  # <<< This key-value pair will set your 
+          # workflow to a status of "On Hold"
           requires:
-            - create-s3
-            - create-ec2
+            - create-frontend-s3
+            - create-backend-ec2
+            - create-prometheus-ec2
       # - hello-world-udapeople
 
   aws-cli:

@@ -232,7 +232,8 @@ to waste credits or time running other steps if the code can’t even compile.
    more descriptive.
 - Job should fail if code cannot be compiled (fail for the right reasons). 
   We have provided an easy-to-fix compile error in the code to prove the jobs fail. 
-  Provide a screenshot of jobs that failed because of compile errors. **[SCREENSHOT01]**
+  Provide a screenshot of jobs that failed because of compile errors. 
+  **[SCREENSHOT01]**
 - Fix the compile error so that the pipeline can continue (see code-comment that guides 
    you to the fix).
 - A failed build should stop all future jobs.
@@ -417,9 +418,39 @@ We’ll need a job that executes some CloudFormation templates so
 that the UdaPeople team never has to worry about a missed deployment 
 checklist item.
 
+---
+
+Add this command to the scripts in your `package.json`, 
+but add a unique bucket name rather than the placeholder.
+
+"provision": "aws cloudformation deploy --template-file \
+	./cloudformation_basic.yml --stack-name hosting-bucket \
+	--parameter-overrides BucketName=<BUCKET_NAME>",
+Or,
+"provision": "aws cloudformation deploy \
+	--template-file .cicircle/files/frontend.yml \
+	--stack-name project-udapeople --parameter-overrides ID=s3-udapeople",
+
+### Command line:
+$ aws cloudformation deploy \
+--template-file files/cloudformation_basic.yml \
+--stack-name hosting-bucketx --parameter-overrides \
+BucketName=uda-deployyy
+
+Waiting for changeset to be created..
+Waiting for stack create/update to complete
+Successfully created/updated stack - hosting-bucketx
+$
+
+https://s3.console.aws.amazon.com/ >> Amazon S3 >> uda-deployyy
+Endpoint : http://uda-deployyy.s3-website-us-east-1.amazonaws.com
+
+---
+
 - Add jobs to your config file to create your infrastructure using 
    CloudFormation templates. Again, provide a screenshot demonstrating 
    an appropriate job failure (failing for the right reasons). **[SCREENSHOT05]**
+
   - New EC2 Instance for back-end.
     Public DNS: ec2-34-204-95-58.compute-1.amazonaws.com         # RedHat
     IPv4 Public IP: 34.204.95.58
@@ -428,26 +459,21 @@ checklist item.
   - New S3 Bucket for front-end.
     Bucket name: `s3-uda-deploy`
 
-Working with Amazon S3 Buckets
-https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingBucket.html
+---
 
-An S3 bucket can be accessed through its URL. The URL format of a bucket is either of two options: 
-http://s3.amazonaws.com/[bucket_name]/  or, http://[bucket_name].s3.amazonaws.com/
+Website endpoints
+https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html
+Depending on your Region, your Amazon S3 website endpoint follows one of these two formats.
+s3-website dash (-) Region ‐ 
+http://bucket-name.s3-website-Region.amazonaws.com 
+==>> http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com --OK!
 
-Amazon S3 virtual hosted style URLs follow the format shown below.
-https://bucket-name.s3.Region.amazonaws.com/key name
+s3-website dot (.) Region ‐ 
+http://bucket-name.s3-website.Region.amazonaws.com  
+==>> http://s3-uda-deploy.s3-website.us-east-1.amazonaws.com --OK!
+These URLs return the default index document that you configure for the website.
 
-In Amazon S3, path-style URLs follow the format shown below.
-https://s3.Region.amazonaws.com/bucket-name/key name
-
-In Amazon S3, path-style URLs follow the format shown below.
-https://s3.Region.amazonaws.com/bucket-name/key name
-
-Using:
-http://s3.amazonaws.com/s3-uda-deploy/  or, 
-http://s3-uda-deploy.s3.amazonaws.com/
-
-https://s3-uda-deploy.s3.us-east-1.amazonaws.com/README.md
+---
 
 Making Everything in the S3 Bucket Publicly Accessible:
 Amazon S3 > s3-uda-deploy > Permissions > Bucket Policy:
@@ -704,8 +730,37 @@ Web - ELP62178K8WGU - dlikkhw73vt34.cloudfront.net - s3-uda-deploy.s3-website-us
 Domain Name: dlikkhw73vt34.cloudfront.net
 Price Class: Use Only U.S., Canada and Europe  #  <<==
 
+Origin: 
+s3-uda-deploy.s3-website-us-east-1.amazonaws.com  -- OK!
+s3-uda-deploy.s3-website.us-east-1.amazonaws.com  -- dot vs dash: Use dot
+--
+s3-uda-deploy.s3.amazonaws.com ?? Deprecated ??
+udapeople-udapeople.s3.amazonaws.com ?? Deprecated ??
+
+
 http://dlikkhw73vt34.cloudfront.net/#/employees
 
+$ aws cloudformation deploy \
+>             --template-file .circleci/files/cloudfront.yml \
+>             --stack-name project-udapeople \
+>             --parameter-overrides WorkflowID=udapeople
+
+Waiting for changeset to be created..
+Waiting for stack create/update to complete
+Successfully created/updated stack - project-udapeople
+$ 
+
+Setup in `.circleci/config.yml`
+
+Website endpoints
+https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteEndpoints.html
+Using:
+s3-website dot (.) Region ‐ 
+http://bucket-name.s3-website.Region.amazonaws.com  
+===>>> http://s3-uda-deploy.s3-website.us-east-1.amazonaws.com
+
+
+---
 
 - Provide the public URL for your back-end server. **[URL04]**
 API_URL=http://ec2-100-25-117-115.compute-1.amazonaws.com:3030
@@ -791,10 +846,11 @@ It will be once you build the next job!
 - Add a “[command](https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-commands)”
   that rolls back the last change:
   - Destroy the current CloudFormation stack.
-  - Revert the last migration (IF a new migration was applied) on the database to that it goes
-    back to the way it was before.
+  - Revert the last migration (IF a new migration was applied) on the database 
+    to that it goes back to the way it was before.
 - No more jobs should run after this.
-- Provide a screenshot for a successful rollback after a failed smoke test. **[SCREENSHOT07]**
+- Provide a screenshot for a successful rollback after a failed smoke test. 
+  **[SCREENSHOT07]**
 
 ###### 5. Promotion Phase
 
@@ -874,6 +930,15 @@ running out of memory or disk space. Set up a job to make that dream a reality.
 For your submission, please zip up all of the 12 screenshots, and the text or presentation document, into one zip archive. In your submission you should also include a text file labeled urls.txt with the following URLs:
 - Public Url to GitHub repository (not private) [URL01]
 - Public Url to working CI/CD pipeline (failure-free) [URL02]
+  https://review.udacity.com/#!/rubrics/2834/view
+  Evidence of an active and working CI/CD pipeline that is triggered when 
+  new commits are detected in the connected git repository. [URL02]
+https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows
+
+Announcing new insights endpoints in CircleCI’s API v2
+https://circleci.com/blog/announcing-new-insights-endpoints-in-circleci-s-api-v2/
+
+
 - Public URL for your CloudFront distribution (aka, your front-end) [URL03]
 - Public URLs to deployed application front-end [URL04] and back-end [URL05]
 - Public URL to your Prometheus Server. [URL06]
