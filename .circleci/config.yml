@@ -298,10 +298,6 @@ workflows:
           context: ci-uda-context
           requires:
             - create-frontend-s3
-      - create-backend-ec2:
-          context: ci-uda-context
-          requires:
-            - create-frontend-s3
       - create-prometheus-ec2:
           context: ci-uda-context
           requires:
