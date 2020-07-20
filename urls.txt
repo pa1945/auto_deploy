@@ -4,35 +4,54 @@
 A text file named urls.txt including:
 
 Public Url to GitHub repository (not private) [URL01]
-https://github.com/pa1945/auto_deploy
+- https://github.com/pa1945/auto_deploy
 
 
-Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
-http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees
+Provide the public URL for your S3 Bucket (aka, your front-end). [URL02] 
+Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02] old project
+- http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees
+
+Provide the public Url to working CI/CD pipeline [URL02] - updated project
+Public Url to working CI/CD pipeline (failure-free) [URL02]
+- https://review.udacity.com/#!/rubrics/2834/view
+Evidence of an active and working CI/CD pipeline that is triggered 
+when new commits are detected in the connected git repository. [URL02]
+
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/default
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/default/jobs
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/aws-cli
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/aws-cli/jobs
+One should authenticate on 'circleci' to see the workflows.
 
 
-Public URL for your CloudFront distribution (aka, your blue production front-end) [URL03]
-http://dlikkhw73vt34.cloudfront.net/#/employees
-
+Public URL for your CloudFront distribution  (aka, your blue 
+production front-end) [URL03] (Configuration Management Project)
+- http://dlikkhw73vt34.cloudfront.net/#/employees
+- http://dre9jf8vhlsbm.cloudfront.net/#/employees
 
 Extra:
 Public URLs to deployed application front-end in EC2 (RedHat)
-http://ec2-34-204-95-58.compute-1.amazonaws.com:3000/#/employees
+- http://ec2-34-204-95-58.compute-1.amazonaws.com:3000/#/employees
 Use Firefox, Opera, Safari, IE.
 Some issues using Google Chrome.
 SSH:
 ssh -i "uda-deploy-ec2.pem" ec2-user@ec2-34-204-95-58.compute-1.amazonaws.com
 
+Evidence of Ansible Playbook code that performs the tasks necessary 
+to run the backend on the EC2 instance. [URL03]
+From: https://review.udacity.com/#!/rubrics/2834/view
+
 
 Public URLs to deployed application back-end in EC2 [URL04]
-http://ec2-100-25-117-115.compute-1.amazonaws.com:3030/api/status
+- http://ec2-100-25-117-115.compute-1.amazonaws.com:3030/api/status
 Ubuntu 20.
 SSH:
 ssh -i "uda-deploy-ec2.pem" ubuntu@ec2-100-25-117-115.compute-1.amazonaws.com
 
 
 Public URL to your Prometheus Server [URL05]
-http://ec2-54-226-141-209.compute-1.amazonaws.com:9090/graph
+- http://ec2-54-226-141-209.compute-1.amazonaws.com:9090/graph
 Ubuntu 20.
 SSH:
 ssh -i "uda-deploy-ec2.pem" ubuntu@ec2-54-226-141-209.compute-1.amazonaws.com

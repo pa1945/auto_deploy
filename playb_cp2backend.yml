@@ -1,0 +1,23 @@
+---
+#
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html#examples
+# https://www.decodingdevops.com/ansible-copy-module/
+#
+# Ansible Copy
+# https://www.javatpoint.com/ansible-copy
+#
+# Run:
+# $ ansible-playbook playb_cp2backend.yml
+#
+- hosts: "aws_ubuntu"
+  tasks:  
+  - name: Ansible copy backend files to a remote server  
+    copy:
+      src: backend/
+      dest: ~/uda-deploy/backend
+      # force: yes
+  #- name: Ansible copy 'ecosystem.config.js' file to a remote server  
+  #  copy:
+  #    src: ecosystem.config.js
+  #    dest: ~/uda-deploy/
+  #    # force: yes
