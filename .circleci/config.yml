@@ -415,8 +415,8 @@ workflows:
 #-            - create-prometheus-ec2
       - check-curl-backend:
           context: ci-uda-context
-          requires:
-            - create-backend-ec2
+          #requires:
+          #  - create-backend-ec2
 #-      - check-curl-frontend:
 #-          context: ci-uda-context
 #-          requires:
