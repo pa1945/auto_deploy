@@ -833,6 +833,8 @@ else
   return 0
 fi
 
+:warning: bash: return: can only `return' from a function or sourced script
+Use: exit
 
 CIRCLE_WORKFLOW_ID:
 A unique identifier for the workflow instance of the current job. 

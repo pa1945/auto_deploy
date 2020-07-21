@@ -307,11 +307,8 @@ jobs:
       - run:
           name: Copy fronted/dist to s3 bucket
           command: |
-            FRONTEND_IP=$(aws ec2 describe-instances  \
-              --filters Name=tag-key,Values=Name  \
-              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-              --output text|grep frontend|awk '{print $1}' )
-            if curl -s ${BACKEND_IP} | grep -i "Welcome"
+            FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
+            if curl -s ${FRONTEND} | grep -i "Welcome"
             then
               exit 1
             else
