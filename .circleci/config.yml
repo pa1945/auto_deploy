@@ -291,10 +291,11 @@ jobs:
             # Store evidence on 'memstash.io'
             # echo "This is pipeline ID << pipeline.id >>"
             # echo "Stored pipeline ID: << pipeline.id >>_stack-delete"
+            DATE=`date`
             curl -H "Content-Type: text/plain" \
               -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-              --request PUT --data "Job: << pipeline.id >>_stack-delete" \
-              https://api.memstash.io/values/udapeople-cp2s3
+              --request PUT --data "Circle - $DATE : << pipeline.id >>_stack-delete" \
+              https://api.memstash.io/values/udapeople-stack-delete
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-stack-delete
             
@@ -323,9 +324,10 @@ jobs:
             # Store evidence on 'memstash.io'
             # echo "This is pipeline ID << pipeline.id >>"
             # echo "Stored pipeline ID: << pipeline.id >>_cp2s3"
+            DATE=`date`
             curl -H "Content-Type: text/plain" \
               -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-              --request PUT --data "Job: << pipeline.id >>_cp2s3" \
+              --request PUT --data "Circle - $DATE: << pipeline.id >>_cp2s3" \
               https://api.memstash.io/values/udapeople-cp2s3
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
