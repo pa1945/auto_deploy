@@ -351,7 +351,7 @@ workflows:
     jobs:
       - stack-delete:
           context: ci-uda-context
-          stack-param: prometheus-ec2
+          # stack-param: prometheus-ec2
 
 #-workflows:
 #-  version: 2
