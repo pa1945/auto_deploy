@@ -294,9 +294,9 @@ jobs:
               --output text|grep backend|awk '{print $1}' )
             if curl -s ${BACKEND_IP} | grep -i "status"
             then
-              return 1
+              exit 1
             else
-              return 0
+              exit 0
             fi
 
   check-curl-frontend:
@@ -313,9 +313,9 @@ jobs:
               --output text|grep frontend|awk '{print $1}' )
             if curl -s ${BACKEND_IP} | grep -i "Welcome"
             then
-              return 1
+              exit 1
             else
-              return 0
+              exit 0
             fi
 
 
