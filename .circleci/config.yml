@@ -280,6 +280,44 @@ jobs:
             # --exclude "*.DS_Store" --acl public-read --cache-control \
             # public,max-age=604800 --dryrun --profile iam_user
 
+  check-curl-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Copy fronted/dist to s3 bucket
+          command: |
+            BACKEND_IP=$(aws ec2 describe-instances  \
+              --filters Name=tag-key,Values=Name  \
+              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+              --output text|grep backend|awk '{print $1}' )
+            if curl -s ${BACKEND_IP} | grep -i "status"
+            then
+              return 1
+            else
+              return 0
+            fi
+
+  check-curl-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Copy fronted/dist to s3 bucket
+          command: |
+            FRONTEND_IP=$(aws ec2 describe-instances  \
+              --filters Name=tag-key,Values=Name  \
+              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+              --output text|grep frontend|awk '{print $1}' )
+            if curl -s ${BACKEND_IP} | grep -i "Welcome"
+            then
+              return 1
+            else
+              return 0
+            fi
+
 
 workflows:
   version: 2
@@ -316,7 +354,13 @@ workflows:
             - create-frontend-s3
             - create-backend-ec2
             - create-prometheus-ec2
-      # - hello-world-udapeople
+
+      - check-curl-backend:
+          requires:
+            - create-backend-ec2
+      - check-curl-frontend:
+          requires:
+            - check-curl-backend
 
   aws-cli:
     jobs:
