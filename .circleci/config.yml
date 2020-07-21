@@ -417,7 +417,7 @@ workflows:
           stack-param: stack-name
       - s3-delete:
           context: ci-uda-context
-          stack-param: bucket-name
+          stack-param: bucket-namexxx
       - ec2-delete:
           context: ci-uda-context
           stack-param: i-5203422c
