@@ -264,6 +264,10 @@ jobs:
             # 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
 
   stack-delete:
+    parameters:
+      stack-param:
+        type: string
+        default: prometheus-ec2
     docker:
       - image: amazon/aws-cli
     steps:
