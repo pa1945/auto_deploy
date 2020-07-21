@@ -283,7 +283,8 @@ jobs:
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2            
             aws cloudformation delete-stack \
             --stack-name prometheus-ec2
-            # --stack-name << parameters.stack-param >>
+            
+            # --stack-name  parameters.stack-param 
 
 
   run-cp2s3:
