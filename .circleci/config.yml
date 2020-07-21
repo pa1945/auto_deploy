@@ -267,7 +267,7 @@ jobs:
     parameters:
       stack-param:
         type: string
-        default: prometheus-ec2
+        default: stack-name
     docker:
       - image: amazon/aws-cli
     steps:
@@ -298,8 +298,46 @@ jobs:
               https://api.memstash.io/values/udapeople-stack-delete
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-stack-delete
-            
 
+  s3-delete:
+    parameters:
+      stack-param:
+        type: string
+        default: bucket-name
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - store_test_results:
+          path: /tmp/test-results
+      - run:
+          name: Delete s3 bucket
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws s3 rb s3://<< parameters.stack-param >>
+            # Deletes all objects and subfolders in the bucket and 
+            # then removes the bucket.
+            # aws s3 rb s3://<< parameters.stack-param >> --force
+
+  ec2-delete:
+    parameters:
+      stack-param:
+        type: string
+        default: i-5203422c	# Fake
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - store_test_results:
+          path: /tmp/test-results
+      - run:
+          name: Delete ec2 instance
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws ec2 terminate-instances \
+            --instance-ids  << parameters.stack-param >>
 
   run-cp2s3:
     docker:
@@ -376,7 +414,13 @@ workflows:
     jobs:
       - stack-delete:
           context: ci-uda-context
-          stack-param: prometheus-ec2
+          stack-param: stack-name
+      - s3-delete:
+          context: ci-uda-context
+          stack-param: bucket-name
+      - ec2-delete:
+          context: ci-uda-context
+          stack-param: i-5203422c
 
 #-workflows:
 #-  version: 2
@@ -413,10 +457,10 @@ workflows:
 #-            - create-frontend-s3
 #-            - create-backend-ec2
 #-            - create-prometheus-ec2
-      - check-curl-backend:
-          context: ci-uda-context
-          #requires:
-          #  - create-backend-ec2
+#-      - check-curl-backend:
+#-          context: ci-uda-context
+#-          requires:
+#-            - create-backend-ec2
 #-      - check-curl-frontend:
 #-          context: ci-uda-context
 #-          requires:
