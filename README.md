@@ -814,7 +814,29 @@ BACKEND_IP=$(aws ec2 describe-instances \
   --query 'Reservations[*].Instances[*].PublicIpAddress' \
   --output text)
 
+Using:
+BACKEND_IP=$(aws ec2 describe-instances --filters Name=tag-key,Values=Name \
+ --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+ --output text|grep backend|awk '{print $1}')
+BACKEND_IP=100.25.117.115
+
+BACKEND_IP=$(aws ec2 describe-instances  \
+--filters Name=tag-key,Values=Name  \
+--query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+--output text|grep backend|awk '{print $1}' )
+$ 
 curl "http://${BACKEND_IP}:3030/api/status"
+if curl -s ${BACKEND_IP} | grep -i "status"
+then
+  return 1
+else
+  return 0
+fi
+
+
+CIRCLE_WORKFLOW_ID:
+A unique identifier for the workflow instance of the current job. 
+This identifier is the same for every job in a given workflow instance.
 
 ```
   - Check the front-end to make sure it includes a word or two that proves it is working properly.
@@ -822,7 +844,7 @@ curl "http://${BACKEND_IP}:3030/api/status"
 URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"
 URL="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
 
-if curl -s ${URL} | grep "Welcome"
+if curl -s ${URL} | grep -i "Welcome"
 then
   return 1
 else
@@ -887,11 +909,13 @@ adding a job to clean up old stacks.
 #### Section 4 - Surface Critical Server Errors for Diagnosis Using Centralized Logging
 
 Errors and unhealthy states are important to know about, wouldn’t you say? 
-But, too often, server errors are silenced by hasty reboots or simply never having an outlet in 
-the first place. If a server has an error in a forest, but no one is there to hear it, 
-did it actually happen? Why is the server in the forest in the first place? 
-UdaPeople chose Prometheus as a monitoring solution since it is open-source and versatile. 
-Once configured properly, Prometheus will turn our server’s errors into sirens that no one can ignore.  
+But, too often, server errors are silenced by hasty reboots or simply never 
+having an outlet in  the first place. If a server has an error in a forest, 
+but no one is there to hear it, did it actually happen? Why is the server in 
+the forest in the first place? 
+UdaPeople chose Prometheus as a monitoring solution since it is open-source 
+and versatile. Once configured properly, Prometheus will turn our server’s 
+errors into sirens that no one can ignore.  
 
 ##### Setup
 - Create an EC2 instance and SSH into it.

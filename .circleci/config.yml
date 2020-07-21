@@ -354,11 +354,12 @@ workflows:
             - create-frontend-s3
             - create-backend-ec2
             - create-prometheus-ec2
-
       - check-curl-backend:
+          context: ci-uda-context
           requires:
             - create-backend-ec2
       - check-curl-frontend:
+          context: ci-uda-context
           requires:
             - check-curl-backend
 
