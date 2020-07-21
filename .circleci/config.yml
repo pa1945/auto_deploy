@@ -73,7 +73,7 @@ jobs:
       - run:
           name: List folder/dir where we are
           command: |
-            ls -las
+            pwd ; ls -las
       - run:
           name: cd frontend, install 'npm i' and run lint
           command: |
@@ -91,7 +91,7 @@ jobs:
       - run:
           name: List folder/dir where we are
           command: |
-            ls -las
+            pwd ; ls -las
       - run:
           name: cd backend, install 'npm i' and run lint
           command: |
@@ -111,7 +111,7 @@ jobs:
       - run:
           name: List folder/dir where we are
           command: |
-            ls -las
+            pwd ; ls -las
       - run:
           name: cd frontend, install 'npm i'
           command: |
@@ -120,7 +120,6 @@ jobs:
           name: cd frontend,  and run 'npm audit'
           command: |
             cd frontend; npm audit
-
       - run:
           name: cd frontend, and run 'npm start'
           command: |
@@ -136,11 +135,10 @@ jobs:
           command: |
             cd backend && ls -als
             npm -v && sudo npm install npm -g && npm -v
-
       - run:
           name: List folder/dir where we are
           command: |
-            ls -las
+            pwd ; ls -las
       - run:
           name: cd backend, install 'npm i'
           command: |
@@ -227,7 +225,6 @@ jobs:
             # sudo apt install python3-pip
             # pip3 install awscli --upgrade --user
             aws --version
-
       - run:
           name: Run aws cloudformation and create ec2 instance
           command: |
@@ -252,7 +249,6 @@ jobs:
             # sudo apt install python3-pip
             # pip3 install awscli --upgrade --user
             aws --version
-
       - run:
           # https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-stack-export-name-error/
           # WorkflowID=<existing S3 bucket> e.g.:'s3-uda-deploy'
@@ -266,6 +262,26 @@ jobs:
             --stack-name cloudf-udapeople \
             --parameter-overrides WorkflowID=s3-uda-deploy
             # 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
+
+  stack-delete:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install/version aws cli
+          command: |
+            aws --version
+      - run:
+          # https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-stack-export-name-error/
+          # WorkflowID=<existing S3 bucket> e.g.:'s3-uda-deploy'
+          name: Run aws cloudformation 
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2            
+            aws cloudformation delete-stack \
+            --stack-name prometheus-ec2
+
 
   run-cp2s3:
     docker:
@@ -319,53 +335,59 @@ jobs:
               exit 1	# Fail
             fi
 
-
 workflows:
   version: 2
   create-infra:
     jobs:
-      # - lint-frontend
-      # - lint-backend
-      # - run-frontend
-      # - run-backend
-      - create-frontend-s3:
-          context: ci-uda-context
-      #    aws-access-key-id: AWS_ACCESS_KEY_ID2
-      #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-      #    aws-region: AWS_DEFAULT_REGION
-      - create-backend-ec2:
-          context: ci-uda-context
-          requires:
-            - create-frontend-s3
-      - create-prometheus-ec2:
-          context: ci-uda-context
-          requires:
-            - create-frontend-s3
-            - create-backend-ec2
-      - run-cp2s3:
-          context: ci-uda-context
-          requires:
-            - create-frontend-s3
-            - create-backend-ec2
-      - run-cloudfront:
-          context: ci-uda-context
-          # type: approval  # <<< This key-value pair will set your 
-          # workflow to a status of "On Hold"
-          requires:
-            - create-frontend-s3
-            - create-backend-ec2
-            - create-prometheus-ec2
-      - check-curl-backend:
-          context: ci-uda-context
-          requires:
-            - create-backend-ec2
-      - check-curl-frontend:
-          context: ci-uda-context
-          requires:
-            - check-curl-backend
+      - stack-delete
 
-  aws-cli:
-    jobs:
-      - hello-world-udapeople
-      # - aws-cli-example:
-      #    context: ci-uda-context
+#-workflows:
+#-  version: 2
+#-  create-infra:
+#-    jobs:
+#-      # - lint-frontend
+#-      # - lint-backend
+#-      # - run-frontend
+#-      # - run-backend
+#-      - create-frontend-s3:
+#-          context: ci-uda-context
+#-      #    aws-access-key-id: AWS_ACCESS_KEY_ID2
+#-      #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
+#-      #    aws-region: AWS_DEFAULT_REGION
+#-      - create-backend-ec2:
+#-          context: ci-uda-context
+#-          requires:
+#-            - create-frontend-s3
+#-      - create-prometheus-ec2:
+#-          context: ci-uda-context
+#-          requires:
+#-            - create-frontend-s3
+#-            - create-backend-ec2
+#-      - run-cp2s3:
+#-          context: ci-uda-context
+#-          requires:
+#-            - create-frontend-s3
+#-            - create-backend-ec2
+#-      - run-cloudfront:
+#-          context: ci-uda-context
+#-          # type: approval  # <<< This key-value pair will set your 
+#-          # workflow to a status of "On Hold"
+#-          requires:
+#-            - create-frontend-s3
+#-            - create-backend-ec2
+#-            - create-prometheus-ec2
+#-      - check-curl-backend:
+#-          context: ci-uda-context
+#-          requires:
+#-            - create-backend-ec2
+#-      - check-curl-frontend:
+#-          context: ci-uda-context
+#-          requires:
+#-            - check-curl-backend
+#-
+#-  aws-cli:
+#-    jobs:
+#-      - hello-world-udapeople
+#-      # - aws-cli-example:
+#-      #    context: ci-uda-context
+#-
