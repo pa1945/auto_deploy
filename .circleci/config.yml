@@ -288,7 +288,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Copy fronted/dist to s3 bucket
+          name: Check backend using curl
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
@@ -296,7 +296,7 @@ jobs:
               --filters Name=tag-key,Values=Name  \
               --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
               --output text|grep backend|awk '{print $1}' )
-            if curl -s ${BACKEND_IP} | grep -i "status"
+            if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
               exit 0   # OK
             else
@@ -309,7 +309,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Copy fronted/dist to s3 bucket
+          name: Check Frontend using curl
           command: |
             FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${FRONTEND} | grep -i "Welcome"
