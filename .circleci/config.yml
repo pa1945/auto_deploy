@@ -442,8 +442,8 @@ workflows:
           #requires:
           #  - create-backend-ec2
 
-#  create-infra:
-#    jobs:
+  create-infra:
+    jobs:
       - create-frontend-s3:
           context: ci-uda-context
           stack-param: uda-bucketx
