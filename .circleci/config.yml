@@ -402,7 +402,7 @@ jobs:
               --output text|grep backend|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
-              exit 0   # OK 
+              exit 0   # OK
             else
               exit 1   # Fail
             fi
@@ -421,6 +421,23 @@ jobs:
               exit 0    # OK
             else
               exit 1    # Fail
+            fi
+
+  deploy-ifmaster:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Deploy if Master branch
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              # ansible-playbook site.yml
+              echo "Master Branch - deploy site"
+              exit 0
+            else
+              echo "Branch = ${CIRCLE_BRANCH}: NOT Master Branch -- Do not deploy site"
+              exit 1
             fi
 
 workflows:
@@ -465,11 +482,13 @@ workflows:
 #-      # - lint-backend
 #-      # - run-frontend
 #-      # - run-backend
-#-      - run-cp2s3:
-#-          context: ci-uda-context
-#-          requires:
-#-            - create-frontend-s3
-#-            - create-backend-ec2
+      - run-cp2s3:
+          context: ci-uda-context
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
+            - deploy-ifmaster
+
 #-      - run-cloudfront:
 #-          context: ci-uda-context
 #-          # type: approval  # <<< This key-value pair will set your 
@@ -487,6 +506,21 @@ workflows:
 #-          requires:
 #-            - check-curl-backend
 #-
+
+#  deploy-udap:
+#    jobs:
+
+      - deploy-ifmaster:
+        filters:
+          branches:
+            - master
+            - beta
+
+#        filters:
+#          branches:
+#            only:
+#              - master
+#              - beta
 
   say-hello:
     jobs:
