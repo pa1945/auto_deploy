@@ -154,6 +154,10 @@ jobs:
             cd backend;  npm run start
 
   create-frontend-s3:
+    parameters:
+      stack-param:
+        type: string
+        default: stack-name-udap
     docker:
       - image: amazon/aws-cli
     steps:
@@ -185,9 +189,14 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name udapeople-s3 \
-            --parameter-overrides ID=s3-udapeople
+            --parameter-overrides ID=<< parameters.stack-param >>
+            # --parameter-overrides ID=s3-udapeople
 
   create-backend-ec2:
+    parameters:
+      stack-param:
+        type: string
+        default: stack-name-udap
     docker:
       - image: amazon/aws-cli
     steps:
@@ -210,9 +219,14 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
             --stack-name udapeople-ec2 \
-            --parameter-overrides ID=ec2-udapeople
+            --parameter-overrides ID=<< parameters.stack-param >>
+            # --parameter-overrides ID=ec2-udapeople
 
   create-prometheus-ec2:
+    parameters:
+      stack-param:
+        type: string
+        default: stack-name-udap
     docker:
       - image: amazon/aws-cli
     steps:
@@ -234,7 +248,8 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/prometheus.yml \
             --stack-name prometheus-ec2 \
-            --parameter-overrides ID=ec2-promet
+            --parameter-overrides ID=<< parameters.stack-param >>
+            # --parameter-overrides ID=ec2-promet
 
   run-cloudfront:
     docker:
@@ -267,7 +282,7 @@ jobs:
     parameters:
       stack-param:
         type: string
-        default: stack-name
+        default: stack-name-udap
     docker:
       - image: amazon/aws-cli
     steps:
@@ -410,40 +425,45 @@ jobs:
 
 workflows:
   version: 2
-  create-infra:
+  clean-up-old-stacks:
     jobs:
       - stack-delete:
           context: ci-uda-context
-          stack-param: stack-name
+          stack-param: stack-name-udap
       - s3-delete:
           context: ci-uda-context
-          stack-param: bucket-namexxx
+          stack-param: uda-bucket
+          requires:
+            create-frontend-s3
       - ec2-delete:
           context: ci-uda-context
           stack-param: i-5203422c
+          requires:
+            - create-backend-ec2
 
-#-workflows:
-#-  version: 2
-#-  create-infra:
-#-    jobs:
+  create-infra:
+    jobs:
+      - create-frontend-s3:
+          context: ci-uda-context
+          stack-param: uda-bucket
+      - create-backend-ec2:
+          context: ci-uda-context
+          stack-param: uda-instance
+          requires:
+            - create-frontend-s3
+      - create-prometheus-ec2:
+          context: ci-uda-context
+          stack-param: udap-promet
+          #requires:
+          #  - create-frontend-s3
+          #  - create-backend-ec2
+
+  check-infra:
+    jobs:
 #-      # - lint-frontend
 #-      # - lint-backend
 #-      # - run-frontend
 #-      # - run-backend
-#-      - create-frontend-s3:
-#-          context: ci-uda-context
-#-      #    aws-access-key-id: AWS_ACCESS_KEY_ID2
-#-      #    aws-secret-access-key: AWS_SECRET_ACCESS_KEY2
-#-      #    aws-region: AWS_DEFAULT_REGION
-#-      - create-backend-ec2:
-#-          context: ci-uda-context
-#-          requires:
-#-            - create-frontend-s3
-#-      - create-prometheus-ec2:
-#-          context: ci-uda-context
-#-          requires:
-#-            - create-frontend-s3
-#-            - create-backend-ec2
 #-      - run-cp2s3:
 #-          context: ci-uda-context
 #-          requires:
@@ -466,9 +486,12 @@ workflows:
 #-          requires:
 #-            - check-curl-backend
 #-
-#-  aws-cli:
-#-    jobs:
-#-      - hello-world-udapeople
-#-      # - aws-cli-example:
-#-      #    context: ci-uda-context
-#-
+
+  say-hello:
+    jobs:
+  aws-cli:
+    jobs:
+      - hello-world-udapeople
+      # - aws-cli-example:
+      #    context: ci-uda-context
+
