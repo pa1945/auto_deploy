@@ -476,8 +476,8 @@ workflows:
           #  - create-frontend-s3
           #  - create-backend-ec2
 
-  check-code:
-    jobs:
+#  check-code:
+#    jobs:
 #-      # - lint-frontend
 #-      # - lint-backend
 #-      # - run-frontend
@@ -485,8 +485,8 @@ workflows:
       - run-cp2s3:
           context: ci-uda-context
           requires:
-            - create-infra.create-frontend-s3
-            - create-infra.create-backend-ec2
+            - create-frontend-s3
+            - create-backend-ec2
             - deploy-udap
 #-      - run-cloudfront:
 #-          context: ci-uda-context
