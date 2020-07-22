@@ -423,6 +423,23 @@ jobs:
               exit 1    # Fail
             fi
 
+  deploy-site:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Deploy if Master branch
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              # ansible-playbook site.yml
+              echo "Master Branch - deploy site"
+              exit 0
+            else
+              echo "NOT Master Branch -- Do not deploy site"
+              exit 1
+            fi
+
 workflows:
   version: 2
 
@@ -459,17 +476,18 @@ workflows:
           #  - create-frontend-s3
           #  - create-backend-ec2
 
-#  check-code:
-#    jobs:
+  check-code:
+    jobs:
 #-      # - lint-frontend
 #-      # - lint-backend
 #-      # - run-frontend
 #-      # - run-backend
-#-      - run-cp2s3:
-#-          context: ci-uda-context
-#-          requires:
-#-            - create-frontend-s3
-#-            - create-backend-ec2
+      - run-cp2s3:
+          context: ci-uda-context
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
+            - deploy-udap
 #-      - run-cloudfront:
 #-          context: ci-uda-context
 #-          # type: approval  # <<< This key-value pair will set your 
@@ -487,6 +505,10 @@ workflows:
 #-          requires:
 #-            - check-curl-backend
 #-
+
+  deploy-udap:
+    jobs:
+      - deploy-site
 
   say-hello:
     jobs:
