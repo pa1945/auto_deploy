@@ -339,7 +339,7 @@ jobs:
     parameters:
       stack-param:
         type: string
-        default: i-5203422c	# Fake
+        default: i-5203422c    # Fake
     docker:
       - image: amazon/aws-cli
     steps:
@@ -418,13 +418,14 @@ jobs:
             FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${FRONTEND} | grep -i "Welcome"
             then
-              exit 0	# OK
+              exit 0    # OK
             else
-              exit 1	# Fail
+              exit 1    # Fail
             fi
 
 workflows:
   version: 2
+
   clean-up-old-stacks:
     jobs:
       - stack-delete:
@@ -458,8 +459,8 @@ workflows:
           #  - create-frontend-s3
           #  - create-backend-ec2
 
-  check-infra:
-    jobs:
+#  check-code:
+#    jobs:
 #-      # - lint-frontend
 #-      # - lint-backend
 #-      # - run-frontend
@@ -489,9 +490,6 @@ workflows:
 
   say-hello:
     jobs:
-  aws-cli:
-    jobs:
       - hello-world-udapeople
       # - aws-cli-example:
       #    context: ci-uda-context
-
