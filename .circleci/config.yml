@@ -423,7 +423,7 @@ jobs:
               exit 1    # Fail
             fi
 
-  deploy-site:
+  deploy-ifmaster:
     docker:
       - image: amazon/aws-cli
     steps:
@@ -488,6 +488,7 @@ workflows:
             - create-frontend-s3
             - create-backend-ec2
             - deploy-ifmaster
+
 #-      - run-cloudfront:
 #-          context: ci-uda-context
 #-          # type: approval  # <<< This key-value pair will set your 
@@ -508,6 +509,7 @@ workflows:
 
 #  deploy-udap:
 #    jobs:
+
       - deploy-ifmaster:
         filters:
           branches:
