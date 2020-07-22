@@ -436,7 +436,7 @@ jobs:
               echo "Master Branch - deploy site"
               exit 0
             else
-              echo "NOT Master Branch -- Do not deploy site"
+              echo "Branch = ${CIRCLE_BRANCH}: NOT Master Branch -- Do not deploy site"
               exit 1
             fi
 
@@ -487,7 +487,7 @@ workflows:
           requires:
             - create-frontend-s3
             - create-backend-ec2
-            - deploy-site
+            - deploy-site-if-master
 #-      - run-cloudfront:
 #-          context: ci-uda-context
 #-          # type: approval  # <<< This key-value pair will set your 
@@ -508,7 +508,7 @@ workflows:
 
 #  deploy-udap:
 #    jobs:
-      - deploy-site:
+      - deploy-site-if-master:
         filters:
           branches:
             - master
