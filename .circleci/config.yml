@@ -509,11 +509,16 @@ workflows:
   deploy-udap:
     jobs:
       - deploy-site
-        filters:
-          branches:
-            only:
-              - master
-              - beta
+        branches:
+          only:
+            - master
+            - beta
+
+#        filters:
+#          branches:
+#            only:
+3              - master
+3              - beta
 
   say-hello:
     jobs:
