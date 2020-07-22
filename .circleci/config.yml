@@ -318,7 +318,7 @@ jobs:
     parameters:
       stack-param:
         type: string
-        default: bucket-name
+        default: bucket-namex
     docker:
       - image: amazon/aws-cli
     steps:
@@ -432,29 +432,29 @@ workflows:
           context: ci-uda-context
           stack-param: stack-name-udap
       - s3-delete:
-          requires:
-            create-frontend-s3
           context: ci-uda-context
-          stack-param: uda-bucket
+          stack-param: uda-bucketx
+          #requires:
+          #  create-frontend-s3
       - ec2-delete:
+          context: ci-uda-context
+          stack-param: i-03d46b7705a8d05a7x
           requires:
             - create-backend-ec2
-          context: ci-uda-context
-          stack-param: i-5203422c
 
   create-infra:
     jobs:
       - create-frontend-s3:
           context: ci-uda-context
-          stack-param: uda-bucket
+          stack-param: uda-bucketx
       - create-backend-ec2:
           context: ci-uda-context
-          stack-param: uda-instance
+          stack-param: uda-instancex
           requires:
             - create-frontend-s3
       - create-prometheus-ec2:
           context: ci-uda-context
-          stack-param: udap-promet
+          stack-param: udap-prometx
           #requires:
           #  - create-frontend-s3
           #  - create-backend-ec2
