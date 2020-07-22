@@ -432,15 +432,15 @@ workflows:
           context: ci-uda-context
           stack-param: stack-name-udap
       - s3-delete:
+          requires:
+            create-frontend-s3
           context: ci-uda-context
           stack-param: uda-bucket
-          #requires:
-          #  create-frontend-s3
       - ec2-delete:
+          requires:
+            - create-backend-ec2
           context: ci-uda-context
           stack-param: i-5203422c
-          #requires:
-          #  - create-backend-ec2
 
   create-infra:
     jobs:
