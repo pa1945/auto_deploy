@@ -485,8 +485,8 @@ workflows:
       - run-cp2s3:
           context: ci-uda-context
           requires:
-            - create-frontend-s3
-            - create-backend-ec2
+            - create-infra.create-frontend-s3
+            - create-infra.create-backend-ec2
             - deploy-udap
 #-      - run-cloudfront:
 #-          context: ci-uda-context
