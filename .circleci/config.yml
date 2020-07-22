@@ -402,7 +402,7 @@ jobs:
               --output text|grep backend|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
-              exit 0   # OK
+              exit 0   # OK 
             else
               exit 1   # Fail
             fi
