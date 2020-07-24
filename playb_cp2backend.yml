@@ -16,6 +16,8 @@
       src: backend/
       dest: ~/uda-deploy/backend
       # force: yes
+
+  #
   #- name: Ansible copy 'ecosystem.config.js' file to a remote server  
   #  copy:
   #    src: ecosystem.config.js

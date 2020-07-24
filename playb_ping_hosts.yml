@@ -1,0 +1,32 @@
+# Run:
+# $ ansible-playbook playb_ping_hosts.yml
+#
+- name: Hosts ping google DNS
+  hosts: "*"
+  # hosts: "aws_rh"
+  gather_facts: false
+  # become: yes
+  # become_user: ec2-user / ubuntu
+  # Or,
+  # Declare in '/etc/ansible/hosts' for example:
+  # [aws_rh:vars]
+  # ansible_connection=ssh 
+  # ansible_user=ec2-user 
+  #
+  # [aws_ubuntu:vars]
+  # ansible_connection=ssh 
+  # ansible_user=ubuntu
+
+  tasks:
+    - debug: var=ansible_host
+    - name: Run as ec2-user/ubuntu --
+      raw: "{{ item }}"
+      loop:
+        - bash -c 'touch ~/ansible-ping'
+        - bash -c 'ping -c 3 8.8.8.8'
+        - bash -c 'touch ~/ansible-ping-finished'
+
+#  unarchive:
+#    src: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+#    dest: /tmp
+#    remote_src: yes

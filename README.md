@@ -683,7 +683,7 @@ https://pm2.keymetrics.io/docs/usage/quick-start/
 
 ---
 
-###### 2. Deploy Phase
+###### 2. Deploy Phase -- Using Ansible
 
 Now that the infrastructure is up and running, it’s time to configure for 
 dependencies and move our application files over. UdaPeople used to have 
@@ -699,16 +699,24 @@ to catch up on his Netflix playlist.
   - Take note of whether or not any new migrations were run. 
     This is useful information if you need to rollback.
 
+**New:**
+Save some evidence that any new migrations ran. 
+This is useful information if you need to rollback. 
+To do this, you can use bash to save the migration output to a file or 
+a variable. Then you can use grep to check for certain words that show 
+that new migrations were run. It might help to use MemStash.io to store 
+a true or false if any migrations were run (hint: use something 
+like << pipeline.id >>_migrations as a key).
+
+https://circleci.com/docs/2.0/configuration-reference/#using-pipeline-values
+
+
 - Add a job to build and copy the compiled back-end files to your new 
    EC2 instance. Use Ansible to copy the files. 
 
 - Add a job to prepare the front-end code for distribution and deploy it. 
   - Add the back-end url that you saved earlier to the job's `API_URL` 
     environment variables. 
-    API_URL=http://ec2-34-204-95-58.compute-1.amazonaws.com:3000   # This is front end
-
-#Frontend -  RedHat
-34.204.95.58   uda-deploy1   ec2-34-204-95-58.compute-1.amazonaws.com
 
 #Backend Ubuntu 20.
 100.25.117.115 uda-deploy3   ec2-100-25-117-115.compute-1.amazonaws.com
@@ -724,6 +732,11 @@ to catch up on his Netflix playlist.
     distribution to your new bucket.
 - Provide the public URL for your CloudFront distribution (aka, your front-end).
    **[URL03]**
+
+From: https://review.udacity.com/#!/rubrics/2834/view
+Evidence of Ansible Playbook code that performs the tasks necessary to run 
+the backend on the EC2 instance. [URL03]
+
 
 ### CloudFront Distributions
 Web - ELP62178K8WGU - dlikkhw73vt34.cloudfront.net - s3-uda-deploy.s3-website-us-east-1.amazonaws.com
@@ -826,15 +839,15 @@ BACKEND_IP=$(aws ec2 describe-instances  \
 --output text|grep backend|awk '{print $1}' )
 $ 
 curl "http://${BACKEND_IP}:3030/api/status"
-if curl -s ${BACKEND_IP} | grep -i "status"
+if curl -s "http:${BACKEND_IP}:3030/api/status" | grep -i "status"
 then
-  return 1
+  return 1      # <<<=== Use exit 1
 else
   return 0
 fi
 
 :warning: bash: return: can only `return' from a function or sourced script
-Use: exit
+Use: exit 1|0
 
 CIRCLE_WORKFLOW_ID:
 A unique identifier for the workflow instance of the current job. 
@@ -890,10 +903,11 @@ switch from blue to green.
 
 ###### 6. Cleanup Phase
 
-The UdaPeople finance department likes it when your AWS bills are more or less the same as 
-last month OR trending downward. But, what if all this “Blue-Green” is leaving behind a 
-trail of dead-end production environments? That upward trend probably means no Christmas 
-bonus for the dev team. Let’s make sure everyone at UdaPeople has a Merry Christmas by 
+The UdaPeople finance department likes it when your AWS bills are more or 
+less the same as last month OR trending downward. But, what if all this 
+“Blue-Green” is leaving behind a trail of dead-end production environments? 
+That upward trend probably means no Christmas bonus for the dev team. 
+Let’s make sure everyone at UdaPeople has a Merry Christmas by 
 adding a job to clean up old stacks.
 
 - Add a job that deletes the previous S3 bucket and EC2 instance. 
@@ -901,7 +915,11 @@ adding a job to clean up old stacks.
 
 ###### Other Considerations
 
-- Make sure you only run deployment-related jobs on commits to the `master` branch. 
+- Make sure you only run deployment-related jobs on commits to the 
+  `master` branch. <<== Check circleci:
+  if [ "${CIRCLE_BRANCH}" == "master" ]; then
+        ansible-playbook site.yml
+  fi
   Provide screenshot of a build triggered by a non-master commit. 
   It should only run the job prior to deployment. [SCREENSHOT10]
 - Provide public URLs to deployed application front-end [URL04] and back-end [URL05]
@@ -930,10 +948,18 @@ errors into sirens that no one can ignore.
 
 ###### 1. Setup Back-End Monitoring
 
-In order for server instances to speak to Prometheus, we need to install an “exporter” in each one.  
-Create a job that uses Ansible to go into the EC2 instance and install the exporter.
+In order for server instances to speak to Prometheus, we need to install 
+an “exporter” in each one.  
+Create a job that uses Ansible to go into the EC2 instance and install 
+the exporter.
 
-- Add a section to your back-end configuration job to install the `node_exporter` for Prometheus monitoring.
+- Add a section to your back-end configuration job to install the 
+  `node_exporter` for Prometheus monitoring.
+  Use:
+  .circleci/ansible/roles/configure-prometheus-node-exporter/tasks/main.yml
+
+  - https://codewizardly.com/prometheus-on-aws-ec2-part2/
+
 - After deploy, ensure your back-end is being discovered by the Prometheus Server.
 - Provide a screenshot of a graph of your EC2 instance including available memory, available disk space, 
    and CPU usage. **[SCREENSHOT11]**
@@ -941,19 +967,25 @@ Create a job that uses Ansible to go into the EC2 instance and install the expor
 
 ##### 2. Setup Alerts
 
-Now that Prometheus and our EC2 instance have an open line of communication, we need to set up some alerts. 
-The UdaPeople dev team loves their chat tool and wants to receive an alert in chat when the server starts 
-running out of memory or disk space. Set up a job to make that dream a reality.
+Now that Prometheus and our EC2 instance have an open line of communication, 
+we need to set up some alerts. 
+The UdaPeople dev team loves their chat tool and wants to receive an alert in 
+chat when the server starts  running out of memory or disk space. 
+Set up a job to make that dream a reality.
 
 - SSH into your Prometheus Server
 - Install and configure AlertManager by following 
   [these instructions](https://medium.com/@abhishekbhardwaj510/alertmanager-integration-in-prometheus-197e03bfabdf).
+  - https://codewizardly.com/prometheus-on-aws-ec2-part4/
 - You can decide if you will use Slack, email, or another messaging service.
 - Set up an alert for low memory or some condition you can control to intentionally cause an alert.
 - Provide a screenshot of an alert that was sent by Prometheus. **[SCREENSHOT12]**
 
 ## Project Submission
-For your submission, please zip up all of the 12 screenshots, and the text or presentation document, into one zip archive. In your submission you should also include a text file labeled urls.txt with the following URLs:
+For your submission, please zip up all of the 12 screenshots, and the text 
+or presentation document, into one zip archive. 
+In your submission you should also include a text file labeled urls.txt 
+with the following URLs:
 - Public Url to GitHub repository (not private) [URL01]
 - Public Url to working CI/CD pipeline (failure-free) [URL02]
   https://review.udacity.com/#!/rubrics/2834/view
@@ -964,10 +996,35 @@ https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows
 Announcing new insights endpoints in CircleCI’s API v2
 https://circleci.com/blog/announcing-new-insights-endpoints-in-circleci-s-api-v2/
 
-
 - Public URL for your CloudFront distribution (aka, your front-end) [URL03]
 - Public URLs to deployed application front-end [URL04] and back-end [URL05]
 - Public URL to your Prometheus Server. [URL06]
+
+--- Updated README.md
+- Your screenshots in JPG or PNG format, named using the screenshot number listed in the instructions. These screenshots should be included in your code repository in the root folder.
+  1. Job failed because of compile errors. [SCREENSHOT01]
+  1. Job failed because of unit tests. [SCREENSHOT02]
+  1. Job that failed because of vulnerable packages. [SCREENSHOT03]
+  1. An alert from one of your failed builds. [SCREENSHOT04]
+  1. Appropriate job failure for infrastructure creation. [SCREENSHOT05]
+  1. Appropriate job failure for the smoke test job. [SCREENSHOT06]
+  1. Successful rollback after a failed smoke test. [SCREENSHOT07]  
+  1. Successful promotion job. [SCREENSHOT08]
+  1. Successful cleanup job. [SCREENSHOT09]
+  1. Only deploy on pushed to `master` branch. [SCREENSHOT10]
+  1. Provide a screenshot of a graph of your EC2 instance including available memory, 
+     available disk space, and CPU usage. [SCREENSHOT11]
+     Prometheus Query: 
+     node_memory_MemAvailable_bytes
+     node_load5
+     node_filesystem_avail_bytes
+      
+
+  1. Provide a screenshot of an alert that was sent by Prometheus. [SCREENSHOT12]
+
+- Your presentation should be in PDF format named "presentation.pdf" and should be included in your code repository root folder. 
+
+---
 
 Before you submit your project, please check your work against the project rubric. 
 If you haven’t satisfied each criterion in the rubric, then revise your work so that you have met all 

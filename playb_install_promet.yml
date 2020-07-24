@@ -1,0 +1,77 @@
+#
+# https://docs.ansible.com/ansible/2.5/installation_guide/intro_installation.html
+#
+# Run:
+# $ ansible-playbook playb_install_promet.yml
+#
+# Inventory in current directory:
+# export ANSIBLE_INVENTORY=ansible_hosts
+#
+#
+# prometheus-server: Port: 9090
+#
+# prometheus-node-exporter: Port: 9100
+# Prometheus Node Exporter on AWS EC2
+# https://codewizardly.com/prometheus-on-aws-ec2-part2/
+#
+- name: Install prometheus on Ubuntu instance
+  # hosts: aws_ubuntu, aws _promet
+  hosts: "aws_promet"
+  become: yes
+  become_user: root
+  gather_facts: false
+  tasks:
+    - debug: var=ansible_host
+    - name: run as root and install Prometheus + node-exporter on Prometheus server
+      ignore_errors: true
+      raw: "{{ item }}"
+      loop:
+        - touch /root/ansible-prometheus-install
+        # - useradd --no-create-home prometheus
+        - apt install -y prometheus
+        - apt install -y prometheus-node-exporter
+        - apt install prometheus-alertmanager
+        - systemctl daemon-reload
+        - systemctl enable prometheus
+        - systemctl start prometheus
+        # /etc/systemd/system/prometheus.service
+        # ExecStart=/usr/bin/prometheus \...
+        # On EC2 backend install. Not on Prometheus server.
+        # - apt install -y python 
+        # Warning: The unit file, source configuration file or drop-ins 
+        # of prometheus.service changed on disk. 
+        # Run 'systemctl daemon-reload' to reload units.
+        # - systemctl daemon-reload
+        # - systemctl status prometheus
+
+
+- name: Install prometheus on Ubuntu instances (backend) and node_exporter
+  # hosts: aws_ubuntu, aws _promet
+  hosts: "aws_ubuntu"
+  become: yes
+  become_user: root
+  gather_facts: false
+  tasks:
+    - debug: var=ansible_host
+    - name: Ansible copy file to a remote server  
+      copy:
+        src: .circleci/ansible/roles/configure-prometheus-node-exporter/files/node_exporter.service
+        dest: /etc/systemd/system/node-exporter.service
+    - name: run as root and install Prometheus - node-exporter
+      ignore_errors: true
+      raw: "{{ item }}"
+      loop:
+        - touch /root/ansible-prometheus-node-exporter-install
+        - apt install -y prometheus
+        # On EC2 backend install:
+        - apt install -y prometheus-node-exporter
+        - apt install prometheus-alertmanager
+        # Now let’s create a user for Prometheus Node Exporter
+        # - useradd --no-create-home node_exporter
+        # - apt install -y python
+        - systemctl daemon-reload
+        # On ubuntu: node-exporter -> prometheus-node-exporter
+        - systemctl enable prometheus-node-exporter
+        - systemctl start prometheus-node-exporter
+        # - systemctl status node-exporter
+        - systemctl status prometheus-node-exporter

@@ -1,0 +1,43 @@
+---
+#
+# https://docs.ansible.com/ansible/latest/modules/copy_module.html#examples
+# https://www.decodingdevops.com/ansible-copy-module/
+#
+# Ansible Copy
+# https://www.javatpoint.com/ansible-copy
+#
+# Run:
+# $ ansible-playbook playb_run_npm.yml
+#
+- name: Run npm
+  # hosts: "*"
+  hosts: "aws_ubuntu"
+  gather_facts: false
+  tasks:
+    - debug: var=ansible_host
+    - name: Run npm
+      ignore_errors: true
+      shell: |
+        echo $PATH > path1.txt
+        # npm PATH:
+        . ~/.nvm/nvm.sh
+        echo $PATH > path2.txt
+        npm -v > npm.txt
+        npm install pm2 -g
+        # npm run start
+        pm2 start "npm start" --name backend
+        echo $PATH > path3.txt
+        #exit 0
+      args:
+        chdir: ~/uda-deploy/backend/
+        executable: /bin/bash
+      
+      
+      
+      
+#
+#- name: Ansible copy 'ecosystem.config.js' file to a remote server  
+#  copy:
+#    src: ecosystem.config.js
+#    dest: ~/uda-deploy/
+#    # force: yes

@@ -1,0 +1,25 @@
+# Run:
+# $ ansible-playbook playb_upgrade_rh.yml
+#
+- name: Install python3 on all RedHat (yum) instances and make maintenance
+  # hosts: "*"
+  hosts: "aws_rh"
+  become: yes
+  become_user: root
+  gather_facts: false
+  tasks:
+    - debug: var=ansible_host
+    - name: run as root - yum update, yum install python, node, pm2 ...
+      #ignore_errors: true
+      raw: "{{ item }}"
+      loop:
+        - touch /root/ansible-yum-update
+        - sudo rpm -Va --nofiles --nodigest
+        - sudo yum -y update --skip-broken
+        - touch /root/ansible-yum-install-py
+        - sudo yum install -y python 
+
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v0.17.0/node_exporter-0.17.0.linux-amd64.tar.gz
+    dest: /tmp
+    remote_src: yes

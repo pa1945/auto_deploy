@@ -1,0 +1,553 @@
+{
+    "Reservations": [
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-0e9089763828757e1",
+                    "InstanceId": "i-0664c47ffdf99661a",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "uda-deploy-ec2",
+                    "LaunchTime": "2020-07-04T13:34:49.000Z",
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-1e",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "ip-172-31-48-54.ec2.internal",
+                    "PrivateIpAddress": "172.31.48.54",
+                    "ProductCodes": [],
+                    "PublicDnsName": "ec2-34-204-95-58.compute-1.amazonaws.com",
+                    "PublicIpAddress": "34.204.95.58",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+                    },
+                    "StateTransitionReason": "",
+                    "SubnetId": "subnet-b14f6e8f",
+                    "VpcId": "vpc-2fc6e855",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [
+                        {
+                            "DeviceName": "/dev/xvda",
+                            "Ebs": {
+                                "AttachTime": "2020-07-04T13:34:50.000Z",
+                                "DeleteOnTermination": true,
+                                "Status": "attached",
+                                "VolumeId": "vol-0c8a2438aa25f34b6"
+                            }
+                        }
+                    ],
+                    "ClientToken": "",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [
+                        {
+                            "Association": {
+                                "IpOwnerId": "amazon",
+                                "PublicDnsName": "ec2-34-204-95-58.compute-1.amazonaws.com",
+                                "PublicIp": "34.204.95.58"
+                            },
+                            "Attachment": {
+                                "AttachTime": "2020-07-04T13:34:49.000Z",
+                                "AttachmentId": "eni-attach-0da2700123692f109",
+                                "DeleteOnTermination": true,
+                                "DeviceIndex": 0,
+                                "Status": "attached"
+                            },
+                            "Description": "",
+                            "Groups": [
+                                {
+                                    "GroupName": "launch-wizard-1",
+                                    "GroupId": "sg-015fd4bafe95a16a2"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "MacAddress": "06:9d:ac:a2:55:3b",
+                            "NetworkInterfaceId": "eni-08bce14423192500c",
+                            "OwnerId": "913243346481",
+                            "PrivateDnsName": "ip-172-31-48-54.ec2.internal",
+                            "PrivateIpAddress": "172.31.48.54",
+                            "PrivateIpAddresses": [
+                                {
+                                    "Association": {
+                                        "IpOwnerId": "amazon",
+                                        "PublicDnsName": "ec2-34-204-95-58.compute-1.amazonaws.com",
+                                        "PublicIp": "34.204.95.58"
+                                    },
+                                    "Primary": true,
+                                    "PrivateDnsName": "ip-172-31-48-54.ec2.internal",
+                                    "PrivateIpAddress": "172.31.48.54"
+                                }
+                            ],
+                            "SourceDestCheck": true,
+                            "Status": "in-use",
+                            "SubnetId": "subnet-b14f6e8f",
+                            "VpcId": "vpc-2fc6e855",
+                            "InterfaceType": "interface"
+                        }
+                    ],
+                    "RootDeviceName": "/dev/xvda",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "launch-wizard-1",
+                            "GroupId": "sg-015fd4bafe95a16a2"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "redhat-uda-deploy1"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "applied",
+                        "HttpTokens": "optional",
+                        "HttpPutResponseHopLimit": 1,
+                        "HttpEndpoint": "enabled"
+                    }
+                }
+            ],
+            "OwnerId": "913243346481",
+            "ReservationId": "r-0d57c1ffb8030f784"
+        },
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-02ae530dacc099fc9",
+                    "InstanceId": "i-0548ff721f54b7ef4",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "uda-deploy-ec2",
+                    "LaunchTime": "2020-07-09T18:20:13.000Z",
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-1e",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "ip-172-31-62-95.ec2.internal",
+                    "PrivateIpAddress": "172.31.62.95",
+                    "ProductCodes": [],
+                    "PublicDnsName": "ec2-100-25-117-115.compute-1.amazonaws.com",
+                    "PublicIpAddress": "100.25.117.115",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+                    },
+                    "StateTransitionReason": "",
+                    "SubnetId": "subnet-b14f6e8f",
+                    "VpcId": "vpc-2fc6e855",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [
+                        {
+                            "DeviceName": "/dev/sda1",
+                            "Ebs": {
+                                "AttachTime": "2020-07-09T18:20:14.000Z",
+                                "DeleteOnTermination": true,
+                                "Status": "attached",
+                                "VolumeId": "vol-0e6e012fcacbe94e4"
+                            }
+                        }
+                    ],
+                    "ClientToken": "",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [
+                        {
+                            "Association": {
+                                "IpOwnerId": "amazon",
+                                "PublicDnsName": "ec2-100-25-117-115.compute-1.amazonaws.com",
+                                "PublicIp": "100.25.117.115"
+                            },
+                            "Attachment": {
+                                "AttachTime": "2020-07-09T18:20:13.000Z",
+                                "AttachmentId": "eni-attach-0f0f754ec30ecf2da",
+                                "DeleteOnTermination": true,
+                                "DeviceIndex": 0,
+                                "Status": "attached"
+                            },
+                            "Description": "",
+                            "Groups": [
+                                {
+                                    "GroupName": "launch-wizard-1",
+                                    "GroupId": "sg-015fd4bafe95a16a2"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "MacAddress": "06:0b:73:72:23:bd",
+                            "NetworkInterfaceId": "eni-01ffae8baad1d9c09",
+                            "OwnerId": "913243346481",
+                            "PrivateDnsName": "ip-172-31-62-95.ec2.internal",
+                            "PrivateIpAddress": "172.31.62.95",
+                            "PrivateIpAddresses": [
+                                {
+                                    "Association": {
+                                        "IpOwnerId": "amazon",
+                                        "PublicDnsName": "ec2-100-25-117-115.compute-1.amazonaws.com",
+                                        "PublicIp": "100.25.117.115"
+                                    },
+                                    "Primary": true,
+                                    "PrivateDnsName": "ip-172-31-62-95.ec2.internal",
+                                    "PrivateIpAddress": "172.31.62.95"
+                                }
+                            ],
+                            "SourceDestCheck": true,
+                            "Status": "in-use",
+                            "SubnetId": "subnet-b14f6e8f",
+                            "VpcId": "vpc-2fc6e855",
+                            "InterfaceType": "interface"
+                        }
+                    ],
+                    "RootDeviceName": "/dev/sda1",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "launch-wizard-1",
+                            "GroupId": "sg-015fd4bafe95a16a2"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "backend-uda-deploy3"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "applied",
+                        "HttpTokens": "optional",
+                        "HttpPutResponseHopLimit": 1,
+                        "HttpEndpoint": "enabled"
+                    }
+                }
+            ],
+            "OwnerId": "913243346481",
+            "ReservationId": "r-0a2f60bae871cab52"
+        },
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-068663a3c619dd892",
+                    "InstanceId": "i-0131a01146a9dd178",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "uda-deploy-ec2",
+                    "LaunchTime": "2020-07-20T22:40:27.000Z",
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-1e",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "",
+                    "ProductCodes": [],
+                    "PublicDnsName": "",
+                    "State": {
+                        "Code": 48,
+                        "Name": "terminated"
+                    },
+                    "StateTransitionReason": "User initiated (2020-07-20 22:57:02 GMT)",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [],
+                    "ClientToken": "prome-EC2In-1IYX3D2WTM0FT",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [],
+                    "RootDeviceName": "/dev/sda1",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [],
+                    "StateReason": {
+                        "Code": "Client.UserInitiatedShutdown",
+                        "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                    },
+                    "Tags": [
+                        {
+                            "Key": "aws:cloudformation:stack-name",
+                            "Value": "prometheus-ec2"
+                        },
+                        {
+                            "Key": "Name",
+                            "Value": "promet-ec2-promet"
+                        },
+                        {
+                            "Key": "aws:cloudformation:logical-id",
+                            "Value": "EC2Instance"
+                        },
+                        {
+                            "Key": "aws:cloudformation:stack-id",
+                            "Value": "arn:aws:cloudformation:us-east-1:913243346481:stack/prometheus-ec2/f2e5c580-cad9-11ea-8668-0aa958b6917a"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "pending",
+                        "HttpTokens": "optional",
+                        "HttpPutResponseHopLimit": 1,
+                        "HttpEndpoint": "enabled"
+                    }
+                }
+            ],
+            "OwnerId": "913243346481",
+            "RequesterId": "043234062703",
+            "ReservationId": "r-0d43651084641d82a"
+        },
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-068663a3c619dd892",
+                    "InstanceId": "i-02c33757de70fa879",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "uda-deploy-ec2",
+                    "LaunchTime": "2020-07-20T22:38:54.000Z",
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-1e",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "",
+                    "ProductCodes": [],
+                    "PublicDnsName": "",
+                    "State": {
+                        "Code": 48,
+                        "Name": "terminated"
+                    },
+                    "StateTransitionReason": "User initiated (2020-07-20 22:57:02 GMT)",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [],
+                    "ClientToken": "udape-EC2In-LR5R1J22G5PA",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [],
+                    "RootDeviceName": "/dev/sda1",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [],
+                    "StateReason": {
+                        "Code": "Client.UserInitiatedShutdown",
+                        "Message": "Client.UserInitiatedShutdown: User initiated shutdown"
+                    },
+                    "Tags": [
+                        {
+                            "Key": "aws:cloudformation:stack-id",
+                            "Value": "arn:aws:cloudformation:us-east-1:913243346481:stack/udapeople-ec2/bf3b25e0-cad9-11ea-8339-0e4a688d3275"
+                        },
+                        {
+                            "Key": "aws:cloudformation:logical-id",
+                            "Value": "EC2Instance"
+                        },
+                        {
+                            "Key": "aws:cloudformation:stack-name",
+                            "Value": "udapeople-ec2"
+                        },
+                        {
+                            "Key": "Name",
+                            "Value": "backend-ec2-udapeople"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "pending",
+                        "HttpTokens": "optional",
+                        "HttpPutResponseHopLimit": 1,
+                        "HttpEndpoint": "enabled"
+                    }
+                }
+            ],
+            "OwnerId": "913243346481",
+            "RequesterId": "043234062703",
+            "ReservationId": "r-05377f87d81e71d09"
+        },
+        {
+            "Groups": [],
+            "Instances": [
+                {
+                    "AmiLaunchIndex": 0,
+                    "ImageId": "ami-02ae530dacc099fc9",
+                    "InstanceId": "i-074d6654fe483ac3d",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "uda-deploy-ec2",
+                    "LaunchTime": "2020-07-10T19:50:27.000Z",
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "Placement": {
+                        "AvailabilityZone": "us-east-1b",
+                        "GroupName": "",
+                        "Tenancy": "default"
+                    },
+                    "PrivateDnsName": "ip-172-31-37-30.ec2.internal",
+                    "PrivateIpAddress": "172.31.37.30",
+                    "ProductCodes": [],
+                    "PublicDnsName": "ec2-54-226-141-209.compute-1.amazonaws.com",
+                    "PublicIpAddress": "54.226.141.209",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+                    },
+                    "StateTransitionReason": "",
+                    "SubnetId": "subnet-30b1ae6c",
+                    "VpcId": "vpc-2fc6e855",
+                    "Architecture": "x86_64",
+                    "BlockDeviceMappings": [
+                        {
+                            "DeviceName": "/dev/sda1",
+                            "Ebs": {
+                                "AttachTime": "2020-07-10T19:50:28.000Z",
+                                "DeleteOnTermination": true,
+                                "Status": "attached",
+                                "VolumeId": "vol-07f90225cabc4f2c6"
+                            }
+                        }
+                    ],
+                    "ClientToken": "",
+                    "EbsOptimized": false,
+                    "EnaSupport": true,
+                    "Hypervisor": "xen",
+                    "NetworkInterfaces": [
+                        {
+                            "Association": {
+                                "IpOwnerId": "amazon",
+                                "PublicDnsName": "ec2-54-226-141-209.compute-1.amazonaws.com",
+                                "PublicIp": "54.226.141.209"
+                            },
+                            "Attachment": {
+                                "AttachTime": "2020-07-10T19:50:27.000Z",
+                                "AttachmentId": "eni-attach-05c77e8c48907a9ca",
+                                "DeleteOnTermination": true,
+                                "DeviceIndex": 0,
+                                "Status": "attached"
+                            },
+                            "Description": "",
+                            "Groups": [
+                                {
+                                    "GroupName": "launch-wizard-1",
+                                    "GroupId": "sg-015fd4bafe95a16a2"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "MacAddress": "0e:e4:a5:f9:ae:1d",
+                            "NetworkInterfaceId": "eni-0cfa94da2072f2552",
+                            "OwnerId": "913243346481",
+                            "PrivateDnsName": "ip-172-31-37-30.ec2.internal",
+                            "PrivateIpAddress": "172.31.37.30",
+                            "PrivateIpAddresses": [
+                                {
+                                    "Association": {
+                                        "IpOwnerId": "amazon",
+                                        "PublicDnsName": "ec2-54-226-141-209.compute-1.amazonaws.com",
+                                        "PublicIp": "54.226.141.209"
+                                    },
+                                    "Primary": true,
+                                    "PrivateDnsName": "ip-172-31-37-30.ec2.internal",
+                                    "PrivateIpAddress": "172.31.37.30"
+                                }
+                            ],
+                            "SourceDestCheck": true,
+                            "Status": "in-use",
+                            "SubnetId": "subnet-30b1ae6c",
+                            "VpcId": "vpc-2fc6e855",
+                            "InterfaceType": "interface"
+                        }
+                    ],
+                    "RootDeviceName": "/dev/sda1",
+                    "RootDeviceType": "ebs",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "launch-wizard-1",
+                            "GroupId": "sg-015fd4bafe95a16a2"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Tags": [
+                        {
+                            "Key": "Name",
+                            "Value": "promet-uda-prometheus"
+                        }
+                    ],
+                    "VirtualizationType": "hvm",
+                    "CpuOptions": {
+                        "CoreCount": 1,
+                        "ThreadsPerCore": 1
+                    },
+                    "CapacityReservationSpecification": {
+                        "CapacityReservationPreference": "open"
+                    },
+                    "HibernationOptions": {
+                        "Configured": false
+                    },
+                    "MetadataOptions": {
+                        "State": "applied",
+                        "HttpTokens": "optional",
+                        "HttpPutResponseHopLimit": 1,
+                        "HttpEndpoint": "enabled"
+                    }
+                }
+            ],
+            "OwnerId": "913243346481",
+            "ReservationId": "r-06c54780e16492d6a"
+        }
+    ]
+}

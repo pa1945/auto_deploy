@@ -7,7 +7,7 @@
 # https://www.javatpoint.com/ansible-copy
 #
 # Run:
-# cdond-c3-projectstarter $ ansible-playbook playb_cp_file.yml
+# $ ansible-playbook playb_cp_file.yml
 #
 - hosts: "*"
   tasks:  

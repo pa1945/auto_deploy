@@ -1,0 +1,22 @@
+#
+# Run:
+# $ ansible-playbook playb_upgrade_ubuntu.yml
+#
+- name: Install 
+  # hosts: "*"
+  hosts: "aws_ubuntu"
+  become: yes
+  become_user: root
+  gather_facts: false
+  tasks:
+    - debug: var=ansible_host
+    - name: run as root - update, install python, ...
+      ignore_errors: true
+      raw: "{{ item }}"
+      loop:
+        - touch /root/ansible-apt-update
+        - apt -y update
+        - apt -y upgrade
+        - apt install -y python
+        - apt install -y prometheus
+        - apt install -y prometheus-node-exporter
