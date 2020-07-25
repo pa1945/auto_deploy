@@ -160,7 +160,7 @@ jobs:
 
   create-frontend-s3:
     parameters:
-      stack-param:
+      stack-create-s3:
         type: string
         default: stack-name-udap
     docker:
@@ -194,12 +194,12 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/frontend.yml \
             --stack-name udapeople-s3 \
-            --parameter-overrides ID=<< parameters.stack-param >>
+            --parameter-overrides ID=<< parameters.stack-create-s3 >>
             # --parameter-overrides ID=s3-udapeople
 
   create-backend-ec2:
     parameters:
-      stack-param:
+      stack-create-ec2:
         type: string
         default: stack-name-udap
     docker:
@@ -224,12 +224,12 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/backend.yml \
             --stack-name udapeople-ec2 \
-            --parameter-overrides ID=<< parameters.stack-param >>
+            --parameter-overrides ID=<< parameters.stack-create-ec2 >>
             # --parameter-overrides ID=ec2-udapeople
 
   create-prometheus-ec2:
     parameters:
-      stack-param:
+      stack-create-promet:
         type: string
         default: stack-name-udap
     docker:
@@ -253,7 +253,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/prometheus.yml \
             --stack-name prometheus-ec2 \
-            --parameter-overrides ID=<< parameters.stack-param >>
+            --parameter-overrides ID=<< parameters.stack-create-promet >>
             # --parameter-overrides ID=ec2-promet
 
   run-cloudfront:
@@ -285,7 +285,7 @@ jobs:
 
   stack-delete:
     parameters:
-      stack-param:
+      stack-param-del:
         type: string
         default: stack-name-udap
     docker:
@@ -306,7 +306,7 @@ jobs:
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2            
             aws cloudformation delete-stack \
-            --stack-name  << parameters.stack-param >>
+            --stack-name  << parameters.stack-param-del >>
             #
             # Store evidence on 'memstash.io'
             # echo "This is pipeline ID << pipeline.id >>"
@@ -521,10 +521,10 @@ parameters:
   # A parameter per package
   deploy-ec2:
     type: boolean
-    default: false
+    default: true
   destroy-s3:
     type: boolean
-    default: false
+    default: true
   # A parameter per package
   destroy-ec2:
     type: boolean
@@ -535,7 +535,10 @@ parameters:
   jest2:
     type: boolean
     default: true
-  gateway:
+  jest-checked:
+    type: boolean
+    default: true
+  say-hello-only:
     type: boolean
     default: false
 
@@ -543,10 +546,11 @@ parameters:
 workflows:
   version: 2
 
-  conditional-workflow:
+  create-infra:         # conditional-workflow
     when:
-      and: # All must be true to trigger
+      and:              # All must be true to trigger
         - equal: [ master, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.jest-checked >> ]
         - and: [ << pipeline.parameters.deploy-s3 >> ]
         - and: [ << pipeline.parameters.deploy-ec2 >> ]
         #  when: << pipeline.parameters.trigger >>
@@ -558,15 +562,15 @@ workflows:
       # - job-on-condition
       - create-frontend-s3:
           context: ci-uda-context
-          stack-param: uda-bucketx
+          stack-create-s3: uda-bucketx
       - create-backend-ec2:
           context: ci-uda-context
-          stack-param: uda-instancex
+          stack-create-ec2: uda-instancex
           requires:
             - create-frontend-s3
       - create-prometheus-ec2:
           context: ci-uda-context
-          stack-param: udap-prometx
+          stack-create-promet: udap-prometx
           #requires:
           #  - create-frontend-s3
           #  - create-backend-ec2
@@ -591,7 +595,7 @@ workflows:
     jobs:
       - stack-delete:
           context: ci-uda-context
-          stack-param: stack-name-udap
+          stack-param-del: stack-name-udap
       - s3-delete:
           context: ci-uda-context
           s3-param: udapeople-uda-bucketx
@@ -687,8 +691,9 @@ workflows:
 #              - master
 #              - beta
 
-#  say-hello:
-#    jobs:
-#      - hello-world-udapeople
-#      # - aws-cli-example:
-#      #    context: ci-uda-context
+  say-hello:
+    when: << pipeline.parameters.say-hello-only >>
+    jobs:
+      - hello-world-udapeople
+      # - aws-cli-example:
+      #    context: ci-uda-context
