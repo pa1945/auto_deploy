@@ -288,7 +288,7 @@ jobs:
     steps:
       - checkout
       - store_test_results:
-          path: /tmp/test-results
+          path: test-results
       - run:
           name: Install/version aws cli
           command: |
@@ -324,7 +324,7 @@ jobs:
     steps:
       - checkout
       - store_test_results:
-          path: /tmp/test-results
+          path: test-results
       - run:
           name: Delete s3 bucket
           command: |
@@ -345,7 +345,7 @@ jobs:
     steps:
       - checkout
       - store_test_results:
-          path: /tmp/test-results
+          path: test-results
       - run:
           name: Delete ec2 instance
           command: |
@@ -440,6 +440,30 @@ jobs:
               exit 1
             fi
 
+  jest-test-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - run:
+        name: Install JUnit coverage reporter
+        command: |
+            cd backend
+            npm  add --dev jest-junit
+      - run:
+          name: Run tests with JUnit as reporter
+          command: |
+            cd backend
+            npm  add --dev jest-junit
+            node_modules/.bin/jest --ci --runInBand --reporters=default \
+              --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+      - store_test_results:
+          path: ./reports/junit/
+      - store_artifacts:
+          path: ./reports/junit
+
+
 workflows:
   version: 2
 
@@ -516,14 +540,18 @@ workflows:
             - master
             - beta
 
+      - jest-test-backend:
+          requires:
+            - deploy-ifmaster
+
 #        filters:
 #          branches:
 #            only:
 #              - master
 #              - beta
 
-  say-hello:
-    jobs:
-      - hello-world-udapeople
-      # - aws-cli-example:
-      #    context: ci-uda-context
+#  say-hello:
+#    jobs:
+#      - hello-world-udapeople
+#      # - aws-cli-example:
+#      #    context: ci-uda-context
