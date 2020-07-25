@@ -513,6 +513,20 @@ parameters:
   trigger:
     type: boolean
     default: false
+  # A parameter per package
+  api:
+    type: boolean
+    default: false
+  app:
+    type: boolean
+    default: false
+  auth:
+    type: boolean
+    default: false
+  gateway:
+    type: boolean
+    default: false
+
 
 workflows:
   version: 2
@@ -535,6 +549,7 @@ workflows:
           #  - create-frontend-s3
           #  - create-backend-ec2
           #  - deploy-ifmaster
+
 
   clean-up-old-stacks:
     jobs:
@@ -575,12 +590,13 @@ workflows:
       - lint-backend
 #-      # - run-frontend
 #-      # - run-backend
-      - run-cp2s3:
-          context: ci-uda-context
-          requires:
-            - create-frontend-s3
-            - create-backend-ec2
-            - deploy-ifmaster
+
+#      - run-cp2s3:
+#          context: ci-uda-context
+#          requires:
+#            - create-frontend-s3
+#            - create-backend-ec2
+#            - deploy-ifmaster
 
 #-      - run-cloudfront:
 #-          context: ci-uda-context
