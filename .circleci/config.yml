@@ -454,14 +454,18 @@ jobs:
       - run:
           name: Install JUnit coverage reporter
           command: |
+            pwd
             cd backend
             npm  add --dev jest-junit
             mkdir -p ~/reports/junit/
-            pwd ; ls -asl 
+            pwd ; ls -asl
+            echo "Where is ~/reports/junit/" >> ~/reports/junit/jest-test-backend.txt
             ls -las ~/reports/junit/
+            cat  ~/reports/junit/jest-test-backend.txt
       - run:
           name: Run tests with JUnit as reporter
           command: |
+            pwd
             cd backend
             npm  add --dev jest-junit
             node_modules/.bin/jest --ci --runInBand --reporters=default \
