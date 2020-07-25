@@ -532,9 +532,9 @@ parameters:
   lint:
     type: boolean
     default: false
-  auth:
+  jest2:
     type: boolean
-    default: false
+    default: true
   gateway:
     type: boolean
     default: false
@@ -579,7 +579,10 @@ workflows:
 
 
   clean-up-old-stacks:
-    when:  << pipeline.parameters.destroy-s3 >>,  << pipeline.parameters.destroy-ec2 >>
+    when: << pipeline.parameters.destroy-s3 >>
+      #and:
+        #- true: [ << pipeline.parameters.destroy-s3 >> ]
+        #- true: [  << pipeline.parameters.destroy-ec2 >> ]
       #and: # All must be true to trigger
         #- equal: [ master, << pipeline.git.branch >> ]
         # - not: [ << pipeline.parameters.deploy-s3 >> ]
@@ -600,6 +603,7 @@ workflows:
           #requires:
           #  - create-backend-ec2
 
+
 #-  create-infra:
 #-    jobs:
 #-      - create-frontend-s3:
@@ -617,6 +621,7 @@ workflows:
 #-          #  - create-frontend-s3
 #-          #  - create-backend-ec2
 
+
   check-code:
     when: << pipeline.parameters.lint >> 
       #and: # All must be true to trigger
@@ -626,6 +631,7 @@ workflows:
     jobs:
       - lint-frontend
       - lint-backend
+
 
 #-      # - run-frontend
 #-      # - run-backend
@@ -658,12 +664,15 @@ workflows:
 #  deploy-udap:
 #    jobs:
 
-      - deploy-ifmaster:
-        filters:
-          branches:
-            - master
-            - beta
+#      - deploy-ifmaster:
+#        filters:
+#          branches:
+#            - master
+#            - beta
 
+  check-jest:
+    when: << pipeline.parameters.jest2 >>
+    jobs:
       - jest-test-frontend
           #requires:
           #  - deploy-ifmaster
