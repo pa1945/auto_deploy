@@ -553,6 +553,7 @@ workflows:
         - and: [ << pipeline.parameters.jest-checked >> ]
         - and: [ << pipeline.parameters.deploy-s3 >> ]
         - and: [ << pipeline.parameters.deploy-ec2 >> ]
+        #
         #  when: << pipeline.parameters.trigger >>
         # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
         # - not: << pipeline.parameters.param1 >>
