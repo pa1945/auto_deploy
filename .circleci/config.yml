@@ -505,7 +505,8 @@ jobs:
             cd backend
             npm  add --dev jest-junit
             node_modules/.bin/jest --ci --runInBand --reporters=default \
-              --reporters=jest-junit
+              --reporters=jest-junit \
+              --testResultsProcessor="jest-junit"
           environment:
             JEST_JUNIT_OUTPUT_DIR: ~/reports/junit/
       - store_test_results:
