@@ -458,6 +458,7 @@ jobs:
             npm  add --dev jest-junit
             mkdir -p ~/reports/junit/
             pwd ; ls -asl 
+            ls -las ~/reports/junit/
       - run:
           name: Run tests with JUnit as reporter
           command: |
@@ -466,11 +467,11 @@ jobs:
             node_modules/.bin/jest --ci --runInBand --reporters=default \
               --reporters=jest-junit
           environment:
-            JEST_JUNIT_OUTPUT_DIR: ./reports/junit/
+            JEST_JUNIT_OUTPUT_DIR: ~/reports/junit/
       - store_test_results:
-          path: ./reports/junit/
+          path: ~/reports/junit/
       - store_artifacts:
-          path: ./reports/junit
+          path: ~/reports/junit
 
 
 workflows:
