@@ -456,7 +456,8 @@ jobs:
           command: |
             cd backend
             npm  add --dev jest-junit
-            mkdir -p ./reports/junit/
+            mkdir -p ~/reports/junit/
+            pwd ; ls -asl 
       - run:
           name: Run tests with JUnit as reporter
           command: |
