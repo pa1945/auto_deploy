@@ -503,8 +503,8 @@ workflows:
 
 #  check-code:
 #    jobs:
-#-      # - lint-frontend
-#-      # - lint-backend
+      - lint-frontend
+      - lint-backend
 #-      # - run-frontend
 #-      # - run-backend
       - run-cp2s3:
