@@ -63,7 +63,9 @@ jobs:
 
   lint-frontend:
     docker:
-      - image: amazon/aws-cli
+      #- image: amazon/aws-cli
+      # For npm
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -81,7 +83,8 @@ jobs:
 
   lint-backend:
     docker:
-      - image: amazon/aws-cli
+      # - image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -99,7 +102,8 @@ jobs:
 
   run-frontend:
     docker:
-      - image: amazon/aws-cli
+      #- image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -127,7 +131,8 @@ jobs:
 
   run-backend:
     docker:
-      - image: amazon/aws-cli
+      # - image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
@@ -442,7 +447,8 @@ jobs:
 
   jest-test-backend:
     docker:
-      - image: amazon/aws-cli
+      # - image: amazon/aws-cli
+      - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
