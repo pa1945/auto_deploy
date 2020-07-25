@@ -522,7 +522,14 @@ parameters:
   deploy-ec2:
     type: boolean
     default: false
-  app:
+  destroy-s3:
+    type: boolean
+    default: false
+  # A parameter per package
+  destroy-ec2:
+    type: boolean
+    default: false
+  lint:
     type: boolean
     default: false
   auth:
@@ -572,6 +579,12 @@ workflows:
 
 
   clean-up-old-stacks:
+    when:  << pipeline.parameters.destroy-s3 >>,  << pipeline.parameters.destroy-ec2 >>
+      #and: # All must be true to trigger
+        #- equal: [ master, << pipeline.git.branch >> ]
+        # - not: [ << pipeline.parameters.deploy-s3 >> ]
+        #- or: [  << pipeline.parameters.destroy-s3 >>,  << pipeline.parameters.destroy-ec2 >>  ]
+
     jobs:
       - stack-delete:
           context: ci-uda-context
@@ -604,10 +617,16 @@ workflows:
 #-          #  - create-frontend-s3
 #-          #  - create-backend-ec2
 
-#  check-code:
-#    jobs:
+  check-code:
+    when: << pipeline.parameters.lint >> 
+      #and: # All must be true to trigger
+        #- equal: [ master, << pipeline.git.branch >> ]
+        # - not: [ << pipeline.parameters.deploy-s3 >> ]
+        # - or: [  << pipeline.parameters.lint >>  ]
+    jobs:
       - lint-frontend
       - lint-backend
+
 #-      # - run-frontend
 #-      # - run-backend
 
