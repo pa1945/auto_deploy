@@ -444,9 +444,10 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - checkout
       - run:
-        name: Install JUnit coverage reporter
-        command: |
+          name: Install JUnit coverage reporter
+          command: |
             cd backend
             npm  add --dev jest-junit
       - run:
