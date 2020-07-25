@@ -445,6 +445,38 @@ jobs:
               exit 1
             fi
 
+  jest-test-frontend:
+    docker:
+      # - image: amazon/aws-cli
+      - image: circleci/node:10.0.0
+    steps:
+      - checkout
+      - run:
+          name: Install JUnit coverage reporter
+          command: |
+            pwd
+            cd frontend
+            npm  add --dev jest-junit
+            mkdir -p ~/reports/junit/
+            pwd ; ls -asl
+            echo "Where is ~/reports/junit/" >> ~/reports/junit/jest-test-frontend.txt
+            ls -las ~/reports/junit/
+            cat  ~/reports/junit/jest-test-frontend.txt
+      - run:
+          name: Run tests with JUnit as reporter
+          command: |
+            pwd
+            cd frontend
+            npm  add --dev jest-junit
+            node_modules/.bin/jest --ci --runInBand --reporters=default \
+              --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: ~/reports/junit/
+      - store_test_results:
+          path: ~/reports/junit/
+      - store_artifacts:
+          path: ~/reports/junit
+
   jest-test-backend:
     docker:
       # - image: amazon/aws-cli
@@ -477,9 +509,32 @@ jobs:
       - store_artifacts:
           path: ~/reports/junit
 
+parameters:
+  trigger:
+    type: boolean
+    default: false
 
 workflows:
   version: 2
+
+  conditional-workflow:
+    when:
+      and: # All must be true to trigger
+        - equal: [ master, << pipeline.git.branch >> ]
+        - equal: [ << pipeline.parameters.trigger >> ]
+        #  when: << pipeline.parameters.trigger >>
+        # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
+        # - not: << pipeline.parameters.param1 >>
+        # - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]
+
+    jobs:
+      # - job-on-condition
+      - run-cp2s3:
+          context: ci-uda-context
+          #requires:
+          #  - create-frontend-s3
+          #  - create-backend-ec2
+          #  - deploy-ifmaster
 
   clean-up-old-stacks:
     jobs:
@@ -554,7 +609,11 @@ workflows:
             - master
             - beta
 
-      - jest-test-backend:
+      - jest-test-frontend:
+          requires:
+            - deploy-ifmaster
+
+      - jest-test-frontend:
           requires:
             - deploy-ifmaster
 
