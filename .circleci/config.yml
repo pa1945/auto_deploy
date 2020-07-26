@@ -529,7 +529,7 @@ parameters:
     default: true
   deploy2s3:
     type: boolean
-    default: true
+    default: false
   destroy-s3:
     type: boolean
     default: false
@@ -573,8 +573,8 @@ workflows:
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: B-##1Incorrect      # uda-instancex
-          requires:
-            - create-frontend-s3
+          #requires:
+          #  - create-frontend-s3
       - create-prometheus-ec2:
           context: ci-uda-context
           stack-create-promet: udap-prometx
