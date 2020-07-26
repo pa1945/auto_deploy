@@ -68,7 +68,7 @@ commands:
     parameters:
       roll-ec2-param:
         type: string
-        default: xxxxxxx    # Fake
+        default: xxxx-uuu    # Fake
     steps:
       - run:
           name: Roll back ec2instance - command roll-back-ec2
@@ -83,8 +83,10 @@ commands:
             if test "x$instance_name" = "x"
             then
               echo "This is the first instance -  No roll back possible"
+              instance_name="not-found0"
               exit 0
             else
+              echo "Instance name: $instance_name"
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
@@ -505,7 +507,7 @@ jobs:
       - sayhello:
           to: "======== Lev Lev Lev ========="
       - roll-back-ec2:
-          roll-ec2-param: "roll back"
+          roll-ec2-param: "roll-back"
       - run:
           name: Check backend using curl
           command: |
@@ -568,7 +570,7 @@ jobs:
             exit 0
 
       - roll-back-ec2:
-          roll-ec2-param: "roll back"
+          roll-ec2-param: "roll-back2"
             
 
   check-curl-frontend:
