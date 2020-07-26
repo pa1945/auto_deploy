@@ -548,11 +548,10 @@ workflows:
 
   create-infra:         # conditional-workflow
     when: 
-      equal: [ master, << pipeline.git.branch >> ]
-      #and:              # All must be true to trigger
-        # - equal: [ master, << pipeline.git.branch >> ]
-        # - and: [ << pipeline.parameters.jest-checked >> , << pipeline.parameters.deploy-s3 >> , << pipeline.parameters.deploy-ec2 >> ]
-        #  when: << pipeline.parameters.trigger >>
+      and:          # All must be true to trigger
+        - equal: [ master, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.deploy-ec2 >> , << pipeline.parameters.deploy-s3 >> ]
+        - and: [ << pipeline.parameters.jest-checked >> ]
         # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
         # - not: << pipeline.parameters.param1 >>
         # - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]
@@ -570,15 +569,15 @@ workflows:
       - create-prometheus-ec2:
           context: ci-uda-context
           stack-create-promet: udap-prometx
-          #requires:
-          #  - create-frontend-s3
-          #  - create-backend-ec2
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
       - run-cp2s3:
           context: ci-uda-context
-          #requires:
-          #  - create-frontend-s3
-          #  - create-backend-ec2
-          #  - deploy-ifmaster
+          requires:
+            - create-frontend-s3
+            - create-backend-ec2
+            # - deploy-ifmaster
 
 
   clean-up-old-stacks:
