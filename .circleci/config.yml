@@ -572,7 +572,7 @@ workflows:
           stack-create-s3: A-@!#incorrect	# uda-bucketx
       - create-backend-ec2:
           context: ci-uda-context
-          stack-create-ec2: B-##1Incorrect      # uda-instancex
+          stack-create-ec2: uda-instancex      # uda-instancex
           #requires:
           #  - create-frontend-s3
       - create-prometheus-ec2:
