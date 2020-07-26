@@ -264,10 +264,6 @@ jobs:
       - run:
           name: Install/version aws cli
           command: |
-            # sudo apt update
-            # sudo apt upgrade
-            # sudo apt install python3-pip
-            # pip3 install awscli --upgrade --user
             aws --version
 
       - run:
@@ -309,10 +305,6 @@ jobs:
       - run:
           name: Install/version aws cli
           command: |
-            # sudo apt update # Or without 'sudo'
-            # sudo apt upgrade
-            # sudo apt install python3-pip
-            # pip3 install awscli --upgrade --user
             aws --version
 
       - run:
@@ -408,8 +400,6 @@ jobs:
           command: |
             aws --version
       - run:
-          # https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-stack-export-name-error/
-          # WorkflowID=<existing S3 bucket> e.g.:'s3-uda-deploy'
           name: Delete stack
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
@@ -425,8 +415,6 @@ jobs:
               -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request PUT --data "Circle - $DATE : << pipeline.id >>_stack-delete" \
               https://api.memstash.io/values/udapeople-stack-delete
-            # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-            #  --request GET https://api.memstash.io/values/udapeople-stack-delete
 
   s3-delete:
     parameters:
@@ -511,8 +499,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - sayhello:
-          to: "======== Lev Lev Lev ========="
       - run:
           name: Check backend using curl
           command: |
