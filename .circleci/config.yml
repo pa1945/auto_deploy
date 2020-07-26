@@ -500,6 +500,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - sayhello:
+          to: "======== Lev Lev Lev ========="
       - roll-back-ec2:
           roll-ec2-param: "roll back"
       - run:
@@ -526,6 +528,9 @@ jobs:
                 echo "This is the first instance -  No roll back possible"
                 instance_name="not-found-on-stash.io"
               else
+                echo "instance name: $instance_name"
+              fi
+              echo "instance name: $instance_name"
 
               echo "Instance name: $instance_name"
               # Get the IP for the instance_name
