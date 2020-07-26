@@ -80,9 +80,10 @@ commands:
             echo "Instance name: $instance_name"
             # Get the IP for the instance_name
             # Test firs it exist on 'memstash.io'
-            if test "x$instance_name" = x
+            if test "x$instance_name" = "x"
             then
               echo "This is the first instance -  No roll back possible"
+              exit 0
             else
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
@@ -97,6 +98,7 @@ commands:
               # Show me the change
               echo "frontend/.env:"
               cat frontend/.env
+              exit 0
             fi
             exit 0
 
