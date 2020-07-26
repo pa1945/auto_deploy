@@ -63,25 +63,39 @@ commands:
             --instance-ids  << parameters.com-ec2-param >>
 
 
-  roll-back-ec2:
-    description: "Roll back EC2 instance"
+  smoke-roll-back-ec2:
+    description: "Roll back EC2 instance if smoke test fail"
     parameters:
       roll-ec2-param:
         type: string
-        default: xxxx-uuu    # Fake
+        default: backend-uda-instancex  # For Test. Working: backend-uda-deploy3
     steps:
       - run:
-          name: Roll back ec2instance - command roll-back-ec2
+          name: Roll back ec2 instance if smoke test fail 'smoke-roll-back-ec2'
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
-            # Roll back instance
-            # Set .env on frontend to the IP in memstash.
+            #
+            BACKEND_IP=$(aws ec2 describe-instances  \
+              --filters Name=tag-key,Values=Name  \
+              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+              --output text|grep backend-uda-deploy3|awk '{print $1}' )
+            if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
+            then
+              echo "BACKEND_IP: $BACKEND_IP"
+              exit 0   # OK
+            else
+              echo "Should Roll back"
+            fi            
+            #
+            # Roll back instance if smoke test fail
+            # Set .env on frontend to the IP in memstash.io (last deploy succeeded)
+            # Get last succeeded instance name from 'memstash.io'
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
             echo "Instance name: $instance_name"
             # Get the IP for the instance_name
-            # Test firs it exist on 'memstash.io'
+            # Test first if it exist on 'memstash.io'
             if test "x$instance_name" = "x"
             then
               echo "This is the first instance -  No roll back possible"
@@ -99,7 +113,7 @@ commands:
               # Commented during testing
               # aws s3 cp frontend/.env s3://s3-uda-deploy
               # --acl public-read
-              # Show me the change
+              # Show me the change:
               echo "frontend/.env:"
               cat frontend/.env
               exit 0
@@ -504,78 +518,20 @@ jobs:
             
 
   check-curl-backend:
+    parameters:
+      ec2-name-param:
+        type: string
+        default: backend-uda-deploy3    
+        # Main: backend-uda-deploy3
+        # secondary: backend-uda-instancex on 'memstash.io'
     docker:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - sayhello:
-          to: "======== Lev Lev Lev ========="
-      - roll-back-ec2:
-          roll-ec2-param: "roll-back"
-      - run:
-          name: Check backend using curl
-          command: |
-            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
-            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
-            BACKEND_IP=$(aws ec2 describe-instances  \
-              --filters Name=tag-key,Values=Name  \
-              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-              --output text|grep backend-uda-deploy3|awk '{print $1}' )
-            if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
-            then
-              # OK
-              echo "Do not exit - show the new IP and run rollback"
-            else
-              # Roll back instance on 'check-curl-backend'
-              # Set .env on frontend to the IP in memstash.
-              instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-                --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
-              
-              if test "x$instance_name" = x
-              then
-                echo "This is the first instance -  No roll back possible"
-                instance_name="not-found-on-stash.io"
-              else
-                echo "instance name: $instance_name"
-              fi
-              echo "instance name: $instance_name"
-
-              echo "Instance name: $instance_name"
-              # Get the IP for the instance_name
-              BACKEND_IP_NEW=$(aws ec2 describe-instances  \
-                --filters Name=tag-key,Values=Name  \
-                --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-                --output text|grep $instance_name|awk '{print $1}' )
-              echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
-              echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
-              # Setup the current frontend S3 bucket to access the new backend
-              # Commented during testing
-              # aws s3 cp frontend/.env s3://s3-uda-deploy
-              # --acl public-read
-              # Show me the change
-              echo "frontend/.env:"
-              cat frontend/.env
-            fi
-            # Working fine, show in case something fail, what should be done
-            instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-              --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
-            echo "Instance name: $instance_name"
-            #
-            # Get the IP for the instance
-            #
-            aws --version
-            BACKEND_IP_NEW=$(aws ec2 describe-instances  \
-                --filters Name=tag-key,Values=Name  \
-                --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-                --output text|grep $instance_name|awk '{print $1}' )
-            echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
-            echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
-            # Must exit
-            exit 0
-
-      - roll-back-ec2:
-          roll-ec2-param: "roll-back2"
-            
+      #- sayhello:
+      #    to: "======== Lev Lev Lev ========="
+      - smoke-roll-back-ec2:
+          roll-ec2-param: << parameters.ec2-name-param >>
 
   check-curl-frontend:
     docker:
@@ -820,8 +776,11 @@ workflows:
     jobs:
       - check-curl-backend:
           context: ci-uda-context
+          ec2-name-param: backend-uda-deploy3
           #requires:
           #  - create-backend-ec2
+          # Main: backend-uda-deploy3
+          # secondary: backend-uda-instancex on 'memstash.io'
       - check-curl-frontend:
           context: ci-uda-context
           #requires:
