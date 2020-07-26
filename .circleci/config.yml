@@ -652,7 +652,7 @@ parameters:
     default: true
   create-infra-allow:
     type: boolean
-    default: true
+    default: false
   jest2:
     type: boolean
     default: true
