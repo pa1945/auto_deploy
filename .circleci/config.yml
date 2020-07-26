@@ -90,7 +90,7 @@ commands:
             else
               echo "Should Roll back - smoke test fail"
             fi            
-            #
+            #  *** from now on should exit from bash = 1 ***
             # Roll back instance if smoke test fail
             # Set .env on frontend to the IP in memstash.io (last deploy succeeded)
             # Get last succeeded instance name from 'memstash.io'
@@ -103,7 +103,7 @@ commands:
             then
               echo "This is the first instance -  No roll back possible"
               instance_name="not-found"
-              exit 0
+              exit 1	# signal evidence something wrong
             else
               echo "Instance name3: $instance_name"
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
@@ -119,9 +119,9 @@ commands:
               # Show me the change:
               echo "frontend/.env:"
               cat frontend/.env
-              exit 0
+              exit 1
             fi
-            exit 0
+            exit 1
             # $? from the command-line gives the exit status of the script
             #  echo "$?"
 
