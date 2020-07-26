@@ -196,6 +196,13 @@ jobs:
             --stack-name udapeople-s3 \
             --parameter-overrides ID=<< parameters.stack-create-s3 >>
             # --parameter-overrides ID=s3-udapeople
+            # Save the (old?)-> new bucket arn (bucket name?) in case you 
+            # need it later (for rollback).
+            curl -H "Content-Type: text/plain" \
+              -H "token: 265a0727-db66-453a-8559-6b292b496502" \
+              --request PUT \
+              --data "<< parameters.stack-create-s3 >>" \
+              https://api.memstash.io/values/parameters.stack-create-s3
 
   create-backend-ec2:
     parameters:
@@ -226,6 +233,12 @@ jobs:
             --stack-name udapeople-ec2 \
             --parameter-overrides ID=<< parameters.stack-create-ec2 >>
             # --parameter-overrides ID=ec2-udapeople
+            # Save the new back-end url for later use (the front-end needs it).
+            curl -H "Content-Type: text/plain" \
+              -H "token: 265a0727-db66-453a-8559-6b292b496502" \
+              --request PUT \
+              --data "<< parameters.stack-create-ec2 >>" \
+              https://api.memstash.io/values/parameters.stack-create-ec2
 
   create-prometheus-ec2:
     parameters:
@@ -552,6 +565,9 @@ parameters:
   say-hello-only:
     type: boolean
     default: false
+  stash-token:
+    type: string
+    default: 265a0727-db66-453a-8559-6b292b496502
 
 
 workflows:
