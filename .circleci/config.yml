@@ -361,8 +361,9 @@ jobs:
 
   run-cp2s3:
     docker:
-      # - image: amazon/aws-cli
-      - image: circleci/node:10.0.0
+      - image: amazon/aws-cli
+      # amazon/aws-cli: aws command
+      # - image: circleci/node:10.0.0
     steps:
       - checkout
       - run:
