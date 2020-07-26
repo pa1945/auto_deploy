@@ -569,7 +569,7 @@ workflows:
       # - job-on-condition
       - create-frontend-s3:
           context: ci-uda-context
-          stack-create-s3: A-@!#incorrect	# uda-bucketx
+          stack-create-s3:  uda-bucketx        # 'A-@!#incorrect'
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
