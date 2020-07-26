@@ -73,6 +73,8 @@ commands:
       - run:
           name: Roll back ec2instance - command roll-back-ec2
           command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
             # Roll back instance
             # Set .env on frontend to the IP in memstash.
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
@@ -103,6 +105,8 @@ commands:
               exit 0
             fi
             exit 0
+            # $? from the command-line gives the exit status of the script
+            #  echo "$?"
 
 ############## jobs #################
 
