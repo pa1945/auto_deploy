@@ -524,7 +524,7 @@ parameters:
     default: true
   destroy-s3:
     type: boolean
-    default: true
+    default: false
   # A parameter per package
   destroy-ec2:
     type: boolean
@@ -582,10 +582,12 @@ workflows:
 
 
   clean-up-old-stacks:
-    when: << pipeline.parameters.destroy-s3 >>
-      #and:
-        #- true: [ << pipeline.parameters.destroy-s3 >> ]
-        #- true: [  << pipeline.parameters.destroy-ec2 >> ]
+    when:           # << pipeline.parameters.destroy-s3 >>
+      and:
+        - equal: [ master, << pipeline.git.branch >> ]
+        - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
+      #  - true: << pipeline.parameters.destroy-s3 >>
+      #  - true: << pipeline.parameters.destroy-ec2 >>
       #and: # All must be true to trigger
         #- equal: [ master, << pipeline.git.branch >> ]
         # - not: [ << pipeline.parameters.deploy-s3 >> ]
