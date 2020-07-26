@@ -517,7 +517,7 @@ jobs:
 parameters:
   deploy-s3:
     type: boolean
-    default: false
+    default: true
   # A parameter per package
   deploy-ec2:
     type: boolean
