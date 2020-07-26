@@ -551,7 +551,7 @@ workflows:
       and:          # All must be true to trigger
         - equal: [ master, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.deploy-ec2 >> , << pipeline.parameters.deploy-s3 >> ]
-        - and: [ << pipeline.parameters.jest-checked >> ]
+        # - and: [ << pipeline.parameters.jest-checked >> ]
         # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
         # - not: << pipeline.parameters.param1 >>
         # - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]
