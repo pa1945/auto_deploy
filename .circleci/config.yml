@@ -431,18 +431,18 @@ jobs:
               --output text|grep backend-uda-deploy3|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
-              exit 0   # OK
-            else
-              exit 1   # Fail
+              #-exit 0   # OK
+            #-else
+              #- exit 1   # Fail
               # Roll back instance
               # Set .env on frontend to the IP in memstash.
               instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
               # Get the IP for the instance
-            BACKEND_IP_NEW=$(aws ec2 describe-instances  \
-              --filters Name=tag-key,Values=Name  \
-              --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-              --output text|grep $instance_name|awk '{print $1}' )
+              BACKEND_IP_NEW=$(aws ec2 describe-instances  \
+                --filters Name=tag-key,Values=Name  \
+                --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+                --output text|grep $instance_name|awk '{print $1}' )
               echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
               echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
               # Show me the change
@@ -576,6 +576,9 @@ parameters:
   smoke:
     type: boolean
     default: true
+  create-infra-allow:
+    type: boolean
+    default: false
   jest2:
     type: boolean
     default: true
@@ -598,6 +601,7 @@ workflows:
     when: 
       and:          # All must be true to trigger
         - equal: [ master, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.create-infra-allow >> ]
         - and: [ << pipeline.parameters.jest-checked >> ]
         - and: [ << pipeline.parameters.deploy-ec2 >> ]
         - and: [ << pipeline.parameters.deploy-s3 >> ]
