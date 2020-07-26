@@ -451,6 +451,9 @@ jobs:
               cat frontend/.env
               exit 1	# Fail ==> Show evidence the new backend EC2
             fi
+            instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
+              --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+            # Get the IP for the instance
             BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
