@@ -98,6 +98,7 @@ commands:
               echo "frontend/.env:"
               cat frontend/.env
             fi
+            exit 0
 
 ############## jobs #################
 
@@ -556,6 +557,8 @@ jobs:
                 --output text|grep $instance_name|awk '{print $1}' )
             echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
             echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
+            # Must exit
+            exit 0
 
       - roll-back-ec2:
           roll-ec2-param: "roll back"
