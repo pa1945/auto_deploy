@@ -527,6 +527,9 @@ parameters:
   deploy-ec2:
     type: boolean
     default: true
+  deploy2s3:
+    type: boolean
+    default: true
   destroy-s3:
     type: boolean
     default: false
@@ -566,10 +569,10 @@ workflows:
       # - job-on-condition
       - create-frontend-s3:
           context: ci-uda-context
-          stack-create-s3: uda-bucketx
+          stack-create-s3: A-@!#incorrect	# uda-bucketx
       - create-backend-ec2:
           context: ci-uda-context
-          stack-create-ec2: uda-instancex
+          stack-create-ec2: B-##1Incorrect      # uda-instancex
           requires:
             - create-frontend-s3
       - create-prometheus-ec2:
@@ -584,6 +587,21 @@ workflows:
             - create-frontend-s3
             - create-backend-ec2
             # - deploy-ifmaster
+
+
+  deploy-code:
+    when:  << pipeline.parameters.deploy2s3 >>
+    jobs:
+      - run-cp2s3:
+        filters:
+          branches:
+              - master
+              - beta
+          context: ci-uda-context
+          #requires:
+          #  - create-frontend-s3
+          #  - create-backend-ec2
+          #  # - deploy-ifmaster
 
 
   clean-up-old-stacks:
