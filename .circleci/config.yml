@@ -422,12 +422,15 @@ jobs:
             BACKEND_IP=$(aws ec2 describe-instances  \
               --filters Name=tag-key,Values=Name  \
               --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
-              --output text|grep backend|awk '{print $1}' )
+              --output text|grep backend-uda-deploy3|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
               exit 0   # OK
             else
               exit 1   # Fail
+              # Roll back instance
+              # Set .env on frontend to the IP in memstash.
+              
             fi
 
   check-curl-frontend:
