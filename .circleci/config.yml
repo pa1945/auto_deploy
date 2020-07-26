@@ -364,6 +364,7 @@ jobs:
       - image: amazon/aws-cli
       # amazon/aws-cli: aws command
       # - image: circleci/node:10.0.0
+      # circleci/node:10.0.0: npm command
     steps:
       - checkout
       - run:
@@ -390,7 +391,6 @@ jobs:
               --request PUT --data "Circle - $DATE: << pipeline.id >>_cp2s3" \
               https://api.memstash.io/values/udapeople-cp2s3
             cd frontend
-            npm run build
             # aws s3 sync dist/ s3://s3-uda-deploy --acl public-read
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
