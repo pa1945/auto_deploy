@@ -10,6 +10,59 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@1.2.1
+  aws-s3: circleci/aws-s3@1.0.16
+
+commands:
+  sayhello:
+    description: "A very simple command for demonstration purposes"
+    parameters:
+      to:
+        type: string
+        default: "Hello World"
+    steps:
+      - run: echo << parameters.to >>
+
+  com-s3-delete:
+    description: "Dele S3 bucket"
+    parameters:
+      com-s3-param:
+        type: string
+        default: bucket-namex
+    #docker:
+    #  - image: amazon/aws-cli
+    steps:
+      - checkout
+      - store_test_results:
+          path: test-results
+      - run:
+          name: Delete s3 bucket
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws s3 rb s3://<< parameters.com-s3-param >>
+            # Deletes all objects and subfolders in the bucket and 
+            # then removes the bucket.
+            # aws s3 rb s3://<< parameters.s3-param >> --force
+
+  com-ec2-delete:
+    description: "Delete EC2 instance"
+    parameters:
+      com-ec2-param:
+        type: string
+        default: i-5203422c    # Fake
+    #docker:
+    #  - image: amazon/aws-cli
+    steps:
+      - checkout
+      - store_test_results:
+          path: test-results
+      - run:
+          name: Delete ec2 instance
+          command: |
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            aws ec2 terminate-instances \
+            --instance-ids  << parameters.com-ec2-param >>
 
 jobs:
   aws-cli-example:
@@ -410,6 +463,7 @@ jobs:
               --request PUT --data "Circle - $DATE: << pipeline.id >>_cp2s3" \
               https://api.memstash.io/values/udapeople-cp2s3
             cd frontend
+            # Commented during testing
             # aws s3 sync dist/ s3://s3-uda-deploy --acl public-read
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
@@ -420,6 +474,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - sayhello:
+          to: "======== Lev Lev Lev ========="
       - run:
           name: Check backend using curl
           command: |
@@ -434,23 +490,27 @@ jobs:
               #-exit 0   # OK
               echo "Do not exit - show the new IP"
             else
-              #- exit 1   # Fail
               # Roll back instance
               # Set .env on frontend to the IP in memstash.
               instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
-              # Get the IP for the instance
+              # Get the IP for the instance_name
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
                 --output text|grep $instance_name|awk '{print $1}' )
               echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
               echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
+              # Setup the current frontend S3 bucket to access the new backend
+              # Commented during testing
+              # aws s3 cp frontend/.env s3://s3-uda-deploy
+              # --acl public-read
               # Show me the change
               echo "frontend/.env:"
               cat frontend/.env
               exit 1	# Fail ==> Show evidence the new backend EC2
             fi
+            # Working fine, show in case something fail, what should be done:
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
             # Get the IP for the instance
@@ -652,7 +712,7 @@ workflows:
         filters:
           branches:
               - master
-              - beta
+              #- beta
           context: ci-uda-context
           #requires:
           #  - create-frontend-s3
@@ -713,15 +773,6 @@ workflows:
           #  - check-curl-backend
 
 
-#  deploy-udap:
-#    jobs:
-
-#      - deploy-ifmaster:
-#        filters:
-#          branches:
-#            - master
-#            - beta
-
   check-jest:
     when: << pipeline.parameters.jest2 >>
     jobs:
@@ -732,12 +783,6 @@ workflows:
       - jest-test-backend
           #requires:
           #  - deploy-ifmaster
-
-#        filters:
-#          branches:
-#            only:
-#              - master
-#              - beta
 
   say-hello:
     when: << pipeline.parameters.say-hello-only >>
