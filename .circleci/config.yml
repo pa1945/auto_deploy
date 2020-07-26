@@ -499,6 +499,8 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - roll-back-ec2:
+          roll-ec2-param: "roll back"
       - run:
           name: Check backend using curl
           command: |
@@ -517,6 +519,13 @@ jobs:
               # Set .env on frontend to the IP in memstash.
               instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
                 --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+              
+              if test "x$instance_name" = x
+              then
+                echo "This is the first instance -  No roll back possible"
+                instance_name="not-found-on-stash.io"
+              else
+
               echo "Instance name: $instance_name"
               # Get the IP for the instance_name
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
