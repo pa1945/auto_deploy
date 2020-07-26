@@ -510,7 +510,7 @@ jobs:
               --output text|grep backend-uda-deploy3|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
-              #-exit 0   # OK Exit here. To reach rollback and run rollback
+              # OK
               echo "Do not exit - show the new IP and run rollback"
             else
               # Roll back instance on 'check-curl-backend'
@@ -519,7 +519,6 @@ jobs:
                 --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
               echo "Instance name: $instance_name"
               # Get the IP for the instance_name
-              # Test firs it exist on 'memstash.io'
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
@@ -533,15 +532,15 @@ jobs:
               # Show me the change
               echo "frontend/.env:"
               cat frontend/.env
-              # exixxt 1	# Fail ==> Show evidence the new backend EC2
-              # Do not exxit here: Run roll back
             fi
-            # Working fine, show in case something fail, what should be done:
+            # Working fine, show in case something fail, what should be done
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
             echo "Instance name: $instance_name"
             #
             # Get the IP for the instance
+            #
+            aws --version
             BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
