@@ -50,8 +50,6 @@ commands:
       com-ec2-param:
         type: string
         default: i-5203422c    # Fake
-    #docker:
-    #  - image: amazon/aws-cli
     steps:
       - checkout
       - store_test_results:
@@ -63,6 +61,45 @@ commands:
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
             aws ec2 terminate-instances \
             --instance-ids  << parameters.com-ec2-param >>
+
+
+  roll-back-ec2:
+    description: "Roll back EC2 instance"
+    parameters:
+      roll-ec2-param:
+        type: string
+        default: xxxxxxx    # Fake
+    steps:
+      - run:
+          name: Roll back ec2instance
+          command: |
+            # Roll back instance
+            # Set .env on frontend to the IP in memstash.
+            instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
+              --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+            echo "Instance name: $instance_name"
+            # Get the IP for the instance_name
+            # Test firs it exist on 'memstash.io'
+            if test "x$instance_name" = x
+            then
+              echo "This is the first instance -  No roll back possible"
+            else
+              BACKEND_IP_NEW=$(aws ec2 describe-instances  \
+                --filters Name=tag-key,Values=Name  \
+                --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
+                --output text|grep $instance_name|awk '{print $1}' )
+              echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
+              echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
+              # Setup the current frontend S3 bucket to access the new backend
+              # Commented during testing
+              # aws s3 cp frontend/.env s3://s3-uda-deploy
+              # --acl public-read
+              # Show me the change
+              echo "frontend/.env:"
+              cat frontend/.env
+            fi
+
+############## jobs #################
 
 jobs:
   aws-cli-example:
@@ -487,14 +524,16 @@ jobs:
               --output text|grep backend-uda-deploy3|awk '{print $1}' )
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
-              #-exit 0   # OK
-              echo "Do not exit - show the new IP"
+              #-exit 0   # OK Exit here. To reach rollback and run rollback
+              echo "Do not exit - show the new IP and run rollback"
             else
               # Roll back instance
               # Set .env on frontend to the IP in memstash.
               instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-              --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+                --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+              echo "Instance name: $instance_name"
               # Get the IP for the instance_name
+              # Test firs it exist on 'memstash.io'
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
@@ -508,7 +547,8 @@ jobs:
               # Show me the change
               echo "frontend/.env:"
               cat frontend/.env
-              exit 1	# Fail ==> Show evidence the new backend EC2
+              # exit 1	# Fail ==> Show evidence the new backend EC2
+              # Do not exit here: Run roll back
             fi
             # Working fine, show in case something fail, what should be done:
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
@@ -522,6 +562,8 @@ jobs:
                 --output text|grep $instance_name|awk '{print $1}' )
             echo "BACKEND_IP_NEW = $BACKEND_IP_NEW"
             echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
+      - roll-back-ec2:
+          roll-ec2-param: "roll back"
             
 
   check-curl-frontend:
