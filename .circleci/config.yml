@@ -78,7 +78,7 @@ commands:
             #
             ec2_name=<< parameters.roll-ec2-param >>
             echo "ec2 name: << parameters.roll-ec2-param >>"
-            echo "ec2-name: $ec2-name"
+            echo "ec2_name: $ec2_name"
             BACKEND_IP=$(aws ec2 describe-instances  \
               --filters Name=tag-key,Values=Name  \
               --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
@@ -86,9 +86,9 @@ commands:
             if curl -s  "http://${BACKEND_IP}:3030/api/status" | grep -i "status"
             then
               echo "BACKEND_IP: $BACKEND_IP"
-              exit 0   # OK
+              exit 0   # OK Smoke test OK!
             else
-              echo "Should Roll back"
+              echo "Should Roll back - smoke test fail"
             fi            
             #
             # Roll back instance if smoke test fail
@@ -96,16 +96,16 @@ commands:
             # Get last succeeded instance name from 'memstash.io'
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
-            echo "Instance name: $instance_name"
+            echo "Instance name2: $instance_name"
             # Get the IP for the instance_name
             # Test first if it exist on 'memstash.io'
             if test "x$instance_name" = "x"
             then
               echo "This is the first instance -  No roll back possible"
-              instance_name="not-found0"
+              instance_name="not-found"
               exit 0
             else
-              echo "Instance name: $instance_name"
+              echo "Instance name3: $instance_name"
               BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
                 --query 'Reservations[*].Instances[*].{IP:PublicIpAddress,Name:Tags[?Key==`Name`]|[0].Value}' \
