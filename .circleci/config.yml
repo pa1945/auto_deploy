@@ -513,6 +513,8 @@ jobs:
             # Working fine, show in case something fail, what should be done:
             instance_name=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-ec2)
+            echo "Instance name: $instance_name"
+            #
             # Get the IP for the instance
             BACKEND_IP_NEW=$(aws ec2 describe-instances  \
                 --filters Name=tag-key,Values=Name  \
@@ -650,7 +652,7 @@ parameters:
     default: true
   create-infra-allow:
     type: boolean
-    default: false
+    default: true
   jest2:
     type: boolean
     default: true
@@ -674,7 +676,7 @@ workflows:
       and:          # All must be true to trigger
         - equal: [ master, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.create-infra-allow >> ]
-        - and: [ << pipeline.parameters.jest-checked >> ]
+        # - and: [ << pipeline.parameters.jest-checked >> ]
         - and: [ << pipeline.parameters.deploy-ec2 >> ]
         - and: [ << pipeline.parameters.deploy-s3 >> ]
         # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
