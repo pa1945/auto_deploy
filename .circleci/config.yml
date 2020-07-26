@@ -540,6 +540,9 @@ parameters:
   lint:
     type: boolean
     default: false
+  smoke:
+    type: boolean
+    default: true
   jest2:
     type: boolean
     default: true
@@ -625,7 +628,7 @@ workflows:
           #requires:
           #  - create-backend-ec2
 
-  check-code:
+  check-code-lint:
     when: << pipeline.parameters.lint >> 
     jobs:
       - lint-frontend
@@ -643,15 +646,19 @@ workflows:
 #-            - create-frontend-s3
 #-            - create-backend-ec2
 #-            - create-prometheus-ec2
-#-      - check-curl-backend:
-#-          context: ci-uda-context
-#-          requires:
-#-            - create-backend-ec2
-#-      - check-curl-frontend:
-#-          context: ci-uda-context
-#-          requires:
-#-            - check-curl-backend
-#-
+
+  smoke-test:
+    when: << pipeline.parameters.smoke >> 
+    jobs:
+      - check-curl-backend:
+          context: ci-uda-context
+          #requires:
+          #  - create-backend-ec2
+      - check-curl-frontend:
+          context: ci-uda-context
+          #requires:
+          #  - check-curl-backend
+
 
 #  deploy-udap:
 #    jobs:
