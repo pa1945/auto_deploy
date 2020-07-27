@@ -160,9 +160,8 @@ commands:
             #  *** from now on should exit from bash = 1 ***
             # Roll back s3 if smoke test fail
             s3_name_old=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
-              --request GET https://api.memstash.io/values/parameters.roll-s3-param)
+              --request GET https://api.memstash.io/values/parameters.stack-create-s3)
             echo "Bucket name old2: $s3_name_old"
-            # Get the IP for the bucket
             # Test first if it exist on 'memstash.io'
             if test "x$s3_name_old" = "x" -o "x$s3_name_old" = "xNo value matches the provided token and key."
             then
