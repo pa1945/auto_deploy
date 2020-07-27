@@ -11,7 +11,9 @@ version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@1.2.1
   aws-s3: circleci/aws-s3@1.0.16
-
+  # aws-cloudfront: topmonks/aws-cloudfront@1.0.0
+  # aws-cloudformation: orbss/aws-cloudformation@0.1.6 # Stacks
+  
 commands:
   sayhello:
     description: "A very simple command for demonstration purposes"
@@ -124,6 +126,27 @@ commands:
             exit 1
             # $? from the command-line gives the exit status of the script
             #  echo "$?"
+
+  smoke-roll-back-s3:
+    description: "Roll back s3 bucket if smoke test fail"
+    parameters:
+      roll-s3-param:
+        type: string
+        default: frontend-uda-s3x  # For Test. Working: 's3-uda-deploy'
+    steps:
+      - run:
+          name: Roll back s3 bucket if smoke test fail 'smoke-roll-back-s3' - Check Frontend using curl
+          command: |
+            # set +e
+            FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
+            if curl -s ${FRONTEND} | grep -i "Welcome"
+            then
+              exit 0    # OK
+            else
+              exit 1    # Fail
+            fi
+
+
 
 ############## jobs #################
 
@@ -537,20 +560,18 @@ jobs:
           roll-ec2-param: << parameters.ec2-name-param >>
 
   check-curl-frontend:
+    parameters:
+      s3-name-param:
+        type: string
+        default: backend-uda-deploy3
+        # Main: s3-uda-deploy - should not fail
+        # secondary: xx-uda-deploy on 'memstash.io'
     docker:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run:
-          name: Check Frontend using curl
-          command: |
-            FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
-            if curl -s ${FRONTEND} | grep -i "Welcome"
-            then
-              exit 0    # OK
-            else
-              exit 1    # Fail
-            fi
+      - smoke-roll-back-s3:
+          roll-s3-param: << parameters.s3-name-param >>
 
   deploy-ifmaster:
     docker:
@@ -788,6 +809,9 @@ workflows:
           # secondary: backend-uda-instancex on 'memstash.io'
       - check-curl-frontend:
           context: ci-uda-context
+          s3-name-param: uda-bucketx
+          # uda-bucketx: should fail
+          # s3-uda-deploy: should not fail
           #requires:
           #  - check-curl-backend
 
