@@ -145,9 +145,11 @@ commands:
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
             #
+            cloudfront_id=<< parameters.cloud-front-id >>
+            # Test s3 bucket:
             s3_name=<< parameters.roll-s3-param >>
-            echo "s3 name: << parameters.roll-s3-param >>"
-            echo "s3_name: $s3_name"
+            echo "s3 name to smoke test: << parameters.roll-s3-param >>"
+            echo "s3_name to smoke test: $s3_name"
             FRONTEND="http://${s3_name}.s3-website-us-east-1.amazonaws.com/#/employees"
             echo "FRONTEND: $FRONTEND"
             if curl -s ${FRONTEND} | grep -i "Welcome"
@@ -159,6 +161,7 @@ commands:
             fi            
             #  *** from now on should exit from bash = 1 ***
             # Roll back s3 if smoke test fail
+            # get the old s3 bucket from 'memstash.io'
             s3_name_old=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
               --request GET https://api.memstash.io/values/parameters.stack-create-s3)
             echo "Bucket name old2: $s3_name_old"
@@ -175,7 +178,7 @@ commands:
             #
             # Download distribuion config for id 'ELP62178K8WGU'
             aws cloudfront get-distribution-config \
-              --id ELP62178K8WGU > distribution-config-orig.json
+              --id $cloudfront_id > distribution-config-orig.json
             # Get the etag attribute to use in  '--if-match $etag_att' 
             etag_att=$(grep -i etag distribution-config-orig.json |cut -d\" -f4 )
             # New distribution config
@@ -186,15 +189,12 @@ commands:
             # Delete lines 1-3, "$" is the last line, d for delete:
             sed -e '1,3d' < distribution-config-orig.json | sed '$d' >> distribution-config-old0.json
             echo "File distribution-config-old0.json:"
-            cat distribution-config-old0.json
+            # cat distribution-config-old0.json
             # sed to substitue the 'DomaiName'
             echo "substitute DomainName"
-            #grep -i domainname distribution-config-old0.json | sed -e 's/s3-uda-deploy/xxxx/' > \
-            #  distribution-config-old.json
-            cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/xxxx/' > \
+            cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/Xs3-uda-deployX/' > \
               distribution-config-old.json
             #
-            # Commented during testing
             # Show me the change:
             cat distribution-config-old.json
             # Update cloudfront:
