@@ -134,7 +134,7 @@ commands:
       cloud-front-id:
         type: string
         default: ELP62178K8WGU
-      roll-s3-param:
+      current-s3-param:
         type: string
         default: uda-bucketx  # 'uda-bucketx' For Test. Current Working: 's3-uda-deploy'
     steps:
@@ -147,8 +147,8 @@ commands:
             #
             cloudfront_id=<< parameters.cloud-front-id >>
             # Test s3 bucket:
-            s3_name=<< parameters.roll-s3-param >>
-            echo "s3 name to smoke test: << parameters.roll-s3-param >>"
+            s3_name=<< parameters.current-s3-param >>
+            echo "s3 name to smoke test: << parameters.current-s3-param >>"
             echo "s3_name to smoke test: $s3_name"
             FRONTEND="http://${s3_name}.s3-website-us-east-1.amazonaws.com/#/employees"
             echo "FRONTEND: $FRONTEND"
@@ -196,9 +196,9 @@ commands:
               distribution-config-old.json
             #
             # Show me the change:
-            cat distribution-config-old.json
+            # cat distribution-config-old.json
             # Update cloudfront:
-            aws cloudfront update-distribution --id ELP62178K8WGU \
+            aws cloudfront update-distribution --id $cloudfront_id \
               --distribution-config file://distribution-config-old.json \
               --if-match $etag_att
             exit 1
@@ -632,7 +632,7 @@ jobs:
       - checkout
       - smoke-roll-back-s3:
           cloud-front-id: << parameters.cloud-front-id0 >>
-          roll-s3-param: << parameters.s3-name-param >>
+          current-s3-param: << parameters.s3-name-param >>
 
   deploy-ifmaster:
     docker:
