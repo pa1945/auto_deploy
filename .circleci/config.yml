@@ -104,6 +104,7 @@ commands:
             if test "x$instance_name" = "x" -o "x$instance_name" = "xNo value matches the provided token and key."
             then
               echo "This is the first instance -  No roll back possible"
+              echo "Or no information on 'memstash.io' "
               instance_name="not-found"
               exit 1	# signal evidence something wrong
             else
@@ -130,9 +131,12 @@ commands:
   smoke-roll-back-s3:
     description: "Roll back s3 bucket if smoke test fail"
     parameters:
+      cloud-front-id:
+        type: string
+        default: ELP62178K8WGU
       roll-s3-param:
         type: string
-        default: uda-bucketx  # 'uda-bucketx' For Test. Working: 's3-uda-deploy'
+        default: uda-bucketx  # 'uda-bucketx' For Test. Current Working: 's3-uda-deploy'
     steps:
       - run:
           name: Roll back s3 bucket if smoke test fail 'smoke-roll-back-s3' - Check Frontend using curl
@@ -145,14 +149,54 @@ commands:
             echo "s3 name: << parameters.roll-s3-param >>"
             echo "s3_name: $s3_name"
             FRONTEND="http://${s3_name}.s3-website-us-east-1.amazonaws.com/#/employees"
+            echo "FRONTEND: $FRONTEND"
             if curl -s ${FRONTEND} | grep -i "Welcome"
             then
-              exit 0    # OK
+              exit 0    # Smoke test OK!
             else
-              exit 1    # Fail
+              # exit 1    # Fail
+              echo "Should Roll back - smoke test fail"
+            fi            
+            #  *** from now on should exit from bash = 1 ***
+            # Roll back s3 if smoke test fail
+            s3_name_old=$(curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
+              --request GET https://api.memstash.io/values/parameters.roll-s3-param)
+            echo "Bucket name old2: $s3_name_old"
+            # Get the IP for the bucket
+            # Test first if it exist on 'memstash.io'
+            if test "x$s3_name_old" = "x" -o "x$s3_name_old" = "xNo value matches the provided token and key."
+            then
+              echo "This is the first s3 -  No roll back possible"
+              echo "Or no data on 'memstash.io' "
+              s3_name_old="not-found old s3 bucket"
+              echo "Old s3 name: $s3_name_old"
+              exit 1	# signal evidence something wrong
             fi
-
-
+            echo "Bucket name old3: $s3_name_old"
+            #
+            # Download distribuion config for id 'ELP62178K8WGU'
+            aws cloudfront get-distribution-config \
+              --id ELP62178K8WGU > distribution-config-orig.json
+            # Get the etag attribute to use in  '--if-match $etag_att' 
+            etag_att=$(grep -i etag distribution-config-orig.json |cut -d\" -f4 )
+            # New distribution config
+            echo "{" > distribution-config-old0.json
+            # Delete lines 1-3, "$" is the last line, d for delete:
+            sed -e '1,3d' < distribution-config-orig.json | sed '$d' >> distribution-config-old0.json
+            # sed to substitue the 'DomaiName'
+            grep -i domainname distribution-config-old0.json | sed -e 's/s3-uda-deploy/xxxx/' > \
+              distribution-config-old.json
+            #
+            # Commented during testing
+            # Show me the change:
+            cat distribution-config-old.json
+            # Update cloudfront:
+            aws cloudfront update-distribution --id ELP62178K8WGU \
+              --distribution-config file://distribution-config-old.json \
+              --if-match $etag_att
+            exit 1
+            # $? from the command-line gives the exit status of the script
+            #  echo "$?"
 
 ############## jobs #################
 
@@ -307,7 +351,7 @@ jobs:
     parameters:
       stack-create-s3:
         type: string
-        default: stack-name-udap
+        default: uda-bucketx    # Should not exist. The current used and working is 's3-uda-deploy'
     docker:
       - image: amazon/aws-cli
     steps:
@@ -567,9 +611,12 @@ jobs:
 
   check-curl-frontend:
     parameters:
+      cloud-front-id0:
+        type: string
+        default: ELP62178K8WGU
       s3-name-param:
         type: string
-        default: backend-uda-deploy3
+        default: uda-bucketx	# Should not exist. The current working is: 's3-uda-deploy'
         # Main: s3-uda-deploy - should not fail
         # secondary: xx-uda-deploy on 'memstash.io'
     docker:
@@ -577,6 +624,7 @@ jobs:
     steps:
       - checkout
       - smoke-roll-back-s3:
+          cloud-front-id: << parameters.cloud-front-id0 >>
           roll-s3-param: << parameters.s3-name-param >>
 
   deploy-ifmaster:
@@ -816,6 +864,7 @@ workflows:
           # secondary: backend-uda-instancex on 'memstash.io'
       - check-curl-frontend:
           context: ci-uda-context
+          cloud-front-id0: ELP62178K8WGU
           s3-name-param: uda-bucketx
           # uda-bucketx: should fail
           # s3-uda-deploy: should not fail
