@@ -101,7 +101,7 @@ commands:
             echo "Instance name2: $instance_name"
             # Get the IP for the instance_name
             # Test first if it exist on 'memstash.io'
-            if test "x$instance_name" = "x"
+            if test "x$instance_name" = "x" -o "x$instance_name" = "xNo value matches the provided token and key."
             then
               echo "This is the first instance -  No roll back possible"
               instance_name="not-found"
@@ -132,13 +132,19 @@ commands:
     parameters:
       roll-s3-param:
         type: string
-        default: frontend-uda-s3x  # For Test. Working: 's3-uda-deploy'
+        default: uda-bucketx  # 'uda-bucketx' For Test. Working: 's3-uda-deploy'
     steps:
       - run:
           name: Roll back s3 bucket if smoke test fail 'smoke-roll-back-s3' - Check Frontend using curl
           command: |
             # set +e
-            FRONTEND="http://s3-uda-deploy.s3-website-us-east-1.amazonaws.com/#/employees"
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
+            #
+            s3_name=<< parameters.roll-s3-param >>
+            echo "s3 name: << parameters.roll-s3-param >>"
+            echo "s3_name: $s3_name"
+            FRONTEND="http://${s3_name}.s3-website-us-east-1.amazonaws.com/#/employees"
             if curl -s ${FRONTEND} | grep -i "Welcome"
             then
               exit 0    # OK
@@ -720,7 +726,8 @@ workflows:
       # - job-on-condition
       - create-frontend-s3:
           context: ci-uda-context
-          stack-create-s3:  uda-bucketx        # 'A-@!#incorrect'
+          stack-create-s3:  uda-bucketx        # 'A-@!#incorrect' should fail.
+          # 'uda-bucketx' should be the last deployed s3 frontend bucket with success.
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
