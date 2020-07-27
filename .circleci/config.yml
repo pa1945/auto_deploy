@@ -185,6 +185,7 @@ commands:
             echo "{" > distribution-config-old0.json
             echo "etag_att: $etag_att"
             echo "File distribution-config-old0.json:"
+            #
             cat distribution-config-old0.json
             # Delete lines 1-3, "$" is the last line, d for delete:
             sed -e '1,3d' < distribution-config-orig.json | sed '$d' >> distribution-config-old0.json
