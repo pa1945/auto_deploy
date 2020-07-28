@@ -70,7 +70,7 @@ commands:
     parameters:
       roll-ec2-param:
         type: string
-        default: backend-uda-instancex  # For Test. Working: backend-uda-deploy3
+        default: backend-uda-instancex  # For Test. Working is: backend-uda-deploy3
     steps:
       - run:
           name: Roll back ec2 instance if smoke test fail 'smoke-roll-back-ec2'
@@ -184,15 +184,15 @@ commands:
             # New distribution config
             echo "{" > distribution-config-old0.json
             echo "etag_att: $etag_att"
-            echo "File distribution-config-old0.json:"
+            echo "1. File distribution-config-old0.json:"
             #
             cat distribution-config-old0.json
             # Delete lines 1-3, "$" is the last line, d for delete:
             sed -e '1,3d' < distribution-config-orig.json | sed '$d' >> distribution-config-old0.json
-            echo "File distribution-config-old0.json:"
+            echo "2. File distribution-config-old0.json:"
             # cat distribution-config-old0.json
             # sed to substitue the 'DomaiName'
-            echo "substitute DomainName"
+            echo "Substitute DomainName"
             cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/Xs3-uda-deployX/' > \
               distribution-config-old.json
             #
@@ -787,6 +787,7 @@ workflows:
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
+          # The template adds 'backend-' -> backend-uda-instancex
           #requires:
           #  - create-frontend-s3
       - create-prometheus-ec2:
@@ -870,6 +871,8 @@ workflows:
           #  - create-backend-ec2
           # Main: backend-uda-deploy3
           # secondary: backend-uda-instancex on 'memstash.io'
+          # memstash.io key: stack-create-ec2
+          # Old deployed with success: backend-uda-instancex
       - check-curl-frontend:
           context: ci-uda-context
           cloud-front-id0: ELP62178K8WGU
@@ -878,6 +881,8 @@ workflows:
           # s3-uda-deploy: should not fail
           #requires:
           #  - check-curl-backend
+          # memstash.io key: stack-create-s3
+          # Old deployed with success: uda-bucketx
 
 
   check-jest:

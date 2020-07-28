@@ -30,12 +30,16 @@ when new commits are detected in the connected git repository. [URL02]
 - https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/create-infra
 - https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows/create-infra/jobs/run-cp2s3
 
+Insights >> pa1945 >> auto_deploy >> master
+- https://circleci.com/build-insights/gh/pa1945/auto_deploy/master
+- https://circleci.com/build-insights/gh/pa1945
+
 One should authenticate on 'circleci' to fetch the workflows.
 
 
 Public URL for your CloudFront distribution  (aka, your blue 
 production front-end) [URL03] (Configuration Management Project)
-- http://dlikkhw73vt34.cloudfront.net/#/employees
+- http://dlikkhw73vt34.cloudfront.net/#/employees  # The smoke test update this URL.
 - http://dre9jf8vhlsbm.cloudfront.net/#/employees
 
 Extra:
