@@ -740,6 +740,7 @@ jobs:
       - store_artifacts:
           path: ~/reports/junit
 
+# Pipeline parameters
 parameters:
   deploy-s3:
     type: boolean
@@ -900,8 +901,10 @@ workflows:
           # Old deployed with success: uda-bucketx
       - run-cloudfront:
           context: ci-uda-context
-          stack-name-param: cloudf-udapeople
+          stack-name-param: cloudf-udapeople2
           s3-frontend-param: s3-uda-deploy
+          # Keep 'cloudf-udapeople' as default
+          # Creat a new stack 'cloudf-udapeople2' for tests.
           # type: approval  # <<< This key-value pair will set your 
           # workflow to a status of "On Hold"
           requires:

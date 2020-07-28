@@ -40,7 +40,7 @@ One should authenticate on 'circleci' to fetch the workflows.
 Public URL for your CloudFront distribution  (aka, your blue 
 production front-end) [URL03] (Configuration Management Project)
 - http://dlikkhw73vt34.cloudfront.net/#/employees  # The smoke test update this URL.
-- http://dre9jf8vhlsbm.cloudfront.net/#/employees
+- http://dmifumxbgeqlr.cloudfront.net/#/employees
 
 Extra:
 Public URLs to deployed application front-end in EC2 (RedHat)
