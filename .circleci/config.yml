@@ -470,6 +470,13 @@ jobs:
             # --parameter-overrides ID=ec2-promet
 
   run-cloudfront:
+    parameters:
+      stack-name-param:
+        type: string
+        default: cloudf-udapeople
+      s3-frontend-param:
+        type: string
+        default: s3-uda-deploy
     docker:
       - image: amazon/aws-cli
     steps:
@@ -492,8 +499,8 @@ jobs:
             # aws cloudformation wait stack-create-complete \
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
-            --stack-name cloudf-udapeople \
-            --parameter-overrides WorkflowID=s3-uda-deploy
+            --stack-name << parameters.stack-name-param >> \
+            --parameter-overrides WorkflowID=<< parameters.s3-frontend-param >>
             # 'WorkflowID=s3-uda-deploy' same name created S3 bucket above
 
   stack-delete:
@@ -855,35 +862,27 @@ workflows:
 #-      # - run-frontend
 #-      # - run-backend
 
-#-      - run-cloudfront:
-#-          context: ci-uda-context
-#-          # type: approval  # <<< This key-value pair will set your 
-#-          # workflow to a status of "On Hold"
-#-          requires:
-#-            - create-frontend-s3
-#-            - create-backend-ec2
-#-            - create-prometheus-ec2
 
   smoke-test:
     when: << pipeline.parameters.smoke >> 
     jobs:
       - check-curl-backend:
           context: ci-uda-context
-          ec2-name-param: backend-uda-instancex
-          requires:
-            - check-curl-frontend
+          ec2-name-param: backend-uda-deploy3
+          #requires:
+          #  - check-curl-frontend
           # backend-uda-instancex -  should fail
           # ec2-name-param: backend-uda-deploy3 - should not fail
           #requires:
           #  - create-backend-ec2
-          # Main: backend-uda-deploy3
+          # Main: backend-uda-deploy3 - should not fail
           # secondary: backend-uda-instancex on 'memstash.io'
           # memstash.io key: parameters.stack-create-ec2
           # Old deployed with success: backend-uda-instancex
       - check-curl-frontend:
           context: ci-uda-context
           cloud-front-id0: ELP62178K8WGU
-          s3-name-param: uda-bucketx
+          s3-name-param: s3-uda-deploy
           #requires:
           #  - check-curl-backend
           # uda-bucketx: should fail
@@ -892,7 +891,16 @@ workflows:
           #  - check-curl-backend
           # memstash.io key: parameters.stack-create-s3
           # Old deployed with success: uda-bucketx
-
+      - run-cloudfront:
+          context: ci-uda-context
+          stack-name-param: cloudf-udapeople
+          s3-frontend-param: s3-uda-deploy
+          # type: approval  # <<< This key-value pair will set your 
+          # workflow to a status of "On Hold"
+          requires:
+            - check-curl-frontend
+            #- create-backend-ec2
+            #- create-prometheus-ec2
 
   check-jest:
     when: << pipeline.parameters.jest2 >>
