@@ -752,7 +752,7 @@ parameters:
     default: false
   jest2:
     type: boolean
-    default: true
+    default: false
   jest-checked:
     type: boolean
     default: true
