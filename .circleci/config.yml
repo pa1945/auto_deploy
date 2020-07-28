@@ -204,9 +204,10 @@ commands:
             aws cloudfront update-distribution --id $cloudfront_id \
               --distribution-config file://distribution-config-old.json \
               --if-match $etag_att
-            exit 1
-            # $? from the command-line gives the exit status of the script
-            #  echo "$?"
+            echo "*** CloudFront updated ***"
+            # exit 1
+            # $ ? from the command-line gives the exit status of the script
+            #  echo "$ ?"
 
 ############## jobs #################
 
