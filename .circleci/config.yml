@@ -868,6 +868,8 @@ workflows:
       - check-curl-backend:
           context: ci-uda-context
           ec2-name-param: backend-uda-instancex
+          requires:
+            - check-curl-frontend
           # backend-uda-instancex -  should fail
           # ec2-name-param: backend-uda-deploy3 - should not fail
           #requires:
@@ -880,8 +882,8 @@ workflows:
           context: ci-uda-context
           cloud-front-id0: ELP62178K8WGU
           s3-name-param: uda-bucketx
-          requires:
-            - check-curl-backend
+          #requires:
+          #  - check-curl-backend
           # uda-bucketx: should fail
           # s3-uda-deploy: should not fail
           #requires:
