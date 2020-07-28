@@ -193,12 +193,13 @@ commands:
             # cat distribution-config-old0.json
             # sed to substitue the 'DomaiName'
             echo "Substitute DomainName"
-            cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/Xs3-uda-deployX/' > \
+            # Real production: ${s3_name} and not 's3-uda-deploy':
+            cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/${s3_name_old}/' > \
               distribution-config-old.json
             #
             # Show me the change:
             # cat distribution-config-old.json
-            # Update cloudfront:
+            echo "*** Update cloudfront new 'Origin Domain Name and Path' ***"
             aws cloudfront update-distribution --id $cloudfront_id \
               --distribution-config file://distribution-config-old.json \
               --if-match $etag_att
@@ -871,7 +872,7 @@ workflows:
           #  - create-backend-ec2
           # Main: backend-uda-deploy3
           # secondary: backend-uda-instancex on 'memstash.io'
-          # memstash.io key: stack-create-ec2
+          # memstash.io key: parameters.stack-create-ec2
           # Old deployed with success: backend-uda-instancex
       - check-curl-frontend:
           context: ci-uda-context
@@ -881,7 +882,7 @@ workflows:
           # s3-uda-deploy: should not fail
           #requires:
           #  - check-curl-backend
-          # memstash.io key: stack-create-s3
+          # memstash.io key: parameters.stack-create-s3
           # Old deployed with success: uda-bucketx
 
 
