@@ -507,7 +507,7 @@ jobs:
     parameters:
       stack-param-del:
         type: string
-        default: stack-name-udap
+        default: cloudf-udapeople2
     docker:
       - image: amazon/aws-cli
     steps:
@@ -576,6 +576,10 @@ jobs:
             --instance-ids  << parameters.ec2-param >>
 
   run-cp2s3:
+    parameters:
+      copy2s3-param:
+        type: string
+        default: uda-instancex   # s3-uda-deploy
     docker:
       - image: amazon/aws-cli
       # amazon/aws-cli: aws command
@@ -607,8 +611,11 @@ jobs:
               --request PUT --data "Circle - $DATE: << pipeline.id >>_cp2s3" \
               https://api.memstash.io/values/udapeople-cp2s3
             cd frontend
+            s3_bucket_name=<< parameters.copy2s3-param >>
+            echo "Bucket name to copy: $s3_bucket_name"
             # Commented during testing
-            # aws s3 sync dist/ s3://s3-uda-deploy --acl public-read
+            # aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
+            #
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
             
@@ -759,7 +766,7 @@ parameters:
     default: true
   create-infra-allow:
     type: boolean
-    default: false
+    default: true
   jest2:
     type: boolean
     default: false
@@ -784,8 +791,8 @@ workflows:
         - equal: [ master, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.create-infra-allow >> ]
         # - and: [ << pipeline.parameters.jest-checked >> ]
-        - and: [ << pipeline.parameters.deploy-ec2 >> ]
-        - and: [ << pipeline.parameters.deploy-s3 >> ]
+        # - and: [ << pipeline.parameters.deploy-ec2 >> ]
+        # - and: [ << pipeline.parameters.deploy-s3 >> ]
         # - equal: [ uda-bucketx, << pipeline.parameters.stack-param >> ]
         # - not: << pipeline.parameters.param1 >>
         # - or: [ << pipeline.parameters.param1 >>, << pipeline.parameters.param2 >> ]
@@ -810,6 +817,7 @@ workflows:
             - create-backend-ec2
       - run-cp2s3:
           context: ci-uda-context
+          copy2s3-param: uda-instancex
           requires:
             - create-frontend-s3
             - create-backend-ec2
@@ -836,11 +844,10 @@ workflows:
       and:
         - equal: [ master, << pipeline.git.branch >> ]
         - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
-
     jobs:
       - stack-delete:
           context: ci-uda-context
-          stack-param-del: stack-name-udap
+          stack-param-del: cloudf-udapeople2
       - s3-delete:
           context: ci-uda-context
           s3-param: udapeople-uda-bucketx
@@ -863,7 +870,7 @@ workflows:
 #-      # - run-backend
 
 
-  smoke-test:
+  smoke-test-and-deploy:
     when: << pipeline.parameters.smoke >> 
     jobs:
       - check-curl-backend:
@@ -899,7 +906,7 @@ workflows:
           # workflow to a status of "On Hold"
           requires:
             - check-curl-frontend
-            #- create-backend-ec2
+            - check-curl-backend
             #- create-prometheus-ec2
 
   check-jest:
