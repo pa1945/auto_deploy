@@ -203,8 +203,10 @@ commands:
             echo "*** Update cloudfront new 'Origin Domain Name and Path' ***"
             aws cloudfront update-distribution --id $cloudfront_id \
               --distribution-config file://distribution-config-old.json \
-              --if-match $etag_att
+              --if-match $etag_att &
+            
             echo "*** CloudFront updated ***"
+            sleep 30
             # exit 1
             # $ ? from the command-line gives the exit status of the script
             #  echo "$ ?"
