@@ -194,11 +194,12 @@ commands:
             # sed to substitue the 'DomaiName'
             echo "Substitute DomainName"
             # Real production: ${s3_name} and not 's3-uda-deploy':
-            cat distribution-config-old0.json | sed -e 's/s3-uda-deploy/${s3_name_old}/' > \
+            cat distribution-config-old0.json | sed -e "s/s3-uda-deploy/${s3_name_old}/" > \
               distribution-config-old.json
+            echo "Show me the change: DomainName 'key' and 'Value'"
+            grep -i DomainName distribution-config-orig.json 
             #
-            # Show me the change:
-            # cat distribution-config-old.json
+            # c a t distribution-config-old.json
             echo "*** Update cloudfront new 'Origin Domain Name and Path' ***"
             aws cloudfront update-distribution --id $cloudfront_id \
               --distribution-config file://distribution-config-old.json \
