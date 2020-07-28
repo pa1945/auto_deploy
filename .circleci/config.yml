@@ -877,7 +877,10 @@ workflows:
 
 
   create-smoke-test-and-deploy:
-    when: << pipeline.parameters.create-smoke-deploy >> 
+    when: 
+      and:          # All must be true to trigger
+        - equal: [ master, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.create-smoke-deploy >> ]
     jobs:
       - create-frontend-s3:
           context: ci-uda-context
