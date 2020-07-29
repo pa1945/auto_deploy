@@ -780,7 +780,7 @@ parameters:
     default: false
   jest2:
     type: boolean
-    default: false
+    default: true
   jest-checked:
     type: boolean
     default: true
@@ -867,21 +867,12 @@ workflows:
           #  create-frontend-s3
       - ec2-delete:
           context: ci-uda-context
-          ec2-param: i-0ba6588513ecb5be6
+          ec2-param: i-06d82d38442b15283
           # Name: backend-uda-instancex 
           # Template add prefix 'backend-':   Value: !Sub backend-${ID}
           #requires:
           #  - create-backend-ec2
 
-  check-code-lint:
-    when: << pipeline.parameters.lint >> 
-    jobs:
-      - lint-frontend
-      - lint-backend
-
-
-#-      # - run-frontend
-#-      # - run-backend
 
 
   create-smoke-test-and-deploy:
@@ -952,14 +943,21 @@ workflows:
             - check-curl-frontend
             #- check-curl-backend
             #- create-prometheus-ec2
+      # - run-frontend
+      # - run-backend
 
-  check-jest:
-    when: << pipeline.parameters.jest2 >>
+  check-non-prod:
+    when:
+      and:
+        - and: [ << pipeline.parameters.jest2 >> ]
+        - and: [ testing, << pipeline.git.branch >> ]
+        #- and: << pipeline.parameters.lint >>
     jobs:
+      - lint-frontend
+      - lint-backend
       - jest-test-frontend
           #requires:
           #  - deploy-ifmaster
-
       - jest-test-backend
           #requires:
           #  - deploy-ifmaster
