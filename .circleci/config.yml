@@ -662,7 +662,7 @@ jobs:
       - run:
           name: Deploy if Master branch
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "testing" ]; then
               echo "Master Branch - deploy site"
               exit 0
             else
