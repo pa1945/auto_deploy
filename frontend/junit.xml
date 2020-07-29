@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="12" failures="0" time="5.463">
+  <testsuite name="&lt;LoadingMessage&gt;" errors="0" failures="0" skipped="0" timestamp="2020-07-25T22:29:23" time="1.53" tests="1">
+    <testcase classname="&lt;LoadingMessage&gt; Props message Should render the props message" name="&lt;LoadingMessage&gt; Props message Should render the props message" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Pagination&gt;" errors="0" failures="0" skipped="0" timestamp="2020-07-25T22:29:25" time="0.292" tests="6">
+    <testcase classname="&lt;Pagination&gt; Should render" name="&lt;Pagination&gt; Should render" time="0.004">
+    </testcase>
+    <testcase classname="&lt;Pagination&gt; State Should calculate correctly the pagination properties Should calculate the number of pages" name="&lt;Pagination&gt; State Should calculate correctly the pagination properties Should calculate the number of pages" time="0.004">
+    </testcase>
+    <testcase classname="&lt;Pagination&gt; State Should calculate correctly the pagination properties Should calculate correcly the page first order index" name="&lt;Pagination&gt; State Should calculate correctly the pagination properties Should calculate correcly the page first order index" time="0.002">
+    </testcase>
+    <testcase classname="&lt;Pagination&gt; State Should calculate correctly the pagination properties When current page is the last one Should calculate correcly the page last order index" name="&lt;Pagination&gt; State Should calculate correctly the pagination properties When current page is the last one Should calculate correcly the page last order index" time="0.003">
+    </testcase>
+    <testcase classname="&lt;Pagination&gt; Props when receiving page prop should update the page input value" name="&lt;Pagination&gt; Props when receiving page prop should update the page input value" time="0.006">
+    </testcase>
+    <testcase classname="&lt;Pagination&gt; Props when fetching data from the backend should disable the pagination buttons" name="&lt;Pagination&gt; Props when fetching data from the backend should disable the pagination buttons" time="0.024">
+    </testcase>
+  </testsuite>
+  <testsuite name="Employees Reducer" errors="0" failures="0" skipped="0" timestamp="2020-07-25T22:29:25" time="0.307" tests="3">
+    <testcase classname="Employees Reducer ADD_EMPLOYEE_REQUEST Should set the isFetching flag to true" name="Employees Reducer ADD_EMPLOYEE_REQUEST Should set the isFetching flag to true" time="0.001">
+    </testcase>
+    <testcase classname="Employees Reducer ADD_EMPLOYEE_FAILURE Should update the state error message" name="Employees Reducer ADD_EMPLOYEE_FAILURE Should update the state error message" time="0.001">
+    </testcase>
+    <testcase classname="Employees Reducer ADD_EMPLOYEE_SUCCESS Should set the isFetching flag to false" name="Employees Reducer ADD_EMPLOYEE_SUCCESS Should set the isFetching flag to false" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;Empty /&gt;" errors="0" failures="0" skipped="0" timestamp="2020-07-25T22:29:25" time="0.148" tests="1">
+    <testcase classname="&lt;Empty /&gt; When rendering the component Should render correctly" name="&lt;Empty /&gt; When rendering the component Should render correctly" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="&lt;NoFilteredOrders&gt;" errors="0" failures="0" skipped="0" timestamp="2020-07-25T22:29:26" time="0.176" tests="1">
+    <testcase classname="&lt;NoFilteredOrders&gt; when reset button is clicked should called handleResetOrders with empty string" name="&lt;NoFilteredOrders&gt; when reset button is clicked should called handleResetOrders with empty string" time="0.012">
+    </testcase>
+  </testsuite>
+</testsuites>

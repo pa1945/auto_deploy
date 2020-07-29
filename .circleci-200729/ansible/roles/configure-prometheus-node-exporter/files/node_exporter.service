@@ -1,0 +1,20 @@
+#
+# https://codewizardly.com/prometheus-on-aws-ec2-part2/
+#
+[Unit]
+Description=Prometheus Node Exporter Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+# User=node_exporter
+# Group=node_exporter
+
+Type=simple
+# ExecStart=/usr/local/bin/node_exporter
+# On Ubuntu:
+ExecStart=/usr/bin/prometheus-node-exporter
+
+[Install]
+WantedBy=multi-user.target

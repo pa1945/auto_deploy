@@ -1,0 +1,46 @@
+Description: >
+  Cloudfront distribution for UdaPeople.
+
+Parameters:
+  WorkflowID2:
+    Description: Unique identifier.
+    Type: String
+
+
+Resources:
+  
+  CloudFrontOriginAccessIdentity:
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Origin Access Identity for Serverless Static Website
+
+  WebpageCDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Origins:
+          # - DomainName: !Sub "udapeople-${WorkflowID}.s3.amazonaws.com"
+          # OK ^^^^
+          # - DomainName: !Sub "s3-uda-deploy-${WorkflowID}.s3-website.us-east-1.amazonaws.com"
+          - DomainName: !Sub "${WorkflowID2}.s3.amazonaws.com"
+            Id: webpage
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
+        Enabled: True
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: False
+          TargetOriginId: webpage
+          ViewerProtocolPolicy: allow-all
+
+#
+# https://aws.amazon.com/premiumsupport/knowledge-center/cloudformation-stack-export-name-error/
+#
+Outputs:
+  WorkflowID2:
+    Value: !Sub ${WorkflowID2}
+    Description: URL for website hosted on S3
+    Export:
+      Name: WorkflowID2
