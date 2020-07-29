@@ -991,7 +991,10 @@ with the following URLs:
   https://review.udacity.com/#!/rubrics/2834/view
   Evidence of an active and working CI/CD pipeline that is triggered when 
   new commits are detected in the connected git repository. [URL02]
-https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows
+
+- https://circleci.com/api/v2/insights/github/pa1945/auto_deploy/workflows
+Insights >> pa1945 >> auto_deploy >> master
+- https://circleci.com/build-insights/gh/pa1945/auto_deploy/master
 
 Announcing new insights endpoints in CircleCI’s API v2
 https://circleci.com/blog/announcing-new-insights-endpoints-in-circleci-s-api-v2/
