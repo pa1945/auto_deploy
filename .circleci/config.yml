@@ -758,7 +758,7 @@ parameters:
     default: false
   cleanup-phase:
     type: boolean
-    default: true
+    default: false
   destroy-s3:
     type: boolean
     default: false
@@ -774,7 +774,7 @@ parameters:
     default: true
   create-smoke-deploy:
     type: boolean
-    default: false
+    default: true
   create-infra-allow:
     type: boolean
     default: false
@@ -949,12 +949,12 @@ workflows:
   check-non-prod:
     when:
       and:
-        - and: [ << pipeline.parameters.jest2 >> ]
         - and: [ testing, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.jest2 >> ]
         #- and: << pipeline.parameters.lint >>
     jobs:
-      - lint-frontend
-      - lint-backend
+      #- lint-frontend
+      #- lint-backend
       - jest-test-frontend
           #requires:
           #  - deploy-ifmaster
