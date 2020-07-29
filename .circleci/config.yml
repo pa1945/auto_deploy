@@ -880,13 +880,14 @@ workflows:
   create-smoke-test-and-deploy:
     when: 
       and:          # All must be true to trigger
-        - equal: [ master, << pipeline.git.branch >> ]
+        - equal: [ testing, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.create-smoke-deploy >> ]
     jobs:
       - create-frontend-s3:
           context: ci-uda-context
           stack-create-s3:  uda-bucketx        # 'A-@!#incorrect' should fail.
           # 'uda-bucketx' should be the last deployed s3 frontend bucket with success.
+          - deploy-ifmaster
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
