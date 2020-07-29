@@ -669,7 +669,7 @@ jobs:
               echo "Branch = ${CIRCLE_BRANCH}: NOT Master Branch -- Do not deploy site"
               # Ending a Job from within a step
               circleci-agent step halt
-              # exit 1
+              exit 1
             fi
 
   jest-test-frontend:
@@ -878,16 +878,18 @@ workflows:
 
 
   create-smoke-test-and-deploy:
-    when:           #         Conditional Workflows used
-      and:          # All must be true to trigger 
+    when: 
+      and:          # All must be true to trigger
         - equal: [ master, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.create-smoke-deploy >> ]
     jobs:
+      - deploy-ifmaster
       - create-frontend-s3:
           context: ci-uda-context
           stack-create-s3:  uda-bucketx        # 'A-@!#incorrect' should fail.
           # 'uda-bucketx' should be the last deployed s3 frontend bucket with success.
-          # - deploy-ifmaster  # Alternative filter solution
+          requires:
+            - deploy-ifmaster
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
