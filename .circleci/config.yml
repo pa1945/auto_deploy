@@ -856,17 +856,20 @@ workflows:
       #  - equal: [ master, << pipeline.git.branch >> ]
       #  - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
     jobs:
-      - stack-delete:
-          context: ci-uda-context
-          stack-param-del: cloudf-udapeople2
+      #- stack-delete:
+      #    context: ci-uda-context
+      #    stack-param-del: udapeople-ec2	# cloudf-udapeople2
       - s3-delete:
           context: ci-uda-context
           s3-param: udapeople-uda-bucketx
+          # Template add prefix 'udapeople-':   BucketName: !Sub "udapeople-${ID}"
           #requires:
           #  create-frontend-s3
       - ec2-delete:
           context: ci-uda-context
-          ec2-param: i-00a6b2f4665d265d3
+          ec2-param: i-0ba6588513ecb5be6
+          # Name: backend-uda-instancex 
+          # Template add prefix 'backend-':   Value: !Sub backend-${ID}
           #requires:
           #  - create-backend-ec2
 
