@@ -117,8 +117,8 @@ commands:
               echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
               # Setup the current frontend S3 bucket to access the new backend
               # Commented during testing
-              # aws s3 cp frontend/.env s3://s3-uda-deploy
-              # --acl public-read
+              aws s3 cp frontend/.env s3://s3-uda-deploy
+              #  --acl public-read
               # Show me the change:
               echo "frontend/.env:"
               cat frontend/.env
@@ -614,7 +614,7 @@ jobs:
             s3_bucket_name=<< parameters.copy2s3-param >>
             echo "Bucket name to copy: $s3_bucket_name"
             # Commented during testing
-            # aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
+            aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
             #
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
