@@ -588,7 +588,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Copy fronted/dist to s3 bucket
+          name: Copy frontend/dist to s3 bucket
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
@@ -614,6 +614,7 @@ jobs:
             s3_bucket_name=<< parameters.copy2s3-param >>
             echo "Bucket name to copy: $s3_bucket_name"
             # Commented during testing
+            # npm install ; npm run build
             aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
             #
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
@@ -755,6 +756,9 @@ parameters:
   deploy2s3:
     type: boolean
     default: false
+  cleanup-phase:
+    type: boolean
+    default: true
   destroy-s3:
     type: boolean
     default: false
@@ -770,7 +774,7 @@ parameters:
     default: true
   create-smoke-deploy:
     type: boolean
-    default: true
+    default: false
   create-infra-allow:
     type: boolean
     default: false
@@ -847,10 +851,10 @@ workflows:
 
 
   clean-up-old-stacks:
-    when:           # << pipeline.parameters.destroy-s3 >>
-      and:
-        - equal: [ master, << pipeline.git.branch >> ]
-        - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
+    when:   << pipeline.cleanup-phase >>      # << pipeline.parameters.destroy-s3 >>
+      #and:
+      #  - equal: [ master, << pipeline.git.branch >> ]
+      #  - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
     jobs:
       - stack-delete:
           context: ci-uda-context
@@ -862,7 +866,7 @@ workflows:
           #  create-frontend-s3
       - ec2-delete:
           context: ci-uda-context
-          ec2-param: i-04ea18fd6a4a5379f
+          ec2-param: i-00a6b2f4665d265d3
           #requires:
           #  - create-backend-ec2
 
