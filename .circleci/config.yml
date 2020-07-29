@@ -663,12 +663,13 @@ jobs:
           name: Deploy if Master branch
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              # ansible-playbook site.yml
               echo "Master Branch - deploy site"
               exit 0
             else
               echo "Branch = ${CIRCLE_BRANCH}: NOT Master Branch -- Do not deploy site"
-              exit 1
+              # Ending a Job from within a step
+              circleci-agent step halt
+              # exit 1
             fi
 
   jest-test-frontend:
@@ -924,6 +925,7 @@ workflows:
           s3-name-param: s3-uda-deploy
           requires:
             - run-cp2s3
+            # - deploy-ifmaster
           # uda-bucketx: should fail
           # s3-uda-deploy: should not fail
           #requires:
