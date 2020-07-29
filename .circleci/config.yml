@@ -851,7 +851,7 @@ workflows:
 
 
   clean-up-old-stacks:
-    when:   << pipeline.cleanup-phase >>      # << pipeline.parameters.destroy-s3 >>
+    when:   << pipeline.parameters.cleanup-phase >>      # << pipeline.parameters.destroy-s3 >>
       #and:
       #  - equal: [ master, << pipeline.git.branch >> ]
       #  - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
