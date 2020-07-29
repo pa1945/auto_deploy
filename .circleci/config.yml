@@ -117,8 +117,8 @@ commands:
               echo "API_URL=http://$BACKEND_IP_NEW:3030" > frontend/.env
               # Setup the current frontend S3 bucket to access the new backend
               # Commented during testing
-              # aws s3 cp frontend/.env s3://s3-uda-deploy
-              # --acl public-read
+              aws s3 cp frontend/.env s3://s3-uda-deploy
+              #  --acl public-read
               # Show me the change:
               echo "frontend/.env:"
               cat frontend/.env
@@ -588,7 +588,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Copy fronted/dist to s3 bucket
+          name: Copy frontend/dist to s3 bucket
           command: |
             export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID2
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY2
@@ -614,7 +614,8 @@ jobs:
             s3_bucket_name=<< parameters.copy2s3-param >>
             echo "Bucket name to copy: $s3_bucket_name"
             # Commented during testing
-            # aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
+            # npm install ; npm run build
+            aws s3 sync dist/ s3://$s3_bucket_name --acl public-read
             #
             # curl -H "token: 265a0727-db66-453a-8559-6b292b496502" \
             #  --request GET https://api.memstash.io/values/udapeople-cp2s3
@@ -663,12 +664,13 @@ jobs:
           name: Deploy if Master branch
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              # ansible-playbook site.yml
               echo "Master Branch - deploy site"
               exit 0
             else
               echo "Branch = ${CIRCLE_BRANCH}: NOT Master Branch -- Do not deploy site"
-              exit 1
+              # Ending a Job from within a step
+              circleci-agent step halt
+              # exit 1
             fi
 
   jest-test-frontend:
@@ -754,6 +756,9 @@ parameters:
   deploy2s3:
     type: boolean
     default: false
+  cleanup-phase:
+    type: boolean
+    default: false
   destroy-s3:
     type: boolean
     default: false
@@ -775,7 +780,7 @@ parameters:
     default: false
   jest2:
     type: boolean
-    default: false
+    default: true
   jest-checked:
     type: boolean
     default: true
@@ -846,39 +851,33 @@ workflows:
 
 
   clean-up-old-stacks:
-    when:           # << pipeline.parameters.destroy-s3 >>
-      and:
-        - equal: [ master, << pipeline.git.branch >> ]
-        - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
+    when:   << pipeline.parameters.cleanup-phase >>      # << pipeline.parameters.destroy-s3 >>
+      #and:
+      #  - equal: [ master, << pipeline.git.branch >> ]
+      #  - or: [ << pipeline.parameters.destroy-ec2 >> , << pipeline.parameters.destroy-s3 >> ]
     jobs:
-      - stack-delete:
-          context: ci-uda-context
-          stack-param-del: cloudf-udapeople2
+      #- stack-delete:
+      #    context: ci-uda-context
+      #    stack-param-del: udapeople-ec2	# cloudf-udapeople2
       - s3-delete:
           context: ci-uda-context
           s3-param: udapeople-uda-bucketx
+          # Template add prefix 'udapeople-':   BucketName: !Sub "udapeople-${ID}"
           #requires:
           #  create-frontend-s3
       - ec2-delete:
           context: ci-uda-context
-          ec2-param: i-04ea18fd6a4a5379f
+          ec2-param: i-06d82d38442b15283
+          # Name: backend-uda-instancex 
+          # Template add prefix 'backend-':   Value: !Sub backend-${ID}
           #requires:
           #  - create-backend-ec2
 
-  check-code-lint:
-    when: << pipeline.parameters.lint >> 
-    jobs:
-      - lint-frontend
-      - lint-backend
-
-
-#-      # - run-frontend
-#-      # - run-backend
 
 
   create-smoke-test-and-deploy:
-    when: 
-      and:          # All must be true to trigger
+    when:           #         Conditional Workflows used
+      and:          # All must be true to trigger 
         - equal: [ master, << pipeline.git.branch >> ]
         - and: [ << pipeline.parameters.create-smoke-deploy >> ]
     jobs:
@@ -886,12 +885,13 @@ workflows:
           context: ci-uda-context
           stack-create-s3:  uda-bucketx        # 'A-@!#incorrect' should fail.
           # 'uda-bucketx' should be the last deployed s3 frontend bucket with success.
+          # - deploy-ifmaster  # Alternative filter solution
       - create-backend-ec2:
           context: ci-uda-context
           stack-create-ec2: uda-instancex      # uda-instancex
           # The template adds 'backend-' -> backend-uda-instancex
-          #requires:
-          #  - create-frontend-s3
+          requires:
+            - create-frontend-s3
       - create-prometheus-ec2:
           context: ci-uda-context
           stack-create-promet: udap-prometx
@@ -924,6 +924,7 @@ workflows:
           s3-name-param: s3-uda-deploy
           requires:
             - run-cp2s3
+            # - deploy-ifmaster
           # uda-bucketx: should fail
           # s3-uda-deploy: should not fail
           #requires:
@@ -942,14 +943,21 @@ workflows:
             - check-curl-frontend
             #- check-curl-backend
             #- create-prometheus-ec2
+      # - run-frontend
+      # - run-backend
 
-  check-jest:
-    when: << pipeline.parameters.jest2 >>
+  check-non-prod:
+    when:
+      and:
+        - and: [ testing, << pipeline.git.branch >> ]
+        - and: [ << pipeline.parameters.jest2 >> ]
+        #- and: << pipeline.parameters.lint >>
     jobs:
+      #- lint-frontend
+      #- lint-backend
       - jest-test-frontend
           #requires:
           #  - deploy-ifmaster
-
       - jest-test-backend
           #requires:
           #  - deploy-ifmaster
